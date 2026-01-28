@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { shallow, useShallow } from "zustand/shallow";
 
-import { REQUEST } from "../../../constants/index";
+import { REQUEST, RESPONSE } from "../../../constants";
 import useStore from "../../../store/useStore";
 import { KeyValueTableData } from "../../../store/slices/type";
-import { generateParameterString, removeUrlParameter, usePrevious } from "../../../utils/index";
+import { generateParameterString, removeUrlParameter, usePrevious } from "../../../utils";
 import getUrlParameters from "../../../utils/getUrlParameters";
 
 const RequestUrl = () => {
@@ -30,7 +30,7 @@ const RequestUrl = () => {
     return `${baseUrl}?${newParamStr}`;
   }
 
-  const initDisplayUrl = () => 
+  const initDisplayUrl = () =>
     keyValueTableData.some(d => d.optionType === REQUEST.PARAMS && d.authType)
       ? removeFirstParam(requestUrl)
       : requestUrl;
@@ -38,6 +38,17 @@ const RequestUrl = () => {
   const [displayUrl, setDisplayUrl] = useState(initDisplayUrl);
   const prevTableData = usePrevious(keyValueTableData);
   const prevDisplayUrl = usePrevious(displayUrl);
+
+  const handleExtensionMessage = (event: MessageEvent) => {
+    if (event.data.type === RESPONSE.TREEVIEW_DATA) {
+      const newDisplayUrl = initDisplayUrl();
+      setDisplayUrl(newDisplayUrl);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("message", handleExtensionMessage);
+  }, []);
 
   useEffect(() => {
     const toUrl = (tableData: KeyValueTableData[]) => {
@@ -72,7 +83,7 @@ const RequestUrl = () => {
       const urlParams = getUrlParameters(displayUrl);
       const urlParamsCount = urlParams.length;
       const allParams = keyValueTableData.filter(d => d.optionType === REQUEST.PARAMS);
-      
+
       const authParam = allParams.find(p => p.authType);
       if (urlParamsCount === 0 && !authParam) {
         handleRequestUrlChange(displayUrl);

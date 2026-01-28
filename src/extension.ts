@@ -32,16 +32,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	};
 
 	const initializePanel = (collectionName?: string, requestName?: string, id?: string) => {
-		if (currentPanel) {
-			currentPanel.reveal(vscode.ViewColumn.One);
-		} else {
-			currentPanel = webviewProvider.initializeWebview(id, collectionName, requestName);
-			if (webviewProvider.mainPanel) {
-				webviewProvider.mainPanel.onDidDispose(() => {
-					currentPanel = null;
-				}, null);
-			}
-		}
+		currentPanel = webviewProvider.initializeWebview(id, collectionName, requestName);
+		webviewProvider.mainPanel?.onDidDispose(() => { currentPanel = null; }, null);
 	};
 
 	const disp_requestHistoryTreeView = vscode.window.createTreeView(
@@ -68,22 +60,16 @@ export async function activate(context: vscode.ExtensionContext) {
 	const disp_openRequestCmd = vscode.commands.registerCommand(
 		COMMAND.OPEN_REQUEST,
 		(item: RequestHistoryTreeItem | RequestCollectionItem) => {
-			if (!currentPanel) {
-				if (item instanceof RequestCollectionItem) {
-					initializePanel(item.parent.name, item.request.name, item.id);
-				} else {
-					initializePanel();
-				}
+			if (item instanceof RequestCollectionItem) {
+				initializePanel(item.parent.name, item.request.name, item.id);
+			} else {
+				initializePanel();
 			}
 
-			setTimeout(() => {
-				if (item) {
-					currentPanel?.webview.postMessage({
-						type: TYPE.TREEVIEW_DATA,
-						...item.request.requestObject,
-					});
-				}
-			}, 1000);
+			currentPanel?.webview.postMessage({
+				type: TYPE.TREEVIEW_DATA,
+				...item.request.requestObject,
+			});
 		}
 	);
 

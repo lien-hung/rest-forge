@@ -42,6 +42,12 @@ class MainWebviewPanel {
     this.collectionName = collectionName;
     this.requestName = requestName;
 
+    if (this.mainPanel) {
+      this.mainPanel.reveal(vscode.ViewColumn.One);
+      this.mainPanel.title = requestName || NAME.MAIN_PANEL_NAME;
+      return this.mainPanel;
+    }
+
     this.mainPanel = vscode.window.createWebviewPanel(
       TYPE.WEBVIEW_TYPE,
       requestName || NAME.MAIN_PANEL_NAME,
@@ -56,14 +62,14 @@ class MainWebviewPanel {
       },
     );
 
-    this.mainPanel.webview.html = this.getHtmlForWebview(
-      this.mainPanel.webview,
-    );
+    this.mainPanel.webview.html = this.getHtmlForWebview(this.mainPanel.webview);
 
     this.mainPanel.iconPath = vscode.Uri.joinPath(
       this.extensionUri,
       "icons/images/apitester-icon.png",
     );
+
+    this.mainPanel.onDidDispose(() => { this.mainPanel = null; }, null);
 
     this.receiveWebviewMessage();
 
