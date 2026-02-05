@@ -31,12 +31,13 @@ const REQUEST = {
   DEFLATE: "deflate",
   NO_CACHE: "no-cache",
   ANY_MIME_TYPE: "*/*",
-  TOKEN: "token",
   KEEP_ALIVE: "keep-alive",
-
+  
   // Auth properties
   USERNAME: "username",
   PASSWORD: "password",
+  TOKEN: "token",
+  TOKEN_PREFIX: "tokenPrefix",
   
   // Authorization types
   NO_AUTH: "No Auth",

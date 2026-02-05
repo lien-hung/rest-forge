@@ -20,7 +20,7 @@ const generateSdkRequestObject = (
   const bodyData = keyValueTableData.filter(
     (data) => data.optionType === bodyOption && data.key.length > 0,
   );
-  const { username, password, token } = authData;
+  const { username, password, token, tokenPrefix } = authData;
   let authHeaderObject: any = undefined;
   let authMode: "noauth" | "bearer" | "basic" = "noauth";
   let bodyMode = "";
@@ -30,7 +30,7 @@ const generateSdkRequestObject = (
       authMode = "bearer";
       authHeaderObject = {
         key: REQUEST.AUTH,
-        value: `Bearer ${token}`,
+        value: `${tokenPrefix} ${token}`,
       };
       break;
     case REQUEST.BASIC_AUTH:

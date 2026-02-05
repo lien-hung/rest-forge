@@ -7,9 +7,14 @@ import { REQUEST } from "../../../constants/index";
 import useStore from "../../../store/useStore";
 
 const RequestAuthBearerToken = () => {
-  const { authDataToken, handleRequestAuthData } = useStore(
+  const {
+    authDataToken,
+    authDataTokenPrefix,
+    handleRequestAuthData
+  } = useStore(
     useShallow((state) => ({
       authDataToken: state.authData.token,
+      authDataTokenPrefix: state.authData.tokenPrefix,
       handleRequestAuthData: state.handleRequestAuthData,
     }))
   );
@@ -24,6 +29,17 @@ const RequestAuthBearerToken = () => {
           value={authDataToken}
           onChange={(event) =>
             handleRequestAuthData(REQUEST.TOKEN, event.target.value)
+          }
+        />
+      </InputWrapper>
+      <InputWrapper>
+        <label htmlFor="prefix">Prefix:</label>
+        <input
+          name="prefix"
+          placeholder="e.g. Bearer"
+          value={authDataTokenPrefix}
+          onChange={(event) =>
+            handleRequestAuthData(REQUEST.TOKEN_PREFIX, event.target.value)
           }
         />
       </InputWrapper>

@@ -21,7 +21,7 @@ const requestDataSlice: StateCreator<
     variant: "libcurl",
     editorLanguage: "c",
   },
-  authData: { username: "", password: "", token: "" },
+  authData: { username: "", password: "", token: "", tokenPrefix: "Bearer" },
   bodyRawData: { text: "", javascript: "", json: "", html: "", xml: "" },
 
   handleRequestUrlChange: (url: string) => set(() => ({ requestUrl: url })),

@@ -17,6 +17,7 @@ export interface IAuthData {
   username: string;
   password: string;
   token: string;
+  tokenPrefix: string;
 }
 
 export interface IEditorTheme {

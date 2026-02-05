@@ -47,6 +47,7 @@ export interface IHeaderAuth {
   username: string;
   password: string;
   token: string;
+  tokenPrefix: string;
 }
 
 export interface IRequestObjectType {

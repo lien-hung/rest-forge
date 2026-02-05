@@ -10,7 +10,7 @@ import {
 function getHeaders(
   keyValueData: IParameterKeyValueData[],
   authOption: string,
-  { username, password, token }: IHeaderAuth,
+  { username, password, token, tokenPrefix }: IHeaderAuth,
 ) {
   const headersObject: IRequestHeaderInformation = {};
 
@@ -31,7 +31,7 @@ function getHeaders(
   }
 
   if (authOption === TYPE.BEARER_TOKEN) {
-    headersObject[TYPE.AUTHORIZATION] = `Bearer ${token}`;
+    headersObject[TYPE.AUTHORIZATION] = `${tokenPrefix} ${token}`;
   }
 
   return headersObject;

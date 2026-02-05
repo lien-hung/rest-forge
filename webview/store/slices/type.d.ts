@@ -2,6 +2,7 @@ export interface AuthData {
   username: string;
   password: string;
   token: string;
+  tokenPrefix: string;
 }
 
 export interface BodyRawData {
