@@ -94,6 +94,7 @@ class MainWebviewPanel {
         tokenRequest,
         codeChallenge,
         newTokenList,
+        errorMsg,
         requestMethod,
         requestUrl,
         authOption,
@@ -106,6 +107,11 @@ class MainWebviewPanel {
       }) => {
         if (command === COMMAND.ALERT_COPY) {
           vscode.window.showInformationMessage(MESSAGE.COPY_SUCCESFUL_MESSAGE);
+          return;
+        }
+
+        if (command === COMMAND.SHOW_ERROR) {
+          vscode.window.showErrorMessage(errorMsg);
           return;
         }
 

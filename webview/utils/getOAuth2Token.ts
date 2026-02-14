@@ -1,3 +1,4 @@
+import showError from "./showError";
 import { IOAuth2RefreshRequest, IOAuth2Request } from "./type";
 
 export function getCodeVerifier() {
@@ -57,7 +58,6 @@ export async function getOAuth2TokenByAuthorizationCode(request: IOAuth2Request,
     const credentials = await response.json();
     return credentials;
   } catch (error: any) {
-    console.error(error);
     return { error: error.message, description: error.error_description };
   }
 }
@@ -67,11 +67,11 @@ export async function getOAuth2TokenByClientCreds(request: IOAuth2Request) {
   const url = oAuth.accessTokenUrl;
 
   if (!url) {
-    console.error("Access token URL is required.");
+    showError("Access token URL is required.");
     return;
   }
   if (!oAuth.clientId) {
-    console.error("Client ID is required.");
+    showError("Client ID is required.");
     return;
   }
 

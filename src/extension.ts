@@ -253,6 +253,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				const paramErrorDesc = queryParams.get("error_description");
 				const paramErrorUri = queryParams.get("error_uri");
 				vscode.window.showErrorMessage(`Authorization failed: ${paramError} (${paramErrorDesc}) [${paramErrorUri}]`);
+				return;
 			}
 
 			const paramCode = queryParams.get("code");

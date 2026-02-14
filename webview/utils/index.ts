@@ -3,6 +3,7 @@ export { default as generateSdkRequestObject } from "./generateSdkRequestObject"
 export { default as getCurrentTheme } from "./getCurrentTheme";
 export { default as getUrlParameters } from "./getUrlParameters";
 export { default as removeUrlParameter } from "./removeUrlParameter";
+export { default as showError } from "./showError";
 export { default as usePrevious } from "./usePrevious";
 export {
   getCodeVerifier,

@@ -10,7 +10,8 @@ import {
   getCodeChallenge,
   getCodeVerifier,
   getOAuth2TokenByAuthorizationCode,
-  getOAuth2TokenByClientCreds
+  getOAuth2TokenByClientCreds,
+  showError
 } from "../../../utils";
 import { IOAuth2Request } from "../../../utils/type";
 import useStore from "../../../store/useStore";
@@ -93,7 +94,7 @@ const RequestOAuth2NewToken = () => {
 
   const handleGetToken = async () => {
     if (!tokenNameRef.current) {
-      console.error("You must specify a token name.");
+      showError("You must specify a token name.");
       return;
     }
 
@@ -114,21 +115,21 @@ const RequestOAuth2NewToken = () => {
     if (grantType === REQUEST.CLIENT_CREDS) {
       const credentials = await getOAuth2TokenByClientCreds(tokenRequest);
       if (credentials.error) {
-        console.error(`An error occurred during authorization: ${credentials.error} (${credentials.error_description})`);
+        showError(`An error occurred during authorization: ${credentials.error} (${credentials.error_description})`);
         return;
       }
       addToken(credentials);
     } else {
       if (!tokenRequest.authorizationUrl) {
-        console.error("Authorization URL is required.");
+        showError("Authorization URL is required.");
         return;
       }
       if (!tokenRequest.accessTokenUrl) {
-        console.error("Access token URL is required.");
+        showError("Access token URL is required.");
         return;
       }
       if (!tokenRequest.clientId) {
-        console.error("Client ID is required.");
+        showError("Client ID is required.");
         return;
       }
 
@@ -137,7 +138,7 @@ const RequestOAuth2NewToken = () => {
         if (tokenRequest.codeVerifier) {
           const userVerifier = tokenRequest.codeVerifier;
           if (!validateCodeVerifier(userVerifier)) {
-            console.error("The code verifier does not conform with the RFC7636 spec. See https://datatracker.ietf.org/doc/html/rfc7636#section-4.1 for reference.");
+            showError("The code verifier does not conform with the RFC7636 spec. See https://datatracker.ietf.org/doc/html/rfc7636#section-4.1 for reference.");
             return;
           }
         } else {
@@ -160,7 +161,7 @@ const RequestOAuth2NewToken = () => {
       const authorizationCode = event.data.code;
       const credentials = await getOAuth2TokenByAuthorizationCode(tokenRequestRef.current, authorizationCode);
       if (credentials.error) {
-        console.error(`An error occurred during authorization: ${credentials.error} (${credentials.error_description})`);
+        showError(`An error occurred during authorization: ${credentials.error} (${credentials.error_description})`);
         return;
       }
       addToken(credentials);
