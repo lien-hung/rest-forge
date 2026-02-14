@@ -66,7 +66,6 @@ const RequestOAuth2NewToken = () => {
   const clientIdRef = useRef<HTMLInputElement>(null);
   const clientSecretRef = useRef<HTMLInputElement>(null);
   const challengeTypeRef = useRef<HTMLSelectElement>(null);
-  const codeVerifierInputRef = useRef<HTMLInputElement>(null);
   const scopeRef = useRef<HTMLInputElement>(null);
   const stateRef = useRef<HTMLInputElement>(null);
   const clientAuthRef = useRef<HTMLSelectElement>(null);
@@ -106,7 +105,7 @@ const RequestOAuth2NewToken = () => {
       clientSecret: clientSecretRef.current?.value || "",
       credsPlacement: clientAuthRef.current?.value === REQUEST.SEND_BASIC_AUTH ? 'basic_auth_header' : '',
       pkce: grantType === REQUEST.AUTH_CODE_PKCE,
-      codeVerifier: codeVerifierInputRef.current?.value,
+      codeVerifier: codeVerifierValue,
       challengeType: challengeTypeRef.current?.value,
       scope: scopeRef.current?.value,
       state: stateRef.current?.value,
@@ -267,7 +266,6 @@ const RequestOAuth2NewToken = () => {
                 type="text"
                 name="codeVerifier"
                 placeholder="Automatically generated if left blank"
-                ref={codeVerifierInputRef}
                 value={codeVerifierValue}
                 onChange={(e) => validateCodeVerifier(e.target.value)}
                 aria-invalid={!!codeVerifierError}
