@@ -7,11 +7,16 @@ const REQUEST = {
   // Add to...
   ADD_TO_QUERY_PARAMS: "Query Params",
   ADD_TO_HEADERS: "Headers",
+  SEND_BASIC_AUTH: "Send as Basic Auth header",
   
   // Menu options
   PARAMS: "Params",
   AUTH: "Authorization",
   ADD_TO_OPTION: "Add To Option",
+  GRANT_TYPE: "Grant Type",
+  CLIENT_AUTH_OPTION: "Client Auth Option",
+  TOKEN_TYPE: "Token Type",
+  CHALLENGE_TYPE: "Challenge Type",
   
   // Body options
   NONE: "None",
@@ -44,6 +49,16 @@ const REQUEST = {
   API_KEY: "API Key",
   BEARER_TOKEN: "Bearer Token",
   BASIC_AUTH: "Basic Auth",
+  OAUTH2: "OAuth 2.0",
+
+  // OAuth 2.0 grant types
+  AUTH_CODE: "Authorization Code",
+  AUTH_CODE_PKCE: "Authorization Code (with PKCE)",
+  CLIENT_CREDS: "Client Credentials",
+
+  // OAuth 2.0 token types
+  ACCESS_TOKEN: "Access token",
+  ID_TOKEN: "ID token",
 };
 
 export default REQUEST;

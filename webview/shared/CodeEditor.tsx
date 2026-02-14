@@ -65,7 +65,6 @@ function CodeEditor({
 
   useEffect(() => {
     window.addEventListener("message", handleExtensionMessage);
-
     vscode.postMessage({ command: COMMON.INIT_TOKEN_COLORS });
   }, []);
 

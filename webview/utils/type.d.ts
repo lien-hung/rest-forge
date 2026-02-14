@@ -34,3 +34,24 @@ export interface ITokenColor {
   background?: string;
   fontStyle?: string;
 }
+
+export interface IOAuth2Request {
+  authorizationUrl: string;
+  accessTokenUrl: string;
+  callbackUrl: string;
+  clientId: string;
+  clientSecret: string;
+  credsPlacement: string;
+  pkce: boolean;
+  codeVerifier?: string;
+  challengeType?: string;
+  scope?: string;
+  state?: string;
+}
+
+export interface IOAuth2RefreshRequest {
+  accessTokenUrl: string;
+  refreshToken: string;
+  clientId: string;
+  clientSecret: string;
+}

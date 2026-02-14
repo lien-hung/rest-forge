@@ -1,6 +1,17 @@
 const OPTION = {
-  AUTHORIZATION_OPTIONS: ["No Auth", "API Key", "Bearer Token", "Basic Auth"],
+  AUTHORIZATION_OPTIONS: ["No Auth", "API Key", "Bearer Token", "Basic Auth", "OAuth 2.0"],
   ADD_TO_OPTIONS: ["Headers", "Query Params"],
+  OAUTH2_GRANT_TYPES: [
+    "Authorization Code",
+    "Authorization Code (with PKCE)",
+    "Client Credentials",
+  ],
+  OAUTH2_TOKEN_TYPES: ["Access token", "ID token"],
+  OAUTH2_PKCE_METHODS: ["SHA-256", "Plain"],
+  OAUTH2_CLIENT_AUTH_OPTIONS: [
+    "Send as Basic Auth header",
+    "Send client credentials in body",
+  ],
   REQUEST_METHOD_OPTIONS: ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"],
   REQUEST_MENU_OPTIONS: [
     "Params",
@@ -12,10 +23,7 @@ const OPTION = {
   REQUEST_BODY_RAW_OPTIONS: [
     { option: "Text", headerField: "text/plain" },
     { option: "JavaScript", headerField: "application/javascript" },
-    {
-      option: "JSON",
-      headerField: "application/json",
-    },
+    { option: "JSON", headerField: "application/json" },
     { option: "HTML", headerField: "text/html" },
     { option: "XML", headerField: "application/xml" },
   ],

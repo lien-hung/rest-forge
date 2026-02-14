@@ -14,6 +14,15 @@ const COMMON = {
   THEME_CHANGED: "Theme Changed",
   HAS_TOKEN_COLORS: "Has Token Colors",
   INIT_TOKEN_COLORS: "Init Token Colors",
+
+  HAS_OAUTH2_TOKENS: "Has OAuth2 Tokens",
+  INIT_OAUTH2_TOKENS: "Init OAuth2 Tokens",
+  OAUTH2_TOKEN_REQUEST: "OAuth2 Token Request",
+  OAUTH2_TOKEN_RESPONSE: "OAuth2 Token Response",
+  SET_OAUTH2_TOKENS: "Set OAuth2 Tokens",
+  OAUTH2_TOKEN_ADDED: "OAuth2 Token Added",
+
+  OPEN_MANAGE_TOKENS: "Open Manage Tokens",
 };
 
 export default COMMON;

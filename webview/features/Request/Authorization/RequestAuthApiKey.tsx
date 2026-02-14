@@ -24,7 +24,7 @@ const RequestAuthApiKey = () => {
     }))
   );
 
-  const apiKeyRow = keyValueTableData.find((d) => d.authType);
+  const apiKeyRow = keyValueTableData.find((d) => d.authType === REQUEST.API_KEY);
   if (!apiKeyRow) return;
 
   const addTo = apiKeyRow.optionType === COMMON.HEADERS
@@ -81,11 +81,10 @@ const RequestAuthApiKey = () => {
 
 const OptionWrapper = styled.select`
   width: auto;
-  height: 2.7rem;
-  border: 0.1rem solid var(--vscode-foreground);
+  height: 2.5rem;
+  border: 0.1rem solid rgba(128, 128, 128, 0.7);
   border-radius: 0.3rem;
   padding: 0.1rem 0.3rem;
-  font-size: 1.2rem;
   background-color: var(--vscode-editor-background);
   color: var(--vscode-foreground);
 `;

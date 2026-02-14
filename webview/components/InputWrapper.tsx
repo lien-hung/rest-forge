@@ -9,26 +9,30 @@ const InputWrapper = ({ children }: ICommonChildProps) => {
 const InputWrapperContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
+  padding: 0 1rem;
 
   label {
     margin-right: 1rem;
-    font-size: 1.2rem;
     opacity: 0.95;
-    flex: 0 0 6rem;
+    flex: 0 0 8rem;
   }
 
   input {
     border: 0.1rem solid rgba(128, 128, 128, 0.7);
     border-radius: 0.3rem;
     padding: 0.5rem 0.7rem;
-    font-size: 1.2rem;
     color: var(--default-text);
     background-color: transparent;
     
     &::placeholder {
       opacity: 0.7;
     }
+  }
+
+  input[disabled] {
+    opacity: 0.8;
+    font-style: italic;
   }
 `;
 

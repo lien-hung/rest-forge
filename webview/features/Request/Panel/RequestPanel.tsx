@@ -37,9 +37,7 @@ const RequestPanel = () => {
       handleRequestProcessStatus(COMMON.LOADING);
     }
 
-    vscode.postMessage({
-      ...requestData,
-    });
+    vscode.postMessage({ ...requestData });
   };
 
   useEffect(() => {

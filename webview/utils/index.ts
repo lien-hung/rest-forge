@@ -4,3 +4,9 @@ export { default as getCurrentTheme } from "./getCurrentTheme";
 export { default as getUrlParameters } from "./getUrlParameters";
 export { default as removeUrlParameter } from "./removeUrlParameter";
 export { default as usePrevious } from "./usePrevious";
+export {
+  getCodeVerifier,
+  getCodeChallenge,
+  getOAuth2TokenByAuthorizationCode,
+  getOAuth2TokenByClientCreds,
+} from "./getOAuth2Token";

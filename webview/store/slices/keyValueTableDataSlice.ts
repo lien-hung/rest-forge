@@ -100,6 +100,13 @@ const keyValueTableDataSlice: StateCreator<
       ),
     })),
 
+  handleHeaderPrefix: (dataId, detail) =>
+    set((state) => ({
+      keyValueTableData: state.keyValueTableData.map((tableData) =>
+        dataId === tableData.id ? { ...tableData, prefix: detail } : tableData,
+      ),      
+    })),
+
   addRequestBodyHeaders: (headerValue) =>
     set((state) => ({
       keyValueTableData: [
@@ -123,7 +130,7 @@ const keyValueTableDataSlice: StateCreator<
     }));
   },
 
-  addAuthTableRow: (authType, optionType, key, value) => {
+  addAuthTableRow: (authType, optionType, key, value, prefix) => {
     set((state) => ({
       keyValueTableData: [
         {
@@ -134,6 +141,7 @@ const keyValueTableDataSlice: StateCreator<
           value: value || "",
           rowReadOnly: true,
           authType: authType,
+          prefix: prefix,
         },
         ...state.keyValueTableData,
       ],

@@ -10,7 +10,7 @@ const RequestAuthBearerToken = () => {
   const {
     authDataToken,
     authDataTokenPrefix,
-    handleRequestAuthData
+    handleRequestAuthData,
   } = useStore(
     useShallow((state) => ({
       authDataToken: state.authData.token,

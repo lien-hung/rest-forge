@@ -21,6 +21,7 @@ export interface KeyValueTableData {
   value: string;
   rowReadOnly: boolean;
   authType?: string;
+  prefix?: string;
 }
 
 export interface IResizeBarSlice {
@@ -104,11 +105,12 @@ export interface IKeyValueTableDataSlice {
   deleteTableRow: (id: string) => void;
   addRequestBodyHeaders: (value: string) => void;
   removeRequestBodyHeaders: () => void;
-  addAuthTableRow: (authType: string, optionType: string, key?: string, value?: string) => void;
+  addAuthTableRow: (authType: string, optionType: string, key?: string, value?: string, prefix?: string) => void;
   removeAuthTableRow: () => void;
   handleRequestCheckbox: (id: string) => void;
   handleRequestKey: (id: string, detail: string) => void;
   handleRequestValue: (id: string, detail: string) => void;
+  handleHeaderPrefix: (id: string, detail: string) => void;
   handleTreeViewTableData: (headers: KeyValueTableData[]) => void;
 }
 
@@ -119,4 +121,23 @@ export interface ExtensionConfig {
 export interface IConfigSlice {
   customMethods: string[];
   setConfig: (config: ExtensionConfig) => void;
+}
+
+export interface IOAuth2Token {
+  name: string;
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  scope: string;
+  id_token: string;
+  refresh_token: string;
+  access_token_url: string;
+  client_id: string;
+  client_secret: string;
+  timestamp: number;
+}
+
+export interface IOAuth2TokenSlice {
+  oauth2Tokens: IOAuth2Token[];
+  setOAuth2Tokens: (tokens: IOAuth2Token[]) => void;
 }

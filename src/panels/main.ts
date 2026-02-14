@@ -1,18 +1,22 @@
 import * as vscode from "vscode";
+import { writeFileSync } from "fs";
 
-import { COMMAND, MESSAGE, NAME, TYPE } from "./constants";
+import { COMMAND, MESSAGE, NAME, TYPE } from "../constants";
 import {
+  authorizeInBrowser,
   generateResponseObject,
   getBody,
   getExtensionConfig,
   getHeaders,
+  getHomePath,
   getNonce,
+  getStoredOAuthTokens,
   getUrl,
-} from "./utils";
-import { IRequestHeaderInformation, IRequestObjectType } from "./utils/type";
-import RequestHistoryProvider from "./request-history";
-import CollectionsProvider from "./collections";
-import getTokenColors from "./utils/getTokenColors";
+} from "../utils";
+import { IRequestHeaderInformation, IRequestObjectType } from "../utils/type";
+import RequestHistoryProvider from "../request-history";
+import CollectionsProvider from "../collections";
+import getTokenColors from "../utils/getTokenColors";
 
 class MainWebviewPanel {
   private url: string = "";
@@ -26,6 +30,10 @@ class MainWebviewPanel {
   private extensionUri;
   private requestHistoryProvider;
   private collectionsProvider;
+
+  private get tokenPath() {
+    return getHomePath("oauth2-tokens.json");
+  }
 
   constructor(
     extensionUri: vscode.Uri,
@@ -82,7 +90,20 @@ class MainWebviewPanel {
     }
 
     this.mainPanel.webview.onDidReceiveMessage(
-      ({ requestMethod, requestUrl, authOption, authData, bodyOption, bodyRawOption, bodyRawData, keyValueTableData, command }) => {
+      ({
+        tokenRequest,
+        codeChallenge,
+        newTokenList,
+        requestMethod,
+        requestUrl,
+        authOption,
+        authData,
+        bodyOption,
+        bodyRawOption,
+        bodyRawData,
+        keyValueTableData,
+        command
+      }) => {
         if (command === COMMAND.ALERT_COPY) {
           vscode.window.showInformationMessage(MESSAGE.COPY_SUCCESFUL_MESSAGE);
           return;
@@ -112,6 +133,38 @@ class MainWebviewPanel {
           if (this.mainPanel) {
             this.mainPanel.webview.postMessage(tokenColorsObject);
           }
+          return;
+        }
+
+        if (command === COMMAND.INIT_OAUTH2_TOKENS) {
+          try {
+            const tokenList = getStoredOAuthTokens(this.tokenPath);
+            const tokenListObject = { tokenList, type: COMMAND.HAS_OAUTH2_TOKENS };
+            if (this.mainPanel) {
+              this.mainPanel.webview.postMessage(tokenListObject);
+            }
+          } catch (error) {
+            console.error("Error loading tokens: ", error);
+          }
+        }
+
+        if (command === COMMAND.OAUTH2_TOKEN_REQUEST) {
+          authorizeInBrowser(tokenRequest, codeChallenge);
+          return;
+        }
+
+        if (command === COMMAND.SET_OAUTH2_TOKENS) {
+          writeFileSync(this.tokenPath, JSON.stringify(newTokenList));
+          return;
+        }
+
+        if (command === COMMAND.OAUTH2_TOKEN_ADDED) {
+          vscode.window.showInformationMessage("Access token added successfully");
+          return;
+        }
+
+        if (command === COMMAND.OPEN_MANAGE_TOKENS) {
+          vscode.commands.executeCommand(COMMAND.MANAGE_TOKENS);
           return;
         }
 

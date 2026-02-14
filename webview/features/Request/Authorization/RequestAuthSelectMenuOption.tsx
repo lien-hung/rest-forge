@@ -6,6 +6,7 @@ import RequestAuthApiKey from "./RequestAuthApiKey";
 import RequestBearerToken from "./RequestAuthBearerToken";
 import RequestBasicAuth from "./RequestBasicAuth";
 import RequestNoAuth from "./RequestNoAuth";
+import RequestOAuth2 from "./RequestOAuth2";
 
 const RequestAuthSelectMenuOption = () => {
   const authOption = useStore((state) => state.authOption);
@@ -17,6 +18,8 @@ const RequestAuthSelectMenuOption = () => {
       return <RequestBearerToken />;
     case REQUEST.BASIC_AUTH:
       return <RequestBasicAuth />;
+    case REQUEST.OAUTH2:
+      return <RequestOAuth2 />;
     default:
       return <RequestNoAuth />;
   }

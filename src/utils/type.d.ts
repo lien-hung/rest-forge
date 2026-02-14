@@ -1,3 +1,17 @@
+export interface IOAuth2Token {
+  name: string;
+  access_token: string;
+  type: string;
+  expires_in: number;
+  scope: string;
+  id_token: string;
+  refresh_token: string;
+  access_token_url: string;
+  client_id: string;
+  client_secret: string;
+  timestamp: number;
+}
+
 export interface IRequestTreeItemState {
   url: string;
   method: string;
@@ -84,4 +98,18 @@ export interface IRequestData {
 
 export interface IExtensionConfig {
   customMethods: string[];
+}
+
+export interface IOAuth2Request {
+  authorizationUrl: string;
+  accessTokenUrl: string;
+  callbackUrl: string;
+  clientId: string;
+  clientSecret: string;
+  credsPlacement: string;
+  pkce: boolean;
+  codeVerifier?: string;
+  challengeType?: string;
+  scope?: string;
+  state?: string;
 }

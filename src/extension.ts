@@ -5,20 +5,23 @@ import { RequestCollection, RequestCollectionItem } from './collections/tree-ite
 import { COMMAND, MESSAGE, TYPE } from "./constants";
 import RequestHistoryProvider from './request-history';
 import { RequestHistoryTreeItem } from './request-history/tree-items';
-import MainWebviewPanel from './webview-panel';
+import MainWebviewPanel from './panels/main';
 import getTokenColors from './utils/getTokenColors';
+import ManageTokenWebviewPanel from './panels/manage-tokens';
 
 export async function activate(context: vscode.ExtensionContext) {
 	const requestHistoryProvider = new RequestHistoryProvider(context);
 	const collectionsProvider = new CollectionsProvider(context);
 
-	const webviewProvider = new MainWebviewPanel(
+	const mainWebviewProvider = new MainWebviewPanel(
 		context.extensionUri,
 		requestHistoryProvider,
 		collectionsProvider
 	);
+	const manageTokenWebviewProvider = new ManageTokenWebviewPanel(context.extensionUri);
 
-	let currentPanel: vscode.WebviewPanel | null = null;
+	let currentMainPanel: vscode.WebviewPanel | null = null;
+	let currentManageTokenPanel: vscode.WebviewPanel | null = null;
 
 	const handleInputName = async () => {
 		const inputName = await vscode.window.showInputBox({
@@ -32,8 +35,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	};
 
 	const initializePanel = (collectionName?: string, requestName?: string, id?: string) => {
-		currentPanel = webviewProvider.initializeWebview(id, collectionName, requestName);
-		webviewProvider.mainPanel?.onDidDispose(() => { currentPanel = null; }, null);
+		currentMainPanel = mainWebviewProvider.initializeWebview(id, collectionName, requestName);
+		mainWebviewProvider.mainPanel?.onDidDispose(() => { currentMainPanel = null; }, null);
 	};
 
 	const disp_requestHistoryTreeView = vscode.window.createTreeView(
@@ -66,7 +69,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				initializePanel();
 			}
 
-			currentPanel?.webview.postMessage({
+			currentMainPanel?.webview.postMessage({
 				type: TYPE.TREEVIEW_DATA,
 				...item.request.requestObject,
 			});
@@ -215,16 +218,53 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	);
 
+	const disp_manageTokensCmd = vscode.commands.registerCommand(
+		COMMAND.MANAGE_TOKENS,
+		() => {
+			if (currentManageTokenPanel) {
+				currentManageTokenPanel.reveal(vscode.ViewColumn.One);
+			} else {
+				manageTokenWebviewProvider.initializeWebview();
+				if (manageTokenWebviewProvider.mainPanel) {
+					manageTokenWebviewProvider.mainPanel.onDidDispose(() => {
+						manageTokenWebviewProvider.mainPanel = null;
+						currentManageTokenPanel = null;
+					}, null);
+				}
+			}
+		}
+	);
+
 	const disp_onThemeChangeHandler = vscode.window.onDidChangeActiveColorTheme(() => {
-		if (currentPanel) {
+		if (currentMainPanel) {
 			const themeName: string = vscode.workspace.getConfiguration("workbench").get("colorTheme") || "";
 			const tokenColors = getTokenColors(themeName);
-
-			currentPanel.webview.postMessage({
-				type: TYPE.THEME_CHANGED,
-				tokenColors
-			});
+			currentMainPanel.webview.postMessage({ tokenColors, type: TYPE.THEME_CHANGED });
 		}
+	});
+
+	const disp_uriHandler = vscode.window.registerUriHandler({
+		handleUri(uri) {
+			// URI format: vscode://undefined_publisher.api-tester?...
+			const queryParams = new URLSearchParams(uri.query);
+
+			const paramError = queryParams.get("error");
+			if (paramError) {
+				const paramErrorDesc = queryParams.get("error_description");
+				const paramErrorUri = queryParams.get("error_uri");
+				vscode.window.showErrorMessage(`Authorization failed: ${paramError} (${paramErrorDesc}) [${paramErrorUri}]`);
+			}
+
+			const paramCode = queryParams.get("code");
+			if (paramCode) {
+				currentMainPanel?.webview.postMessage({
+					type: COMMAND.OAUTH2_TOKEN_RESPONSE,
+					code: paramCode
+				});
+			} else {
+				vscode.window.showErrorMessage("Authorization code not found");
+			}
+		},
 	});
 
 	// Subscribe tree views
@@ -249,8 +289,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disp_renameCollectionRequestCmd);
 	context.subscriptions.push(disp_deleteCollectionRequestCmd);
 
+	context.subscriptions.push(disp_manageTokensCmd);
+
 	// Subscribe handlers
 	context.subscriptions.push(disp_onThemeChangeHandler);
+	context.subscriptions.push(disp_uriHandler);
 }
 
 export function deactivate() { }
