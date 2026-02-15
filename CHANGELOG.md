@@ -2,6 +2,12 @@
 
 All notable changes to the "api-tester" extension will be documented in this file.
 
+## [v2.2.0]
+- Added support for OAuth 2.0 authorization
+- Added option for customization of header prefixes other than `Bearer`
+- Fixed input URL when changing to a different item in history or collection
+- UI modifications
+
 ## [v2.1.0]
 - Added support for renaming requests from history and save to collection
 - Added theme-specific syntax highlighting for HTML/XML
