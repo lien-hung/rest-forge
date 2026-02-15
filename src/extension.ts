@@ -36,7 +36,12 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const initializePanel = (collectionName?: string, requestName?: string, id?: string) => {
 		currentMainPanel = mainWebviewProvider.initializeWebview(id, collectionName, requestName);
-		mainWebviewProvider.mainPanel?.onDidDispose(() => { currentMainPanel = null; }, null);
+		manageTokenWebviewProvider.mainPanel = currentMainPanel;
+
+		mainWebviewProvider.mainPanel?.onDidDispose(() => {
+			manageTokenWebviewProvider.mainPanel = null;
+			currentMainPanel = null;
+		}, null);
 	};
 
 	const disp_requestHistoryTreeView = vscode.window.createTreeView(
@@ -224,10 +229,12 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (currentManageTokenPanel) {
 				currentManageTokenPanel.reveal(vscode.ViewColumn.One);
 			} else {
-				manageTokenWebviewProvider.initializeWebview();
-				if (manageTokenWebviewProvider.mainPanel) {
-					manageTokenWebviewProvider.mainPanel.onDidDispose(() => {
-						manageTokenWebviewProvider.mainPanel = null;
+				currentManageTokenPanel = manageTokenWebviewProvider.initializeWebview();
+				mainWebviewProvider.manageTokenPanel = currentManageTokenPanel;
+
+				if (manageTokenWebviewProvider.manageTokenPanel) {
+					manageTokenWebviewProvider.manageTokenPanel.onDidDispose(() => {
+						mainWebviewProvider.manageTokenPanel = null;
 						currentManageTokenPanel = null;
 					}, null);
 				}

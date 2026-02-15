@@ -30,6 +30,7 @@ class MainWebviewPanel {
   private extensionUri;
   private requestHistoryProvider;
   private collectionsProvider;
+  public manageTokenPanel: vscode.WebviewPanel | null = null;
 
   private get tokenPath() {
     return getHomePath("oauth2-tokens.json");
@@ -161,6 +162,12 @@ class MainWebviewPanel {
 
         if (command === COMMAND.SET_OAUTH2_TOKENS) {
           writeFileSync(this.tokenPath, JSON.stringify(newTokenList));
+          if (this.manageTokenPanel) {
+            this.manageTokenPanel.webview.postMessage({
+              tokenList: newTokenList,
+              type: COMMAND.HAS_OAUTH2_TOKENS
+            });
+          }
           return;
         }
 

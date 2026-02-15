@@ -9,8 +9,9 @@ import {
 } from "../utils";
 
 class ManageTokenWebviewPanel {
-  public mainPanel: vscode.WebviewPanel | null = null;
+  public manageTokenPanel: vscode.WebviewPanel | null = null;
   private extensionUri;
+  public mainPanel: vscode.WebviewPanel | null = null;
 
   constructor(extensionUri: vscode.Uri) {
     this.extensionUri = extensionUri;
@@ -21,7 +22,7 @@ class ManageTokenWebviewPanel {
   }
 
   initializeWebview() {
-    this.mainPanel = vscode.window.createWebviewPanel(
+    this.manageTokenPanel = vscode.window.createWebviewPanel(
       TYPE.WEBVIEW_TYPE,
       NAME.MANAGE_TOKEN_PANEL_NAME,
       vscode.ViewColumn.One,
@@ -35,28 +36,34 @@ class ManageTokenWebviewPanel {
       },
     );
 
-    this.mainPanel.webview.html = this.getHtmlForWebview(this.mainPanel.webview);
+    this.manageTokenPanel.webview.html = this.getHtmlForWebview(this.manageTokenPanel.webview);
 
-    this.mainPanel.iconPath = vscode.Uri.joinPath(
+    this.manageTokenPanel.iconPath = vscode.Uri.joinPath(
       this.extensionUri,
       "icons/images/apitester-icon.png",
     );
 
-    this.mainPanel.onDidDispose(() => { this.mainPanel = null; }, null);
+    this.manageTokenPanel.onDidDispose(() => { this.manageTokenPanel = null; }, null);
 
     this.receiveWebviewMessage();
 
-    return this.mainPanel;
+    return this.manageTokenPanel;
   }
 
   private receiveWebviewMessage() {
-    if (!this.mainPanel) {
+    if (!this.manageTokenPanel) {
       return;
     }
 
-    this.mainPanel.webview.onDidReceiveMessage(({ command, newTokenList }) => {
+    this.manageTokenPanel.webview.onDidReceiveMessage(({ command, newTokenList }) => {
       if (command === COMMAND.SET_OAUTH2_TOKENS) {
         writeFileSync(this.tokenPath, JSON.stringify(newTokenList));
+        if (this.mainPanel) {
+          this.mainPanel.webview.postMessage({
+            tokenList: newTokenList,
+            type: COMMAND.HAS_OAUTH2_TOKENS
+          });
+        }
         return;
       }
 
@@ -64,8 +71,8 @@ class ManageTokenWebviewPanel {
         try {
           const tokenList = getStoredOAuthTokens(this.tokenPath);
           const tokenListObject = { tokenList, type: COMMAND.HAS_OAUTH2_TOKENS };
-          if (this.mainPanel) {
-            this.mainPanel.webview.postMessage(tokenListObject);
+          if (this.manageTokenPanel) {
+            this.manageTokenPanel.webview.postMessage(tokenListObject);
           }
         } catch (error) {
           console.error("Error loading tokens: ", error);

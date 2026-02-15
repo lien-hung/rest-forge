@@ -165,7 +165,7 @@ const RequestOAuth2NewToken = () => {
         return;
       }
       addToken(credentials);
-    };
+    }
   };
 
   useEffect(() => {

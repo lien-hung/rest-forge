@@ -111,6 +111,19 @@ const RequestOAuth2 = () => {
     setIsRefreshPending(false);
   };
 
+  const handleExtensionMessage = (event: MessageEvent) => {
+    if (event.data.type === COMMON.HAS_OAUTH2_TOKENS) {
+      const newTokenList = event.data.tokenList;
+      if (selectedIndex > newTokenList.length) {
+        setSelectedIndex(0);
+      }
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("message", handleExtensionMessage);
+  }, []);
+
   useEffect(() => setAuthTableRow(), [selectedIndex, addTo]);
 
   useEffect(() => {
