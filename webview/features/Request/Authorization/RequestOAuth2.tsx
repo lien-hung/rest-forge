@@ -86,6 +86,7 @@ const RequestOAuth2 = () => {
 
   const handleRefreshToken = async () => {
     if (!selectedToken) return;
+    if (!selectedToken.refresh_token) return;
 
     const refreshRequest = {
       accessTokenUrl: selectedToken.access_token_url,
@@ -113,9 +114,10 @@ const RequestOAuth2 = () => {
 
   const handleExtensionMessage = (event: MessageEvent) => {
     if (event.data.type === COMMON.HAS_OAUTH2_TOKENS) {
-      const newTokenList = event.data.tokenList;
-      if (selectedIndex > newTokenList.length) {
+      const newTokenList = event.data.tokenList as IOAuth2Token[];
+      if (!selectedToken || newTokenList.findIndex((t) => t.timestamp === selectedToken.timestamp) === -1) {
         setSelectedIndex(0);
+        setToken("");
       }
     }
   };
@@ -127,7 +129,10 @@ const RequestOAuth2 = () => {
   useEffect(() => setAuthTableRow(), [selectedIndex, addTo]);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      removeAuthTableRow();
+      return;
+    }
 
     if (!tokenRow) {
       setAuthTableRow();
@@ -246,7 +251,9 @@ const RequestOAuth2 = () => {
                   <TokenMessage role="message">Token expires at {getExpiryTime(selectedToken)}.</TokenMessage>
                 </>
               )}
-              <a onClick={() => setIsRefreshPending(true)}>Refresh</a>
+              {selectedToken.refresh_token && (
+                <a onClick={() => setIsRefreshPending(true)}>Refresh</a>
+              )}
             </div>
           ))}
         </SelectTokenWrapper>

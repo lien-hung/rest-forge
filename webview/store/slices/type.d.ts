@@ -128,9 +128,9 @@ export interface IOAuth2Token {
   access_token: string;
   token_type: string;
   expires_in: number;
-  scope: string;
-  id_token: string;
-  refresh_token: string;
+  scope?: string;
+  id_token?: string;
+  refresh_token?: string;
   access_token_url: string;
   client_id: string;
   client_secret: string;
