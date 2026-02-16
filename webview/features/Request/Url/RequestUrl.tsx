@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { shallow, useShallow } from "zustand/shallow";
 
 import { REQUEST, RESPONSE } from "../../../constants";
-import useStore from "../../../store/useStore";
 import { KeyValueTableData } from "../../../store/slices/type";
+import useStore from "../../../store/useStore";
 import { generateParameterString, removeUrlParameter, usePrevious } from "../../../utils";
 import getUrlParameters from "../../../utils/getUrlParameters";
 
@@ -39,6 +39,12 @@ const RequestUrl = () => {
   const prevTableData = usePrevious(keyValueTableData);
   const prevDisplayUrl = usePrevious(displayUrl);
 
+  const toUrl = (tableData: KeyValueTableData[]) => {
+    const parameterString = generateParameterString(tableData);
+    const baseUrl = removeUrlParameter(displayUrl || requestUrl);
+    return baseUrl + parameterString;
+  };
+
   const handleExtensionMessage = (event: MessageEvent) => {
     if (event.data.type === RESPONSE.TREEVIEW_DATA) {
       const newDisplayUrl = initDisplayUrl();
@@ -51,57 +57,40 @@ const RequestUrl = () => {
   }, []);
 
   useEffect(() => {
-    const toUrl = (tableData: KeyValueTableData[]) => {
-      const parameterString = generateParameterString(tableData);
-      const baseUrl = removeUrlParameter(displayUrl || requestUrl);
-      return baseUrl + parameterString;
-    };
-
     // Case 1: Table data changed
     if (prevTableData.length !== keyValueTableData.length
       || prevTableData.some((param, i) => !shallow(param, keyValueTableData[i]))
     ) {
-      // Set new request URL
-      const tableData = keyValueTableData.filter(
-        d => d.optionType === REQUEST.PARAMS && d.isChecked
-      );
-      const newUrl = toUrl(tableData);
-      handleRequestUrlChange(newUrl);
+      const rows = keyValueTableData.filter(d => d.optionType === REQUEST.PARAMS && d.isChecked);
+      handleRequestUrlChange(toUrl(rows));
 
-      // Set display URL
-      if (tableData.some(d => d.authType)) {
-        setDisplayUrl(toUrl(tableData.filter(d => !d.authType)));
-      } else {
-        setDisplayUrl(newUrl);
-      }
+      const nonAuthRows = rows.filter(d => !d.authType);
+      setDisplayUrl(toUrl(nonAuthRows));
+
       return;
     }
 
     // Case 2: Request URL changed
     if (prevDisplayUrl !== displayUrl) {
-      const prevUrlParams = getUrlParameters(prevDisplayUrl);
       const urlParams = getUrlParameters(displayUrl);
-      const urlParamsCount = urlParams.length;
-      const allParams = keyValueTableData.filter(d => d.optionType === REQUEST.PARAMS);
+      const tableParams = keyValueTableData.filter(d => d.optionType === REQUEST.PARAMS);
 
-      const authParam = allParams.find(p => p.authType);
-      if (urlParamsCount === 0 && !authParam) {
+      if (!urlParams.length || !tableParams.find(p => p.authType)) {
         handleRequestUrlChange(displayUrl);
-      } else if (prevUrlParams.every((param, i) => shallow(param, urlParams[i]))) {
-        const newUrl = toUrl(allParams.filter(p => p.isChecked));
-        handleRequestUrlChange(newUrl);
       }
 
-      // Map existing URL parameters to rows
-      const urlTableParams = allParams.filter(p => !p.authType);
-      let newParams = urlTableParams.map(p => {
-        if (!p.isChecked || urlParams.length === 0) return p;
+      const newTableParams = tableParams.map(row => {
+        if (row.authType || !row.isChecked) {
+          return row;
+        }
         const urlParam = urlParams.shift();
-        return urlParam ? { ...p, key: urlParam.key, value: urlParam.value } : p;
-      });
+        if (urlParam) {
+          return { ...row, key: urlParam.key, value: urlParam.value };
+        }
+      }).filter(Boolean) as KeyValueTableData[];
 
-      if (urlParams.length > 0) {
-        newParams.splice(-1, 0, ...urlParams.map(p => ({
+      if (urlParams.length) {
+        newTableParams.splice(-1, 0, ...urlParams.map(p => ({
           id: crypto.randomUUID(),
           optionType: REQUEST.PARAMS,
           isChecked: true,
@@ -109,22 +98,10 @@ const RequestUrl = () => {
           value: p.value,
           rowReadOnly: false,
         })));
-      } else {
-        // Remove excess params from the end of URL
-        const toRemoveCount = newParams.filter(p => p.isChecked).length - urlParamsCount;
-        const toRemove: KeyValueTableData[] = [];
-        for (let i = newParams.length - 1; i >= 0 && toRemove.length < toRemoveCount; i--) {
-          if (newParams[i].isChecked) toRemove.push(newParams[i]);
-        }
-        newParams = newParams.filter(p => !toRemove.some(r => r.id === p.id));
       }
 
       const otherRows = keyValueTableData.filter(d => d.optionType !== REQUEST.PARAMS);
-      if (authParam) {
-        handleTreeViewTableData([authParam, ...newParams, ...otherRows]);
-      } else {
-        handleTreeViewTableData([...newParams, ...otherRows]);
-      }
+      handleTreeViewTableData([...newTableParams, ...otherRows]);
     }
   }, [keyValueTableData, displayUrl]);
 
