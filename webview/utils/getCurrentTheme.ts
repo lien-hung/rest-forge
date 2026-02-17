@@ -33,10 +33,8 @@ const getCurrentTheme = (): IEditorTheme => {
 
     // Suggest widget (IntelliSense)
     "editorSuggestWidget.background": editorStyles.getPropertyValue("--vscode-editorSuggestWidget-background"),
-    "editorSuggestWidget.foreground": editorStyles.getPropertyValue("--vscode-editorSuggestWidget-foreground"),
     "editorSuggestWidget.focusHighlightForeground": editorStyles.getPropertyValue("--vscode-editorSuggestWidget-focusHighlightForeground"),
     "editorSuggestWidget.highlightForeground": editorStyles.getPropertyValue("--vscode-editorSuggestWidget-highlightForeground"),
-    "editorSuggestWidget.selectedForeground": editorStyles.getPropertyValue("--vscode-editorSuggestWidget-selectedForeground"),
 
     // Sticky scroll
     "editorStickyScroll.shadow": "#00000022",

@@ -1,5 +1,5 @@
 import { Editor, Monaco } from "@monaco-editor/react";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { COMMON, OPTION, REQUEST, RESPONSE } from "../constants";
@@ -32,17 +32,22 @@ function CodeEditor({
 }: ICodeEditorProps) {
   const editorRef = useRef<any>(null);
   const monacoRef = useRef<Monaco>(null);
-  const currentThemeRef = useRef<IEditorTheme>(getCurrentTheme());
-  const tokenColorsRef = useRef<ITokenColor[]>([]);
+
+  const [currentTheme, setCurrentTheme] = useState<IEditorTheme>({
+    base: "vs-dark",
+    colors: {},
+    fontFamily: OPTION.EDITOR_DEFAULT_FONT_FAMILY
+  });
+  const [tokenColors, setTokenColors] = useState<ITokenColor[]>([]);
 
   const setEditorTheme = () => {
     if (!monacoRef.current) return;
 
     monacoRef.current.editor.defineTheme("currentTheme", {
-      base: currentThemeRef.current.base,
+      base: currentTheme.base,
       inherit: true,
-      rules: tokenColorsRef.current,
-      colors: currentThemeRef.current.colors,
+      rules: tokenColors,
+      colors: currentTheme.colors,
     });
     monacoRef.current.editor.setTheme("currentTheme");
   }
@@ -50,16 +55,13 @@ function CodeEditor({
   const handleEditorDidMount = (editor: any, monaco: Monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
-    setEditorTheme();
+    setCurrentTheme(getCurrentTheme());
   };
 
   const handleExtensionMessage = (event: MessageEvent) => {
-    if (event.data.type === COMMON.THEME_CHANGED) {
-      currentThemeRef.current = getCurrentTheme();
-    }
-    if (event.data.type === COMMON.THEME_CHANGED || event.data.type === COMMON.HAS_TOKEN_COLORS) {      
-      tokenColorsRef.current = event.data.tokenColors;
-      setEditorTheme();
+    if (event.data.type === COMMON.THEME_CHANGED || event.data.type === COMMON.HAS_TOKEN_COLORS) {
+      setTokenColors(event.data.tokenColors);
+      setCurrentTheme(getCurrentTheme());
     }
   };
 
@@ -67,6 +69,8 @@ function CodeEditor({
     window.addEventListener("message", handleExtensionMessage);
     vscode.postMessage({ command: COMMON.INIT_TOKEN_COLORS });
   }, []);
+
+  useEffect(() => setEditorTheme(), [currentTheme]);
 
   useEffect(() => {
     if (shouldBeautifyEditor && requestForm) {
@@ -108,7 +112,7 @@ function CodeEditor({
         <Editor
           language={language}
           value={codeEditorValue}
-          options={{ ...editorOption, fontFamily: currentThemeRef.current.fontFamily }}
+          options={{ ...editorOption, fontFamily: currentTheme.fontFamily }}
           onChange={handleEditorChange}
           onMount={handleEditorDidMount}
         />
@@ -126,10 +130,14 @@ const EditorWrapper = styled.div`
       .current-line {
         background-color: var(--vscode-editor-lineHighlightBackground);
       }
-        
+
       .current-line-exact {
         border: var(--vscode-editor-lineHighlightBorder);
       }
+    }
+
+    .suggest-widget {
+      border: var(--vscode-editorSuggestWidget-border);
     }
   }
 `;
