@@ -24,7 +24,14 @@ const RequestUrl = () => {
   );
 
   const removeFirstParam = (url: string) => {
-    const [baseUrl, paramStr] = url.split("?");
+    const searchIndex = url.indexOf("?");
+    if (searchIndex === -1) {
+      return url;
+    }
+    
+    const baseUrl = url.slice(0, searchIndex);
+    const paramStr = url.slice(searchIndex + 1);
+
     const firstDelimiterIndex = paramStr.indexOf("&");
     const newParamStr = paramStr.slice(firstDelimiterIndex + 1);
     return `${baseUrl}?${newParamStr}`;

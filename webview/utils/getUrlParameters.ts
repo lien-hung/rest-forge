@@ -1,5 +1,10 @@
 function getUrlParameters(url: string) {
-  const paramsStr = url.split("?").at(1);
+  const searchIndex = url.indexOf("?");
+  if (searchIndex === -1) {
+    return [];
+  }
+
+  const paramsStr = url.slice(searchIndex + 1);
   if (!paramsStr) {
     return [];
   }
