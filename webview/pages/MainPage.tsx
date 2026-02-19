@@ -8,7 +8,6 @@ import ResponsePanel from "../features/Response/Panel/ResponsePanel";
 
 import { COMMON } from "../constants";
 import useStore from "../store/useStore";
-import { ExtensionConfig } from "../store/slices/type";
 
 function MainPage() {
   const { setConfig, setOAuth2Tokens } = useStore(
@@ -20,7 +19,7 @@ function MainPage() {
   
   const handleExtensionMessage = (event: MessageEvent) => {
     if (event.data.type === COMMON.HAS_CONFIG) {
-      const config = JSON.parse(event.data.config) as ExtensionConfig;
+      const config = event.data.config;
       setConfig(config);
     } else if (event.data.type === COMMON.HAS_OAUTH2_TOKENS) {
       const tokens = event.data.tokenList;

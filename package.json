@@ -111,6 +111,11 @@
         "title": "Manage OAuth 2.0 Tokens",
         "command": "api-tester.manageTokens",
         "category": "API Tester"
+      },
+      {
+        "title": "Import from cURL",
+        "command": "api-tester.importCurl",
+        "category": "API Tester"
       }
     ],
     "views": {
@@ -305,6 +310,7 @@
     "@types/react-dom": "^19.2.3",
     "@types/styled-components": "^5.1.36",
     "@types/vscode": "^1.107.0",
+    "@types/yargs-parser": "^21.0.3",
     "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^2.5.2",
     "buffer": "^6.0.3",
@@ -320,6 +326,7 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
+    "fast-xml-parser": "^5.3.6",
     "form-data": "^4.0.5",
     "postman-code-generators": "^2.1.0",
     "postman-collection": "^5.2.0",
@@ -328,6 +335,7 @@
     "react-spinners": "^0.17.0",
     "styled-components": "^6.1.19",
     "use-debounce": "^10.0.6",
+    "yargs-parser": "^22.0.0",
     "zustand": "^5.0.9"
   }
 }

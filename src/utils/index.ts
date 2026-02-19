@@ -8,4 +8,5 @@ export { default as getMethodIcons } from "./getMethodIcons";
 export { default as getNonce } from "./getNonce";
 export { default as getStoredOAuthTokens } from "./getStoredOAuthTokens";
 export { default as getUrl } from "./getUrl";
+export { default as parseCurl } from "./parseCurl";
 export { default as getHomePath } from "./path";

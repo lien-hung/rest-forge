@@ -20,22 +20,22 @@ export interface IRequestTreeItemState {
   requestedTime: number;
   id: string;
   name: string;
-  requestObject: RequestObject;
+  requestObject: IRequestObject;
 }
 
 export interface Headers {
   [key: string]: string;
 }
 
-export interface RequestObject {
+export interface IRequestObject {
   requestMethod: string;
   requestUrl: string;
   authOption: string;
-  authData: AuthData;
+  authData: IAuthData;
   bodyOption: string;
   bodyRawOption: string;
-  bodyRawData: BodyRawData;
-  keyValueTableData: KeyValueTableData[];
+  bodyRawData: IBodyRawData;
+  keyValueTableData: IKeyValueTable[];
 }
 
 export interface IRequestHeaderInformation {
@@ -62,23 +62,6 @@ export interface IHeaderAuth {
   password: string;
   token: string;
   tokenPrefix: string;
-}
-
-export interface IRequestObjectType {
-  requestMethod: string;
-  requestUrl: string;
-  authOption: string;
-  authData: AuthData;
-  bodyOption: string;
-  bodyRawOption: string;
-  bodyRawData: BodyRawData;
-  keyValueTableData: IKeyValueTable[];
-}
-
-export interface IAuthData {
-  username: string;
-  password: string;
-  token: string;
 }
 
 export interface IKeyValueTable {
@@ -112,4 +95,35 @@ export interface IOAuth2Request {
   challengeType?: string;
   scope?: string;
   state?: string;
+}
+
+export interface IMultipartUpload {
+  name: string;
+  value: string;
+  type: "file" | "text";
+  enabled: boolean;
+}
+
+export interface ICurlRequest {
+  url: string;
+  method: string;
+  headers: { [key: string]: string };
+  auth: {
+    mode: "basic",
+    basic: {
+      username: string;
+      password: string;
+    }
+  };
+  data?: string;
+  multipartUploads: IMultipartUpload[];
+  cookies: { [key: string]: string | undefined };
+  cookieString: string;
+  urlWithoutQuery: string;
+  queries: ({ name: string, value: string } | undefined)[];
+  isQuery?: boolean;
+  isDataRaw: boolean;
+  isDataBinary: boolean;
+  insecure: boolean;
+  [otherProp: string]: any;
 }

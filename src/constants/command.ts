@@ -19,6 +19,7 @@ const COMMAND = {
   DELETE_COLLECTION_REQUEST: "api-tester.deleteRequestInCollection",
 
   MANAGE_TOKENS: "api-tester.manageTokens",
+  IMPORT_CURL: "api-tester.importCurl",
 
   ADD: "Add",
   DELETE: "Delete",

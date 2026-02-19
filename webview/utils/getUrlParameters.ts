@@ -10,7 +10,7 @@ function getUrlParameters(url: string) {
   }
 
   const params = paramsStr.split("&");
-  const paramsTable = params.map((param) => {
+  const paramPairs = params.map((param) => {
     let key = "";
     let value = "";
 
@@ -26,7 +26,7 @@ function getUrlParameters(url: string) {
     };
   });
 
-  return paramsTable;
+  return paramPairs;
 }
 
 export default getUrlParameters;

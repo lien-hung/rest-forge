@@ -3,11 +3,12 @@ import * as vscode from 'vscode';
 import CollectionsProvider from './collections';
 import { RequestCollection, RequestCollectionItem } from './collections/tree-items';
 import { COMMAND, MESSAGE, TYPE } from "./constants";
+import MainWebviewPanel from './panels/main';
+import ManageTokenWebviewPanel from './panels/manage-tokens';
 import RequestHistoryProvider from './request-history';
 import { RequestHistoryTreeItem } from './request-history/tree-items';
-import MainWebviewPanel from './panels/main';
+import { parseCurl } from './utils';
 import getTokenColors from './utils/getTokenColors';
-import ManageTokenWebviewPanel from './panels/manage-tokens';
 
 export async function activate(context: vscode.ExtensionContext) {
 	const requestHistoryProvider = new RequestHistoryProvider(context);
@@ -23,15 +24,17 @@ export async function activate(context: vscode.ExtensionContext) {
 	let currentMainPanel: vscode.WebviewPanel | null = null;
 	let currentManageTokenPanel: vscode.WebviewPanel | null = null;
 
+	const handleInput = async (placeHolder: string) => {
+		const input = await vscode.window.showInputBox({ placeHolder });
+		return input;
+	};
+
 	const handleInputName = async () => {
 		const inputName = await vscode.window.showInputBox({
 			placeHolder: "New name",
 			validateInput: (value) => !value.trim() ? MESSAGE.NAME_EMPTY : null,
 		});
-		if (!inputName) {
-			return;
-		}
-		return inputName.trim();
+		return inputName;
 	};
 
 	const initializePanel = (collectionName?: string, requestName?: string, id?: string) => {
@@ -96,7 +99,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				return;
 			}
 
-			const newRequest = { ...item.request, name: requestName };
+			const newRequest = { ...item.request, name: requestName.trim() };
 			requestHistoryProvider.delete(item);
 			requestHistoryProvider.add(newRequest);
 		}
@@ -149,11 +152,11 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (!collectionName) {
 				return;
 			}
-			if (collectionsProvider.isCollectionExist(collectionName)) {
+			if (collectionsProvider.isCollectionExist(collectionName.trim())) {
 				await vscode.window.showInformationMessage(MESSAGE.COLLECTION_EXISTS);
 				return;
 			}
-			collectionsProvider.add(collectionName);
+			collectionsProvider.add(collectionName.trim());
 		}
 	);
 
@@ -164,11 +167,11 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (!newName) {
 				return;
 			}
-			if (collectionsProvider.isCollectionExist(newName)) {
+			if (collectionsProvider.isCollectionExist(newName.trim())) {
 				await vscode.window.showInformationMessage(MESSAGE.COLLECTION_EXISTS);
 				return;
 			}
-			collectionsProvider.renameCollection(collection.name, newName);
+			collectionsProvider.renameCollection(collection.name, newName.trim());
 		}
 	);
 
@@ -193,7 +196,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (!requestName) {
 				return;
 			}
-			initializePanel(collection.name, requestName);
+			initializePanel(collection.name, requestName.trim());
 		}
 	);
 
@@ -212,7 +215,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (!newRequestName) {
 				return;
 			}
-			collectionsProvider.renameItem(collectionName, requestItem.id!, newRequestName);
+			collectionsProvider.renameItem(collectionName, requestItem.id!, newRequestName.trim());
 		}
 	);
 
@@ -242,9 +245,24 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	);
 
+	const disp_importCurlCmd = vscode.commands.registerCommand(
+		COMMAND.IMPORT_CURL,
+		async () => {
+			const inputCurl = await handleInput("CURL command");
+			if (!inputCurl || !inputCurl.trim()) {
+				return;
+			}
+			const request = parseCurl(inputCurl);
+
+			initializePanel();
+			setTimeout(() => currentMainPanel?.webview.postMessage({ type: TYPE.TREEVIEW_DATA, ...request }), 1000);
+		}
+	);
+
 	const disp_onThemeChangeHandler = vscode.window.onDidChangeActiveColorTheme(() => {
 		if (currentMainPanel) {
-			const themeName: string = vscode.workspace.getConfiguration("workbench").get("colorTheme") || "";
+			const workbenchConfig = vscode.workspace.getConfiguration("workbench");
+			const themeName: string = workbenchConfig.get("colorTheme") || "";
 			const tokenColors = getTokenColors(themeName);
 			currentMainPanel.webview.postMessage({ tokenColors, type: TYPE.THEME_CHANGED });
 		}
@@ -259,7 +277,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (paramError) {
 				const paramErrorDesc = queryParams.get("error_description");
 				const paramErrorUri = queryParams.get("error_uri");
-				vscode.window.showErrorMessage(`Authorization failed: ${paramError} (${paramErrorDesc}) [${paramErrorUri}]`);
+				vscode.window.showErrorMessage(`Authorization failed: ${paramErrorDesc} [${paramErrorUri}]`);
 				return;
 			}
 
@@ -298,6 +316,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disp_deleteCollectionRequestCmd);
 
 	context.subscriptions.push(disp_manageTokensCmd);
+	context.subscriptions.push(disp_importCurlCmd);
 
 	// Subscribe handlers
 	context.subscriptions.push(disp_onThemeChangeHandler);

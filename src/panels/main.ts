@@ -13,7 +13,7 @@ import {
   getStoredOAuthTokens,
   getUrl,
 } from "../utils";
-import { IRequestHeaderInformation, IRequestObjectType } from "../utils/type";
+import { IRequestHeaderInformation, IRequestObject } from "../utils/type";
 import RequestHistoryProvider from "../request-history";
 import CollectionsProvider from "../collections";
 import getTokenColors from "../utils/getTokenColors";
@@ -119,7 +119,7 @@ class MainWebviewPanel {
         if (command === COMMAND.INIT_CONFIG) {
           const configObject = {
             type: COMMAND.HAS_CONFIG,
-            config: JSON.stringify(getExtensionConfig())
+            config: getExtensionConfig()
           };
 
           if (this.mainPanel) {
@@ -215,7 +215,7 @@ class MainWebviewPanel {
     );
   }
 
-  private async postWebviewMessage(requestObject: IRequestObjectType) {
+  private async postWebviewMessage(requestObject: IRequestObject) {
     const requestData = {
       url: this.url,
       method: this.method,
