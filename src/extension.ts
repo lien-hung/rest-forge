@@ -117,6 +117,12 @@ export async function activate(context: vscode.ExtensionContext) {
 			);
 
 			if (collectionName) {
+				const requestName = await handleInputName();
+				if (!requestName) {
+					return;
+				}
+
+				item.request.name = requestName;
 				collectionsProvider.add(collectionName, item.request);
 			}
 		}
