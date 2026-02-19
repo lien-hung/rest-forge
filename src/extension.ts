@@ -261,7 +261,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			const request = parseCurl(inputCurl);
 
 			initializePanel();
-			setTimeout(() => currentMainPanel?.webview.postMessage({ type: TYPE.TREEVIEW_DATA, ...request }), 1000);
+			currentMainPanel?.webview.postMessage({ type: TYPE.TREEVIEW_DATA, ...request });
 		}
 	);
 

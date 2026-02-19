@@ -283,7 +283,7 @@
             "type": "string"
           },
           "default": [],
-          "description": "Custom HTTP methods (e.g. PROPFIND, REPORT). Must be in uppercase."
+          "description": "Custom HTTP methods (e.g. PROPFIND, REPORT)."
         }
       }
     }
