@@ -1,25 +1,22 @@
 import { Buffer } from "buffer";
 import { Request } from "postman-collection";
 
-import { COMMON, REQUEST } from "../constants";
-import { IAuthData, IBodyRawData, IParameterString } from "./type";
+import { REQUEST } from "../constants";
+import { IAuthData, IBodyRawData, ITableData, OptionType } from "./type";
 
 const generateSdkRequestObject = (
   url: string,
   method: string,
-  keyValueTableData: IParameterString[],
+  tableData: ITableData,
   authOption: string,
   authData: IAuthData,
-  bodyOption: string,
+  bodyOption: OptionType,
   bodyRawOption: string,
   bodyRawData: IBodyRawData
 ) => {
-  const requestHeader = keyValueTableData.filter(
-    (data) => data.optionType === COMMON.HEADERS && data.key.length > 0,
-  );
-  const bodyData = keyValueTableData.filter(
-    (data) => data.optionType === bodyOption && data.key.length > 0,
-  );
+  const requestHeaders = tableData["Headers"].filter((data) => data.key.length > 0);
+  const bodyData = tableData[bodyOption].filter((data) => data.key.length > 0);
+  
   const { username, password, token, tokenPrefix } = authData;
   let authHeaderObject: any = undefined;
   let authMode: "noauth" | "bearer" | "basic" = "noauth";
@@ -61,7 +58,7 @@ const generateSdkRequestObject = (
   const requestObject = new Request({
     method: method,
     url: url,
-    header: [...requestHeader, authHeaderObject],
+    header: [...requestHeaders, authHeaderObject],
     body: {
       mode: bodyMode,
       [bodyMode]: bodyData.length

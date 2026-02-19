@@ -8,7 +8,7 @@ const TYPE = {
   TREEVIEW_DATA: "Selected Collection Data",
   
   BODY_RAW: "Raw",
-  BODY_FORM_URLENCODED: "x-www-form-urlencoded",
+  BODY_FORM_URLENCODED: "Form Encoded",
   BODY_FORM_DATA: "Form Data",
   
   AUTHORIZATION: "Authorization",

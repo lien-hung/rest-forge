@@ -1,24 +1,22 @@
 import { XMLValidator } from "fast-xml-parser";
 import parser from "yargs-parser";
 
-import { IKeyValueTable, IRequestObject } from "./type";
+import { ITableRow, IRequestObject } from "./type";
 import { TYPE } from "../constants";
 
-const emptyTableRow = (optionType: string) =>
-  ({ id: crypto.randomUUID(), optionType, isChecked: false, key: "", value: "", rowReadOnly: false });
+const emptyTableRow = () =>
+  ({ id: crypto.randomUUID(), isChecked: false, key: "", value: "", rowReadOnly: false });
 
 const newTableRow = ({
-  optionType,
   key,
   value,
   rowReadOnly = false
 }: {
-  optionType: string,
   key: string,
   value: string,
   rowReadOnly?: boolean
 }) =>
-  ({ id: crypto.randomUUID(), optionType, isChecked: true, key, value, rowReadOnly });
+  ({ id: crypto.randomUUID(), isChecked: true, key, value, rowReadOnly });
 
 function parseCurl(command: string) {
   if (!command.trim()) {
@@ -44,12 +42,12 @@ function parseCurl(command: string) {
     bodyOption: "None",
     bodyRawOption: "Text",
     bodyRawData: { text: "", javascript: "", json: "", html: "", xml: "" },
-    keyValueTableData: [
-      emptyTableRow("Params"),
-      emptyTableRow("Headers"),
-      emptyTableRow("Form Data"),
-      emptyTableRow("x-www-form-urlencoded"),
-    ]
+    tableData: {
+      "Params": [emptyTableRow()],
+      "Headers": [emptyTableRow()],
+      "Form Data": [emptyTableRow()],
+      "Form Encoded": [emptyTableRow()],
+    }
   };
 
   const isJson = (str: string) => {
@@ -78,11 +76,7 @@ function parseCurl(command: string) {
   const addHeader = (item: string) => {
     const field = parseField(item);
     if (!isAuthHeader(field)) {
-      request.keyValueTableData.splice(-4, 0, newTableRow({
-        optionType: "Headers",
-        key: field[0],
-        value: field[1]
-      }));
+      request.tableData["Headers"].splice(-1, 0, newTableRow({ key: field[0], value: field[1] }));
     }
   };
 
@@ -100,10 +94,10 @@ function parseCurl(command: string) {
   };
 
   const parseData = (data: any) => {
-    const contentTypeHeader = request.keyValueTableData.find(d => d.optionType === "Headers" && d.key.toLowerCase() === "content-type")?.value;
+    const contentTypeHeader = request.tableData["Headers"].find(d => d.key.toLowerCase() === "content-type")?.value;
     if (contentTypeHeader?.includes("application/x-www-form-urlencoded")) {
       request.bodyOption = TYPE.BODY_FORM_URLENCODED;
-      request.keyValueTableData.splice(-4, 0, ...parseDataUrlEncode(data));
+      request.tableData["Form Encoded"].splice(-1, 0, ...parseDataUrlEncode(data));
     } else {
       request.bodyOption = TYPE.BODY_RAW;
       if (contentTypeHeader?.includes("application/json") || isJson(data)) {
@@ -123,11 +117,10 @@ function parseCurl(command: string) {
   };
 
   const parseDataUrlEncode = (data: string | string[]) => {
-    const contentTypeHeader = request.keyValueTableData.find(d => d.optionType === "Headers" && d.key.toLowerCase() === "content-type")?.value;
+    const contentTypeHeader = request.tableData["Headers"].find(d => d.key.toLowerCase() === "content-type")?.value;
 
     if (!contentTypeHeader) {
-      request.keyValueTableData.splice(-4, 0, newTableRow({
-        optionType: "Headers",
+      request.tableData["Headers"].splice(-1, 0, newTableRow({
         key: "Content-Type",
         value: "application/x-www-form-urlencoded",
         rowReadOnly: true
@@ -144,14 +137,10 @@ function parseCurl(command: string) {
 
   const generateFormUrlEncoded = (data: string) => {
     const searchParams = new URLSearchParams(data);
-    const params: IKeyValueTable[] = [];
+    const params: ITableRow[] = [];
     for (const p of searchParams) {
       if (p[0] && p[0].trim()) {
-        const tableRow = newTableRow({
-          optionType: "x-www-form-urlencoded",
-          key: p[0].trim(),
-          value: p[1].trim()
-        });
+        const tableRow = newTableRow({ key: p[0].trim(), value: p[1].trim() });
         params.push(tableRow);
       }
     }
@@ -179,7 +168,7 @@ function parseCurl(command: string) {
 
       case "X":
       case "request":
-        request.requestMethod = argvs[argv].toString().toLowerCase();
+        request.requestMethod = argvs[argv].toString();
         break;
 
       case "H":
@@ -200,11 +189,7 @@ function parseCurl(command: string) {
 
       case "A":
       case "user-agent":
-        request.keyValueTableData.splice(-4, 0, newTableRow({
-          optionType: "Headers",
-          key: "user-agent",
-          value: argvs[argv]
-        }));
+        request.tableData["Headers"].splice(-1, 0, newTableRow({ key: "user-agent", value: argvs[argv] }));
         break;
 
       case "I":
@@ -214,11 +199,7 @@ function parseCurl(command: string) {
 
       case "b":
       case "cookie":
-        request.keyValueTableData.splice(-4, 0, newTableRow({
-          optionType: "Headers",
-          key: "Set-Cookie",
-          value: argvs[argv]
-        }));
+        request.tableData["Headers"].splice(-1, 0, newTableRow({ key: "Set-Cookie", value: argvs[argv] }));
         break;
 
       case "d":
@@ -231,16 +212,15 @@ function parseCurl(command: string) {
 
       case "data-urlencode":
         request.bodyOption = TYPE.BODY_FORM_URLENCODED;
-        request.keyValueTableData.splice(-4, 0, ...parseDataUrlEncode(argvs[argv]));
+        request.tableData["Form Encoded"].splice(-1, 0, ...parseDataUrlEncode(argvs[argv]));
         setRequestMethod();
         break;
 
       case "compressed":
         {
-          const index = request.keyValueTableData.findIndex(d => d.optionType === "Headers" && d.key.toLowerCase() === "accept-encoding");
+          const index = request.tableData["Headers"].findIndex(d => d.key.toLowerCase() === "accept-encoding");
           if (index === -1) {
-            request.keyValueTableData.splice(-4, 0, newTableRow({
-              optionType: "Headers",
+            request.tableData["Headers"].splice(-1, 0, newTableRow({
               key: "Accept-Encoding",
               value: argvs[argv] ? (typeof argvs[argv] === "boolean" ? "gzip, deflate" : argvs[argv]) : "gzip, deflate",
             }));

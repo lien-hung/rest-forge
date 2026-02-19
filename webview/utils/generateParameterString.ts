@@ -1,6 +1,6 @@
-import { IParameterString } from "./type";
+import { ITableRow } from "./type";
 
-function generateParameterString(searchParamsData: IParameterString[]) {
+function generateParameterString(searchParamsData: ITableRow[]) {
   if (searchParamsData.length === 0) {
     return "";
   }

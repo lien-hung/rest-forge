@@ -5,18 +5,18 @@ import { useShallow } from "zustand/shallow";
 import Wrapper from "../../../components/Wrapper";
 import InputWrapper from "../../../components/InputWrapper";
 import useStore from "../../../store/useStore";
-import { COMMON, OPTION, REQUEST } from "../../../constants";
+import { OPTION, REQUEST } from "../../../constants";
 
 const RequestAuthApiKey = () => {
   const {
-    keyValueTableData,
+    tableData,
     addAuthTableRow,
     removeAuthTableRow,
     handleRequestKey,
     handleRequestValue,
   } = useStore(
     useShallow((state) => ({
-      keyValueTableData: state.keyValueTableData,
+      tableData: state.tableData,
       addAuthTableRow: state.addAuthTableRow,
       removeAuthTableRow: state.removeAuthTableRow,
       handleRequestKey: state.handleRequestKey,
@@ -24,19 +24,21 @@ const RequestAuthApiKey = () => {
     }))
   );
 
-  const apiKeyRow = keyValueTableData.find((d) => d.authType === REQUEST.API_KEY);
+  const apiKeyHeader = tableData["Headers"].find((d) => d.authType === REQUEST.API_KEY);
+  const apiKeyParam = tableData["Params"].find((d) => d.authType === REQUEST.API_KEY);
+  const apiKeyRow = apiKeyHeader || apiKeyParam;
+
   if (!apiKeyRow) return;
 
-  const addTo = apiKeyRow.optionType === COMMON.HEADERS
-    ? REQUEST.ADD_TO_HEADERS
-    : REQUEST.ADD_TO_QUERY_PARAMS;
+  const addTo = apiKeyHeader ? REQUEST.ADD_TO_HEADERS : REQUEST.ADD_TO_QUERY_PARAMS;
+  const apiKeyOptionType = apiKeyHeader ? "Headers" : "Params";
 
   const handleAddOptionChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    removeAuthTableRow();
+    removeAuthTableRow(apiKeyOptionType);
     if (event.target.value === REQUEST.ADD_TO_HEADERS) {
-      addAuthTableRow(REQUEST.API_KEY, COMMON.HEADERS, apiKeyRow.key, apiKeyRow.value);
+      addAuthTableRow(REQUEST.API_KEY, "Headers", apiKeyRow.key, apiKeyRow.value);
     } else {
-      addAuthTableRow(REQUEST.API_KEY, REQUEST.PARAMS, apiKeyRow.key, apiKeyRow.value);
+      addAuthTableRow(REQUEST.API_KEY, "Params", apiKeyRow.key, apiKeyRow.value);
     }
   };
   
@@ -49,7 +51,7 @@ const RequestAuthApiKey = () => {
           name="key"
           placeholder="Key"
           value={apiKeyRow.key}
-          onChange={(event) => handleRequestKey(apiKeyRow.id, event.target.value)}
+          onChange={(event) => handleRequestKey(apiKeyOptionType, apiKeyRow.id, event.target.value)}
         />
       </InputWrapper>
       <InputWrapper>
@@ -59,7 +61,7 @@ const RequestAuthApiKey = () => {
           name="value"
           placeholder="Value"
           value={apiKeyRow.value}
-          onChange={(event) => handleRequestValue(apiKeyRow.id, event.target.value)}
+          onChange={(event) => handleRequestValue(apiKeyOptionType, apiKeyRow.id, event.target.value)}
         />
       </InputWrapper>
       <InputWrapper>

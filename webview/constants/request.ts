@@ -21,7 +21,7 @@ const REQUEST = {
   // Body options
   NONE: "None",
   FORM_DATA: "Form Data",
-  FORM_URLENCODED: "x-www-form-urlencoded",
+  FORM_URLENCODED: "Form Encoded",
   RAW: "Raw",
 
   // Default headers

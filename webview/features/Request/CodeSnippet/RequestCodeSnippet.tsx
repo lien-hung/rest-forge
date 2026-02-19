@@ -1,5 +1,5 @@
 // @ts-ignore
-import codegen from "postman-code-generators/lib";
+import codegen from "postman-code-generators";
 import React, { useEffect, useMemo, ChangeEvent } from "react";
 import styled from "styled-components";
 import { useDebounce } from "use-debounce";
@@ -11,6 +11,7 @@ import { COMMON, OPTION } from "../../../constants/index";
 import CodeEditor from "../../../shared/CodeEditor";
 import useStore from "../../../store/useStore";
 import { generateSdkRequestObject } from "../../../utils/index";
+import { OptionType } from "../../../store/slices/type";
 
 const RequestCodeSnippet = () => {
   const {
@@ -23,7 +24,7 @@ const RequestCodeSnippet = () => {
     bodyRawOption,
     codeSnippetValue,
     codeSnippetOption,
-    keyValueTableData,
+    tableData,
     setCodeSnippetValue,
     handleCodeSnippetOptionChange,
     handleCodeSnippetVariantChange,
@@ -33,17 +34,18 @@ const RequestCodeSnippet = () => {
       authOption: state.authOption,
       requestMethod: state.requestMethod,
       requestUrl: state.requestUrl,
-      bodyOption: state.bodyOption,
+      bodyOption: state.bodyOption as OptionType,
       bodyRawData: state.bodyRawData,
       bodyRawOption: state.bodyRawOption,
       codeSnippetValue: state.codeSnippetValue,
       codeSnippetOption: state.codeSnippetOption,
-      keyValueTableData: state.keyValueTableData,
+      tableData: state.tableData,
       setCodeSnippetValue: state.setCodeSnippetValue,
       handleCodeSnippetOptionChange: state.handleCodeSnippetOptionChange,
       handleCodeSnippetVariantChange: state.handleCodeSnippetVariantChange,
     }))
   );
+
   const DEBOUNCE_TIME_VALUE = 800;
   const [debouncedUrlValue] = useDebounce(requestUrl, DEBOUNCE_TIME_VALUE);
 
@@ -60,7 +62,7 @@ const RequestCodeSnippet = () => {
       generateSdkRequestObject(
         debouncedUrlValue,
         requestMethod,
-        keyValueTableData,
+        tableData,
         authOption,
         authData,
         bodyOption,
@@ -70,7 +72,7 @@ const RequestCodeSnippet = () => {
     [
       debouncedUrlValue,
       requestMethod,
-      keyValueTableData,
+      tableData,
       authOption,
       authData,
       bodyOption,

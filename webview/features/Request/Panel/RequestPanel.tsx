@@ -20,7 +20,7 @@ const RequestPanel = () => {
       bodyRawData: state.bodyRawData,
       bodyRawOption: state.bodyRawOption,
       requestMethod: state.requestMethod,
-      keyValueTableData: state.keyValueTableData,
+      tableData: state.tableData,
     }))
   );
   const { requestMenuWidth, handleRequestProcessStatus } = useStore(

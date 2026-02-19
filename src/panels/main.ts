@@ -13,7 +13,7 @@ import {
   getStoredOAuthTokens,
   getUrl,
 } from "../utils";
-import { IRequestHeaderInformation, IRequestObject } from "../utils/type";
+import { IParameterKeyValueData, IRequestHeaderInformation, IRequestObject } from "../utils/type";
 import RequestHistoryProvider from "../request-history";
 import CollectionsProvider from "../collections";
 import getTokenColors from "../utils/getTokenColors";
@@ -103,7 +103,7 @@ class MainWebviewPanel {
         bodyOption,
         bodyRawOption,
         bodyRawData,
-        keyValueTableData,
+        tableData,
         command
       }) => {
         if (command === COMMAND.ALERT_COPY) {
@@ -186,7 +186,7 @@ class MainWebviewPanel {
           return;
         }
 
-        const requestObject = {
+        const requestObject: IRequestObject = {
           requestMethod,
           requestUrl,
           authOption,
@@ -194,17 +194,20 @@ class MainWebviewPanel {
           bodyOption,
           bodyRawOption,
           bodyRawData,
-          keyValueTableData,
-          command,
+          tableData,
         };
+        const flatTableData = Object.keys(tableData).reduce(
+          (data, key) => [...data, tableData[key].map((row: any) => ({ ...row, optionType: key }))],
+          new Array<IParameterKeyValueData>
+        );
 
         this.url = getUrl(requestUrl);
         this.method = requestMethod;
-        this.headers = getHeaders(keyValueTableData, authOption, authData);
+        this.headers = getHeaders(flatTableData, authOption, authData);
 
         // @ts-expect-error
         this.body = getBody(
-          keyValueTableData,
+          flatTableData,
           bodyOption,
           bodyRawOption,
           bodyRawData

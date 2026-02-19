@@ -13,7 +13,17 @@ export interface BodyRawData {
   xml: string;
 }
 
-export interface KeyValueTableData {
+export interface ITableRow {
+  id: string;
+  isChecked: boolean;
+  key: string;
+  value: string;
+  rowReadOnly: boolean;
+  authType?: string;
+  prefix?: string;
+}
+
+export interface TreeViewTableRow {
   id: string;
   optionType: string;
   isChecked: boolean;
@@ -99,19 +109,29 @@ export interface ITreeViewResponse {
   bodyRawData: BodyRawData;
 }
 
+export type OptionType = "Params" | "Headers" | "Form Data" | "Form Encoded";
+
+export interface ITableData {
+  "Params": ITableRow[];
+  "Headers": ITableRow[];
+  "Form Data": ITableRow[];
+  "Form Encoded": ITableRow[];
+}
+
 export interface IKeyValueTableDataSlice {
-  keyValueTableData: KeyValueTableData[];
-  addNewTableRow: (type: string) => void;
-  deleteTableRow: (id: string) => void;
+  tableData: ITableData;
+  addNewTableRow: (type: OptionType) => void;
+  deleteTableRow: (type: OptionType, id: string) => void;
   addRequestBodyHeaders: (value: string) => void;
   removeRequestBodyHeaders: () => void;
-  addAuthTableRow: (authType: string, optionType: string, key?: string, value?: string, prefix?: string) => void;
-  removeAuthTableRow: () => void;
-  handleRequestCheckbox: (id: string) => void;
-  handleRequestKey: (id: string, detail: string) => void;
-  handleRequestValue: (id: string, detail: string) => void;
+  addAuthTableRow: (authType: string, optionType: OptionType, key?: string, value?: string, prefix?: string) => void;
+  removeAuthTableRow: (type: OptionType) => void;
+  handleRequestCheckbox: (type: OptionType, id: string) => void;
+  handleRequestKey: (type: OptionType, id: string, detail: string) => void;
+  handleRequestValue: (type: OptionType, id: string, detail: string) => void;
   handleHeaderPrefix: (id: string, detail: string) => void;
-  handleTreeViewTableData: (headers: KeyValueTableData[]) => void;
+  handleParamsTableData: (params: ITableRow[]) => void;
+  handleTreeViewTableData: (tableData: ITableData) => void;
 }
 
 export interface ExtensionConfig {

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { shallow, useShallow } from "zustand/shallow";
 
 import { REQUEST, RESPONSE } from "../../../constants";
-import { KeyValueTableData } from "../../../store/slices/type";
+import { ITableRow } from "../../../store/slices/type";
 import useStore from "../../../store/useStore";
 import { generateParameterString, removeUrlParameter, usePrevious } from "../../../utils";
 import getUrlParameters from "../../../utils/getUrlParameters";
@@ -11,15 +11,15 @@ import getUrlParameters from "../../../utils/getUrlParameters";
 const RequestUrl = () => {
   const {
     requestUrl,
-    keyValueTableData,
+    tableParams,
     handleRequestUrlChange,
-    handleTreeViewTableData,
+    handleParamsTableData,
   } = useStore(
     useShallow((state) => ({
       requestUrl: state.requestUrl,
-      keyValueTableData: state.keyValueTableData,
+      tableParams: state.tableData["Params"],
       handleRequestUrlChange: state.handleRequestUrlChange,
-      handleTreeViewTableData: state.handleTreeViewTableData,
+      handleParamsTableData: state.handleParamsTableData,
     }))
   );
 
@@ -37,17 +37,14 @@ const RequestUrl = () => {
     return `${baseUrl}?${newParamStr}`;
   }
 
-  const initDisplayUrl = () =>
-    keyValueTableData.some(d => d.optionType === REQUEST.PARAMS && d.authType)
-      ? removeFirstParam(requestUrl)
-      : requestUrl;
+  const initDisplayUrl = () => tableParams.some(d => d.authType) ? removeFirstParam(requestUrl) : requestUrl;
 
   const [displayUrl, setDisplayUrl] = useState(initDisplayUrl);
-  const prevTableData = usePrevious(keyValueTableData);
+  const prevTableData = usePrevious(tableParams);
   const prevDisplayUrl = usePrevious(displayUrl);
 
-  const toUrl = (tableData: KeyValueTableData[]) => {
-    const parameterString = generateParameterString(tableData);
+  const toUrl = (tableData: ITableRow[]) => {
+    const parameterString = generateParameterString(tableData.map(d => ({ ...d, optionType: REQUEST.PARAMS })));
     const baseUrl = removeUrlParameter(displayUrl || requestUrl);
     return baseUrl + parameterString;
   };
@@ -65,10 +62,10 @@ const RequestUrl = () => {
 
   useEffect(() => {
     // Case 1: Table data changed
-    if (prevTableData.length !== keyValueTableData.length
-      || prevTableData.some((param, i) => !shallow(param, keyValueTableData[i]))
+    if (prevTableData.length !== tableParams.length
+      || prevTableData.some((param, i) => !shallow(param, tableParams[i]))
     ) {
-      const rows = keyValueTableData.filter(d => d.optionType === REQUEST.PARAMS && d.isChecked);
+      const rows = tableParams.filter(d => d.isChecked);
       handleRequestUrlChange(toUrl(rows));
 
       const nonAuthRows = rows.filter(d => !d.authType);
@@ -80,8 +77,6 @@ const RequestUrl = () => {
     // Case 2: Request URL changed
     if (prevDisplayUrl !== displayUrl) {
       const urlParams = getUrlParameters(displayUrl);
-      const tableParams = keyValueTableData.filter(d => d.optionType === REQUEST.PARAMS);
-
       if (!urlParams.length || !tableParams.find(p => p.authType)) {
         handleRequestUrlChange(displayUrl);
       }
@@ -94,12 +89,11 @@ const RequestUrl = () => {
         if (urlParam) {
           return { ...row, key: urlParam.key, value: urlParam.value };
         }
-      }).filter(Boolean) as KeyValueTableData[];
+      }).filter(Boolean) as ITableRow[];
 
       if (urlParams.length) {
         newTableParams.splice(-1, 0, ...urlParams.map(p => ({
           id: crypto.randomUUID(),
-          optionType: REQUEST.PARAMS,
           isChecked: true,
           key: p.key,
           value: p.value,
@@ -107,10 +101,9 @@ const RequestUrl = () => {
         })));
       }
 
-      const otherRows = keyValueTableData.filter(d => d.optionType !== REQUEST.PARAMS);
-      handleTreeViewTableData([...newTableParams, ...otherRows]);
+      handleParamsTableData([...newTableParams]);
     }
-  }, [keyValueTableData, displayUrl]);
+  }, [tableParams, displayUrl]);
 
   return (
     <InputContainer

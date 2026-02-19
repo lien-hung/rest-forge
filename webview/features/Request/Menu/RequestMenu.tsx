@@ -8,17 +8,15 @@ import useStore from "../../../store/useStore";
 import RequestMenuOption from "./RequestMenuOption";
 
 const RequestMenu = () => {
-  const { requestOption, keyValueTableData, changeRequestOption } = useStore(
+  const { requestOption, tableData, changeRequestOption } = useStore(
     useShallow((state) => ({
       requestOption: state.requestOption,
-      keyValueTableData: state.keyValueTableData,
+      tableData: state.tableData,
       changeRequestOption: state.handleRequestOptionChange,
     }))
   );
 
-  const headersCount = keyValueTableData.filter(
-    (data) => data.optionType === COMMON.HEADERS && data.isChecked,
-  ).length;
+  const headersCount = tableData["Headers"].filter(row => row.isChecked).length;
 
   const handleOptionChange = (event: MouseEvent<HTMLHeadElement>) => {
     const clickedTarget = event.target as HTMLHeadElement;

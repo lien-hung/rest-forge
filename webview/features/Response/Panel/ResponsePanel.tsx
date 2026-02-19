@@ -38,7 +38,7 @@ const ResponsePanel = () => {
       handleRequestProcessStatus(RESPONSE.ERROR);
     } else if (event.data.type === RESPONSE.TREEVIEW_DATA) {
       const {
-        keyValueTableData,
+        tableData,
         authData,
         authOption,
         requestUrl,
@@ -58,7 +58,7 @@ const ResponsePanel = () => {
         bodyRawData,
       });
 
-      handleTreeViewTableData(keyValueTableData);
+      handleTreeViewTableData(tableData);
     }
   };
 

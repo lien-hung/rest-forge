@@ -19,7 +19,7 @@ const RequestOAuth2 = () => {
   const {
     tokens,
     setTokens,
-    keyValueTableData,
+    tableData,
     addAuthTableRow,
     removeAuthTableRow,
     handleRequestValue,
@@ -28,7 +28,7 @@ const RequestOAuth2 = () => {
     useShallow((state) => ({
       tokens: state.oauth2Tokens,
       setTokens: state.setOAuth2Tokens,
-      keyValueTableData: state.keyValueTableData,
+      tableData: state.tableData,
       addAuthTableRow: state.addAuthTableRow,
       removeAuthTableRow: state.removeAuthTableRow,
       handleRequestValue: state.handleRequestValue,
@@ -36,15 +36,20 @@ const RequestOAuth2 = () => {
     }))
   );
 
-  const tokenRow = keyValueTableData.find(
-    (d) => d.authType === REQUEST.ACCESS_TOKEN || d.authType === REQUEST.ID_TOKEN
+  const tokenRowHeader = tableData["Headers"].find(
+    d => d.authType === REQUEST.ACCESS_TOKEN || d.authType === REQUEST.ID_TOKEN
   );
+  const tokenRowParam = tableData["Params"].find(
+    d => d.authType === REQUEST.ACCESS_TOKEN || d.authType === REQUEST.ID_TOKEN
+  );
+  const tokenRow = tokenRowHeader || tokenRowParam;
+
   const tokenRowPrefix = tokenRow?.prefix || "Bearer";
   const initialToken = tokenRow?.value || "";
 
   const [addTo, setAddTo] = useState(
     tokenRow
-      ? (tokenRow.optionType === COMMON.HEADERS
+      ? (tokenRowHeader
         ? REQUEST.ADD_TO_HEADERS
         : REQUEST.ADD_TO_QUERY_PARAMS)
       : REQUEST.ADD_TO_HEADERS
@@ -61,6 +66,7 @@ const RequestOAuth2 = () => {
   );
   const [isRefreshPending, setIsRefreshPending] = useState(false);
 
+  const tokenOptionType = addTo === REQUEST.ADD_TO_HEADERS ? "Headers" : "Params";
   const selectedToken = tokens[selectedIndex - 1];
   const tokenHeader = `${headerPrefix} ${token}`;
 
@@ -74,12 +80,12 @@ const RequestOAuth2 = () => {
   };
 
   const setAuthTableRow = () => {
-    removeAuthTableRow();
+    removeAuthTableRow(tokenOptionType);
     if (token) {
       if (addTo === REQUEST.ADD_TO_HEADERS) {
-        addAuthTableRow(tokenType, COMMON.HEADERS, REQUEST.AUTH, tokenHeader, headerPrefix);
+        addAuthTableRow(tokenType, "Headers", REQUEST.AUTH, tokenHeader, headerPrefix);
       } else {
-        addAuthTableRow(tokenType, REQUEST.PARAMS, "access_token", token);
+        addAuthTableRow(tokenType, "Params", "access_token", token);
       }
     }
   };
@@ -130,7 +136,7 @@ const RequestOAuth2 = () => {
 
   useEffect(() => {
     if (!token) {
-      removeAuthTableRow();
+      removeAuthTableRow(tokenOptionType);
       return;
     }
 
@@ -138,9 +144,9 @@ const RequestOAuth2 = () => {
       setAuthTableRow();
     } else {
       if (addTo === REQUEST.ADD_TO_HEADERS) {
-        handleRequestValue(tokenRow.id, tokenHeader);
+        handleRequestValue(tokenOptionType, tokenRow.id, tokenHeader);
       } else {
-        handleRequestValue(tokenRow.id, token);
+        handleRequestValue(tokenOptionType, tokenRow.id, token);
       }
     }
   }, [token]);
@@ -148,7 +154,7 @@ const RequestOAuth2 = () => {
   useEffect(() => {
     if (tokenRow && addTo === REQUEST.ADD_TO_HEADERS) {
       handleHeaderPrefix(tokenRow.id, headerPrefix);
-      handleRequestValue(tokenRow.id, tokenHeader);
+      handleRequestValue("Headers", tokenRow.id, tokenHeader);
     }
   }, [headerPrefix]);
 

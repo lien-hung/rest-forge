@@ -4,6 +4,7 @@ import { useShallow } from "zustand/shallow";
 import { OPTION, REQUEST } from "../../../constants/index";
 import CodeEditor from "../../../shared/CodeEditor";
 import KeyValueTable from "../../../shared/KeyValueTable";
+import { OptionType } from "../../../store/slices/type";
 import useStore from "../../../store/useStore";
 import RequestNoBody from "./RequestNoBody";
 
@@ -15,24 +16,26 @@ const RequestBodySelectMenuOption = () => {
     handleBodyRawOptionData,
   } = useStore(
     useShallow((state) => ({
-      bodyOption: state.bodyOption,
+      bodyOption: state.bodyOption as OptionType,
       bodyRawData: state.bodyRawData,
       bodyRawOption: state.bodyRawOption.toLowerCase(),
       handleBodyRawOptionData: state.handleBodyRawOptionData,
     }))
   );
+
   const keyValueProps = useStore(
     useShallow((state) => ({
+      tableData: state.tableData[bodyOption],
       addNewTableRow: state.addNewTableRow,
       deleteTableRow: state.deleteTableRow,
       handleRequestKey: state.handleRequestKey,
-      keyValueTableData: state.keyValueTableData,
       handleRequestValue: state.handleRequestValue,
       addRequestBodyHeaders: state.addRequestBodyHeaders,
       handleRequestCheckbox: state.handleRequestCheckbox,
       removeRequestBodyHeaders: state.removeRequestBodyHeaders,
     }))
   );
+
   const codeEditorProps = useStore(
     useShallow((state) => ({
       shouldBeautifyEditor: state.shouldBeautifyEditor,

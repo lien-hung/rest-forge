@@ -30,10 +30,7 @@ const OPTION = {
   REQUEST_BODY_OPTIONS: [
     { option: "None", headerField: "" },
     { option: "Form Data", headerField: "multipart/form-data" },
-    {
-      option: "x-www-form-urlencoded",
-      headerField: "application/x-www-form-urlencoded",
-    },
+    { option: "Form Encoded", headerField: "application/x-www-form-urlencoded" },
     { option: "Raw", headerField: "text/plain" },
   ],
   RESPONSE_MENU_OPTIONS: ["Body", "Headers"],

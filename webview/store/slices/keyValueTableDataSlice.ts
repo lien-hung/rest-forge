@@ -8,181 +8,200 @@ const keyValueTableDataSlice: StateCreator<
   [],
   IKeyValueTableDataSlice
 > = (set) => ({
-  keyValueTableData: [
-    {
-      id: crypto.randomUUID(),
-      optionType: REQUEST.PARAMS,
-      isChecked: false,
-      key: "",
-      value: "",
-      rowReadOnly: false,
-    },
+  tableData: {
+    "Params": [
+      {
+        id: crypto.randomUUID(),
+        isChecked: false,
+        key: "",
+        value: "",
+        rowReadOnly: false,
+      }
+    ],
+    "Headers": [
+      {
+        id: crypto.randomUUID(),
+        isChecked: true,
+        key: REQUEST.CACHE_CONTROL,
+        value: REQUEST.NO_CACHE,
+        rowReadOnly: true,
+      },
+      {
+        id: crypto.randomUUID(),
+        isChecked: true,
+        key: REQUEST.ACCEPT,
+        value: REQUEST.ANY_MIME_TYPE,
+        rowReadOnly: true,
+      },
+      {
+        id: crypto.randomUUID(),
+        isChecked: true,
+        key: REQUEST.ACCEPT_ENCODING,
+        value: `${REQUEST.GZIP},${REQUEST.DEFLATE}`,
+        rowReadOnly: true,
+      },
+      {
+        id: crypto.randomUUID(),
+        isChecked: true,
+        key: REQUEST.CONNECTION,
+        value: REQUEST.KEEP_ALIVE,
+        rowReadOnly: true,
+      },
+      {
+        id: crypto.randomUUID(),
+        isChecked: false,
+        key: "",
+        value: "",
+        rowReadOnly: false,
+      },
+    ],
+    "Form Data": [
+      {
+        id: crypto.randomUUID(),
+        isChecked: false,
+        key: "",
+        value: "",
+        rowReadOnly: false,
+      },
+    ],
+    "Form Encoded": [
+      {
+        id: crypto.randomUUID(),
+        isChecked: false,
+        key: "",
+        value: "",
+        rowReadOnly: false,
+      },
+    ]
+  },
 
-    {
-      id: crypto.randomUUID(),
-      optionType: COMMON.HEADERS,
-      isChecked: true,
-      key: REQUEST.CACHE_CONTROL,
-      value: REQUEST.NO_CACHE,
-      rowReadOnly: true,
-    },
-    {
-      id: crypto.randomUUID(),
-      optionType: COMMON.HEADERS,
-      isChecked: true,
-      key: REQUEST.ACCEPT,
-      value: REQUEST.ANY_MIME_TYPE,
-      rowReadOnly: true,
-    },
-    {
-      id: crypto.randomUUID(),
-      optionType: COMMON.HEADERS,
-      isChecked: true,
-      key: REQUEST.ACCEPT_ENCODING,
-      value: `${REQUEST.GZIP},${REQUEST.DEFLATE}`,
-      rowReadOnly: true,
-    },
-    {
-      id: crypto.randomUUID(),
-      optionType: COMMON.HEADERS,
-      isChecked: true,
-      key: REQUEST.CONNECTION,
-      value: REQUEST.KEEP_ALIVE,
-      rowReadOnly: true,
-    },
-    {
-      id: crypto.randomUUID(),
-      optionType: COMMON.HEADERS,
-      isChecked: false,
-      key: "",
-      value: "",
-      rowReadOnly: false,
-    },
-    
-    {
-      id: crypto.randomUUID(),
-      optionType: REQUEST.FORM_DATA,
-      isChecked: false,
-      key: "",
-      value: "",
-      rowReadOnly: false,
-    },
-    {
-      id: crypto.randomUUID(),
-      optionType: REQUEST.FORM_URLENCODED,
-      isChecked: false,
-      key: "",
-      value: "",
-      rowReadOnly: false,
-    },
-  ],
-
-  handleRequestCheckbox: (dataId) =>
+  handleRequestCheckbox: (type, dataId) =>
     set((state) => ({
-      keyValueTableData: state.keyValueTableData.map((tableData) =>
-        dataId === tableData.id
-          ? { ...tableData, isChecked: !tableData.isChecked }
-          : tableData,
-      ),
+      tableData: {
+        ...state.tableData,
+        [type]: state.tableData[type].map((row) =>
+          dataId === row.id
+            ? { ...row, isChecked: !row.isChecked }
+            : row
+        ),
+      },
     })),
 
-  handleRequestKey: (dataId, detail) =>
+  handleRequestKey: (type, dataId, detail) =>
     set((state) => ({
-      keyValueTableData: state.keyValueTableData.map((tableData) =>
-        dataId === tableData.id ? { ...tableData, key: detail } : tableData,
-      ),
+      tableData: {
+        ...state.tableData,
+        [type]: state.tableData[type].map((row) => dataId === row.id ? { ...row, key: detail } : row),
+      },
     })),
 
-  handleRequestValue: (dataId, detail) =>
+  handleRequestValue: (type, dataId, detail) =>
     set((state) => ({
-      keyValueTableData: state.keyValueTableData.map((tableData) =>
-        dataId === tableData.id ? { ...tableData, value: detail } : tableData,
-      ),
+      tableData: {
+        ...state.tableData,
+        [type]: state.tableData[type].map((row) => dataId === row.id ? { ...row, value: detail } : row),
+      },
     })),
 
   handleHeaderPrefix: (dataId, detail) =>
     set((state) => ({
-      keyValueTableData: state.keyValueTableData.map((tableData) =>
-        dataId === tableData.id ? { ...tableData, prefix: detail } : tableData,
-      ),      
+      tableData: {
+        ...state.tableData,
+        [COMMON.HEADERS]: state.tableData["Headers"].map((row) => dataId === row.id ? { ...row, prefix: detail } : row),
+      },
     })),
 
   addRequestBodyHeaders: (headerValue) =>
     set((state) => ({
-      keyValueTableData: [
-        {
-          id: crypto.randomUUID(),
-          optionType: COMMON.HEADERS,
-          isChecked: true,
-          key: REQUEST.CONTENT_TYPE,
-          value: headerValue,
-          rowReadOnly: true,
-        },
-        ...state.keyValueTableData,
-      ],
+      tableData: {
+        ...state.tableData,
+        [COMMON.HEADERS]: [
+          {
+            id: crypto.randomUUID(),
+            isChecked: true,
+            key: REQUEST.CONTENT_TYPE,
+            value: headerValue,
+            rowReadOnly: true,
+          },
+          ...state.tableData["Headers"],
+        ]
+      }
     })),
 
   removeRequestBodyHeaders: () => {
     set((state) => ({
-      keyValueTableData: state.keyValueTableData.filter(
-        (keyValueData) => keyValueData.key !== REQUEST.CONTENT_TYPE,
-      ),
+      tableData: {
+        ...state.tableData,
+        [COMMON.HEADERS]: state.tableData["Headers"].filter(row => row.key !== REQUEST.CONTENT_TYPE),
+      },
     }));
   },
 
   addAuthTableRow: (authType, optionType, key, value, prefix) => {
     set((state) => ({
-      keyValueTableData: [
-        {
-          id: crypto.randomUUID(),
-          optionType: optionType,
-          isChecked: true,
-          key: key || "",
-          value: value || "",
-          rowReadOnly: true,
-          authType: authType,
-          prefix: prefix,
-        },
-        ...state.keyValueTableData,
-      ],
+      tableData: {
+        ...state.tableData,
+        [optionType]: [
+          ...state.tableData[optionType],
+          {
+            id: crypto.randomUUID(),
+            isChecked: true,
+            key: key || "",
+            value: value || "",
+            rowReadOnly: true,
+            authType, prefix,
+          },
+        ],
+      },
     }));
   },
 
-  removeAuthTableRow: () => {
+  removeAuthTableRow: (type) => {
     set((state) => ({
-      keyValueTableData: state.keyValueTableData.filter(
-        (keyValueData) => !keyValueData.authType
-      ),
+      tableData: {
+        ...state.tableData,
+        [type]: state.tableData[type].filter(row => !row.authType)
+      },
     }));
   },
 
   addNewTableRow: (type) =>
     set((state) => ({
-      keyValueTableData: [
-        ...state.keyValueTableData,
-        {
-          id: crypto.randomUUID(),
-          optionType: type,
-          isChecked: false,
-          key: "",
-          value: "",
-          rowReadOnly: false,
-        },
-      ],
+      tableData: {
+        ...state.tableData,
+        [type]: [
+          ...state.tableData[type],
+          {
+            id: crypto.randomUUID(),
+            isChecked: false,
+            key: "",
+            value: "",
+            rowReadOnly: false,
+          },
+        ],
+      }
     })),
 
-  deleteTableRow: (dataId) => {
+  deleteTableRow: (type, dataId) => {
     set((state) => ({
-      keyValueTableData: state.keyValueTableData.filter(
-        (tableData) => tableData.id !== dataId,
-      ),
+      tableData: {
+        ...state.tableData,
+        [type]: state.tableData[type].filter(row => row.id !== dataId),
+      },
     }));
   },
 
-  handleTreeViewTableData: (data) => {
-    set(() => ({
-      keyValueTableData: [...data],
+  handleParamsTableData: (params) => {
+    set((state) => ({
+      tableData: {
+        ...state.tableData,
+        [REQUEST.PARAMS]: [...params],
+      },
     }));
+  },
+
+  handleTreeViewTableData: (tableData) => {
+    set(() => ({ tableData }));
   },
 });
 

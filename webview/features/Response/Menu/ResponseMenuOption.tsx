@@ -29,7 +29,7 @@ const ResponseMenuOption = () => {
       return responseHeaders && (
         <KeyValueTable
           title="Response Headers"
-          keyValueTableData={responseHeaders}
+          tableData={responseHeaders}
           tableReadOnly
         />
       );

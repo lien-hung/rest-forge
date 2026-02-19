@@ -1,8 +1,16 @@
-export interface IParameterString {
-  optionType: string;
+export interface ITableRow {
   isChecked: boolean;
   key: string;
   value: string;
+}
+
+export type OptionType = "Params" | "Headers" | "Form Data" | "Form Encoded";
+
+export interface ITableData {
+  "Params": ITableRow[];
+  "Headers": ITableRow[];
+  "Form Data": ITableRow[];
+  "Form Encoded": ITableRow[];
 }
 
 export interface IBodyRawData {

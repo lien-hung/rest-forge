@@ -3,19 +3,20 @@ import { useShallow } from "zustand/shallow";
 
 import { COMMON, REQUEST } from "../../../constants/index";
 import KeyValueTable from "../../../shared/KeyValueTable";
+import { OptionType } from "../../../store/slices/type";
 import useStore from "../../../store/useStore";
 import RequestAuthSelectMenu from "../Authorization/RequestAuthSelectMenu";
 import RequestBodySelectMenu from "../Body/RequestBodySelectMenu";
 import RequestCodeSnippet from "../CodeSnippet/RequestCodeSnippet";
 
 const RequestMenuOption = () => {
-  const requestOption = useStore((state) => state.requestOption);
+  const requestOption = useStore((state) => state.requestOption as OptionType);
   const keyValueProps = useStore(
     useShallow((state) => ({
+      tableData: state.tableData[requestOption],
       addNewTableRow: state.addNewTableRow,
       deleteTableRow: state.deleteTableRow,
       handleRequestKey: state.handleRequestKey,
-      keyValueTableData: state.keyValueTableData,
       handleRequestValue: state.handleRequestValue,
       addRequestBodyHeaders: state.addRequestBodyHeaders,
       handleRequestCheckbox: state.handleRequestCheckbox,

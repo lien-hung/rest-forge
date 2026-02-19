@@ -1,35 +1,32 @@
 import React, { memo } from "react";
 import styled from "styled-components";
-import { IResponseDataHeader, KeyValueTableData } from "../store/slices/type";
+import { IResponseDataHeader, OptionType, ITableRow } from "../store/slices/type";
 
 import deleteIcon from "../assets/svg/delete-icon.svg";
 
 interface IKeyValueTableProps {
-  type?: string;
+  type?: OptionType;
   title?: string;
+  tableData: ITableRow[] | IResponseDataHeader[];
   tableReadOnly: boolean;
-  addNewTableRow?: (type: string, id?: string) => void;
-  deleteTableRow?: (id: string) => void;
-  handleRequestKey?: (id: string, value: string) => void;
-  keyValueTableData: KeyValueTableData[] | IResponseDataHeader[];
-  handleRequestValue?: (id: string, value: string) => void;
-  handleRequestCheckbox?: (id: string) => void;
+  addNewTableRow?: (type: OptionType, id?: string) => void;
+  deleteTableRow?: (type: OptionType, id: string) => void;
+  handleRequestKey?: (type: OptionType, id: string, value: string) => void;
+  handleRequestValue?: (type: OptionType, id: string, value: string) => void;
+  handleRequestCheckbox?: (type: OptionType, id: string) => void;
 }
 
 const KeyValueTable = ({
   type,
   title,
+  tableData,
   tableReadOnly,
   addNewTableRow,
   deleteTableRow,
   handleRequestKey,
-  keyValueTableData,
   handleRequestValue,
   handleRequestCheckbox,
 }: IKeyValueTableProps) => {
-  // @ts-ignore
-  const filteredData = keyValueTableData.filter(data => data.optionType === type);
-
   return (
     <TableContainerWrapper>
       <TableContainer>
@@ -44,7 +41,7 @@ const KeyValueTable = ({
             </tr>
           </thead>
           <tbody>
-            {filteredData.map(
+            {tableData.map(
               (
                 { id, isChecked, key, value, rowReadOnly, authType }: any,
                 index: number,
@@ -53,14 +50,11 @@ const KeyValueTable = ({
                   <tr className={rowReadOnly && "readOnlyRow"}>
                     {!tableReadOnly && (
                       <th className={`tableCheckbox ${authType && "authRow"}`}>
-                        {index !== filteredData.length - 1 && (
+                        {index !== tableData.length - 1 && (
                           <input
                             type="checkbox"
                             checked={isChecked}
-                            onChange={() =>
-                              handleRequestCheckbox &&
-                              handleRequestCheckbox(id)
-                            }
+                            onChange={() => type && handleRequestCheckbox && handleRequestCheckbox(type, id)}
                             disabled={authType}
                           />
                         )}
@@ -73,11 +67,11 @@ const KeyValueTable = ({
                         placeholder="Key"
                         value={key}
                         onChange={(event) => {
-                          if (index === filteredData.length - 1) {
+                          if (index === tableData.length - 1) {
                             type && addNewTableRow && addNewTableRow(type);
-                            handleRequestCheckbox && handleRequestCheckbox(id);
+                            type && handleRequestCheckbox && handleRequestCheckbox(type, id);
                           }
-                          handleRequestKey && handleRequestKey(id, event.target.value);
+                          type && handleRequestKey && handleRequestKey(type, id, event.target.value);
                         }}
                         readOnly={tableReadOnly || rowReadOnly}
                       />
@@ -89,21 +83,21 @@ const KeyValueTable = ({
                         placeholder="Value"
                         value={value}
                         onChange={(event) => {
-                          if (index === filteredData.length - 1) {
+                          if (index === tableData.length - 1) {
                             type && addNewTableRow && addNewTableRow(type);
-                            handleRequestCheckbox && handleRequestCheckbox(id);
+                            type && handleRequestCheckbox && handleRequestCheckbox(type, id);
                           }
-                          handleRequestValue && handleRequestValue(id, event.target.value);
+                          type && handleRequestValue && handleRequestValue(type, id, event.target.value);
                         }}
                         readOnly={tableReadOnly || rowReadOnly}
                       />
                     </td>
                     {!tableReadOnly && (
                       <th className="tableDelete">
-                        {!rowReadOnly && index !== filteredData.length - 1 && (
+                        {!rowReadOnly && index !== tableData.length - 1 && (
                           <TableIconButton
                             type="button"
-                            onClick={() => deleteTableRow && deleteTableRow(id)}
+                            onClick={() => type && deleteTableRow && deleteTableRow(type, id)}
                           >
                             <img src={deleteIcon} />
                           </TableIconButton>

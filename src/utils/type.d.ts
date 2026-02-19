@@ -35,7 +35,7 @@ export interface IRequestObject {
   bodyOption: string;
   bodyRawOption: string;
   bodyRawData: IBodyRawData;
-  keyValueTableData: IKeyValueTable[];
+  tableData: ITableData;
 }
 
 export interface IRequestHeaderInformation {
@@ -64,11 +64,21 @@ export interface IHeaderAuth {
   tokenPrefix: string;
 }
 
-export interface IKeyValueTable {
-  optionType: string;
+export interface ITableRow {
+  id: string;
   isChecked: boolean;
   key: string;
   value: string;
+  rowReadOnly: boolean;
+  authType?: string;
+  prefix?: string;
+}
+
+export interface ITableData {
+  "Params": ITableRow[];
+  "Headers": ITableRow[];
+  "Form Data": ITableRow[];
+  "Form Encoded": ITableRow[];
 }
 
 export interface IRequestData {
@@ -95,35 +105,4 @@ export interface IOAuth2Request {
   challengeType?: string;
   scope?: string;
   state?: string;
-}
-
-export interface IMultipartUpload {
-  name: string;
-  value: string;
-  type: "file" | "text";
-  enabled: boolean;
-}
-
-export interface ICurlRequest {
-  url: string;
-  method: string;
-  headers: { [key: string]: string };
-  auth: {
-    mode: "basic",
-    basic: {
-      username: string;
-      password: string;
-    }
-  };
-  data?: string;
-  multipartUploads: IMultipartUpload[];
-  cookies: { [key: string]: string | undefined };
-  cookieString: string;
-  urlWithoutQuery: string;
-  queries: ({ name: string, value: string } | undefined)[];
-  isQuery?: boolean;
-  isDataRaw: boolean;
-  isDataBinary: boolean;
-  insecure: boolean;
-  [otherProp: string]: any;
 }
