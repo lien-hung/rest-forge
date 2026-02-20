@@ -38,9 +38,10 @@ const RequestMethod = () => {
 const MethodSelectOptionWrapper = styled.select`
   width: 9rem;
   height: 3rem;
-  padding: 0.75rem;
+  padding: 0.7rem;
   font-size: 1.15rem;
-  font-weight: 500;
+  border: 1px solid color-mix(in srgb, var(--vscode-focusBorder), transparent 30%);
+  border-right: 0;
   border-radius: 0;
   appearance: base-select;
 

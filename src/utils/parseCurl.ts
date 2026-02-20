@@ -7,15 +7,7 @@ import { TYPE } from "../constants";
 const emptyTableRow = () =>
   ({ id: crypto.randomUUID(), isChecked: false, key: "", value: "", rowReadOnly: false });
 
-const newTableRow = ({
-  key,
-  value,
-  rowReadOnly = false
-}: {
-  key: string,
-  value: string,
-  rowReadOnly?: boolean
-}) =>
+const newTableRow = ({ key, value, rowReadOnly = false }: { key: string, value: string, rowReadOnly?: boolean }) =>
   ({ id: crypto.randomUUID(), isChecked: true, key, value, rowReadOnly });
 
 function parseCurl(command: string) {
@@ -156,14 +148,12 @@ function parseCurl(command: string) {
   for (const argv in argvs) {
     switch (argv) {
       case "_":
-        {
-          argvs[argv].forEach(item => {
-            item = removeQuotes(item.toString());
-            if (isUrl(item)) {
-              request.requestUrl = item;
-            }
-          });
-        }
+        argvs[argv].forEach(item => {
+          item = removeQuotes(item.toString());
+          if (isUrl(item)) {
+            request.requestUrl = item;
+          }
+        });
         break;
 
       case "X":
@@ -217,14 +207,12 @@ function parseCurl(command: string) {
         break;
 
       case "compressed":
-        {
-          const index = request.tableData["Headers"].findIndex(d => d.key.toLowerCase() === "accept-encoding");
-          if (index === -1) {
-            request.tableData["Headers"].splice(-1, 0, newTableRow({
-              key: "Accept-Encoding",
-              value: argvs[argv] ? (typeof argvs[argv] === "boolean" ? "gzip, deflate" : argvs[argv]) : "gzip, deflate",
-            }));
-          }
+        const index = request.tableData["Headers"].findIndex(d => d.key.toLowerCase() === "accept-encoding");
+        if (index === -1) {
+          request.tableData["Headers"].splice(-1, 0, newTableRow({
+            key: "Accept-Encoding",
+            value: argvs[argv] ? (typeof argvs[argv] === "boolean" ? "gzip, deflate" : argvs[argv]) : "gzip, deflate",
+          }));
         }
         break;
 

@@ -117,7 +117,7 @@ const RequestUrl = () => {
 const InputContainer = styled.input`
   padding-left: 1rem;
   font-size: 1.15rem;
-  background-color: var(--vscode-editor-background);
+  border: 1px solid color-mix(in srgb, var(--vscode-focusBorder), transparent 30%) !important;
   color: var(--vscode-foreground);
 `;
 
