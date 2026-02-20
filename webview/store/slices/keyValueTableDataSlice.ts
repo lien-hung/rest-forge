@@ -142,7 +142,6 @@ const keyValueTableDataSlice: StateCreator<
       tableData: {
         ...state.tableData,
         [optionType]: [
-          ...state.tableData[optionType],
           {
             id: crypto.randomUUID(),
             isChecked: true,
@@ -151,6 +150,7 @@ const keyValueTableDataSlice: StateCreator<
             rowReadOnly: true,
             authType, prefix,
           },
+          ...state.tableData[optionType],
         ],
       },
     }));

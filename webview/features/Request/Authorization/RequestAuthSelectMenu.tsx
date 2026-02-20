@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useShallow } from "zustand/shallow";
 
 import SelectWrapper from "../../../components/SelectWrapper";
-import { OPTION, REQUEST, COMMON } from "../../../constants/index";
+import { OPTION, REQUEST } from "../../../constants/index";
 import useStore from "../../../store/useStore";
 import RequestAuthMenuOption from "./RequestAuthSelectMenuOption";
 
@@ -25,9 +25,11 @@ const RequestAuthSelectMenu = () => {
   const handleAuthOptionChange = (event: ChangeEvent<HTMLSelectElement>) => {
     handleRequestAuthType(event.target.value);
 
-    removeAuthTableRow();
+    removeAuthTableRow("Headers");
+    removeAuthTableRow("Params");
+
     if (event.target.value === REQUEST.API_KEY) {
-      addAuthTableRow(REQUEST.API_KEY, COMMON.HEADERS);
+      addAuthTableRow(REQUEST.API_KEY, "Headers");
     }
   };
 

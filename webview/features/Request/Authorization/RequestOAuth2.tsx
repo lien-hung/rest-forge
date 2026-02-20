@@ -66,7 +66,6 @@ const RequestOAuth2 = () => {
   );
   const [isRefreshPending, setIsRefreshPending] = useState(false);
 
-  const tokenOptionType = addTo === REQUEST.ADD_TO_HEADERS ? "Headers" : "Params";
   const selectedToken = tokens[selectedIndex - 1];
   const tokenHeader = `${headerPrefix} ${token}`;
 
@@ -80,7 +79,9 @@ const RequestOAuth2 = () => {
   };
 
   const setAuthTableRow = () => {
-    removeAuthTableRow(tokenOptionType);
+    removeAuthTableRow("Headers");
+    removeAuthTableRow("Params");
+
     if (token) {
       if (addTo === REQUEST.ADD_TO_HEADERS) {
         addAuthTableRow(tokenType, "Headers", REQUEST.AUTH, tokenHeader, headerPrefix);
@@ -136,7 +137,8 @@ const RequestOAuth2 = () => {
 
   useEffect(() => {
     if (!token) {
-      removeAuthTableRow(tokenOptionType);
+      removeAuthTableRow("Headers");
+      removeAuthTableRow("Params");
       return;
     }
 
@@ -144,9 +146,9 @@ const RequestOAuth2 = () => {
       setAuthTableRow();
     } else {
       if (addTo === REQUEST.ADD_TO_HEADERS) {
-        handleRequestValue(tokenOptionType, tokenRow.id, tokenHeader);
+        handleRequestValue("Headers", tokenRow.id, tokenHeader);
       } else {
-        handleRequestValue(tokenOptionType, tokenRow.id, token);
+        handleRequestValue("Params", tokenRow.id, token);
       }
     }
   }, [token]);
