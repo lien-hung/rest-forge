@@ -133,7 +133,14 @@ const RequestOAuth2 = () => {
     window.addEventListener("message", handleExtensionMessage);
   }, []);
 
-  useEffect(() => setAuthTableRow(), [selectedIndex, addTo]);
+  useEffect(() => {
+    if (selectedToken && !selectedToken.id_token) {
+      setToken(selectedToken.access_token);
+      setTokenType(REQUEST.ACCESS_TOKEN);
+    }
+  }, [selectedIndex]);
+
+  useEffect(() => setAuthTableRow(), [selectedIndex, addTo, tokenType]);
 
   useEffect(() => {
     if (!token) {
@@ -203,7 +210,7 @@ const RequestOAuth2 = () => {
           </Button>
         </TokenWrapper>
       </InputWrapper>
-      {selectedIndex > 0 && (
+      {selectedToken && selectedToken.id_token && (
         <InputWrapper>
           <label htmlFor="tokenType">Token Type:</label>
           <OptionWrapper
@@ -211,9 +218,9 @@ const RequestOAuth2 = () => {
             onChange={(event) => {
               setTokenType(event.target.value);
               if (event.target.value === REQUEST.ACCESS_TOKEN) {
-                setToken(selectedToken?.access_token || "");
+                setToken(selectedToken.access_token);
               } else {
-                setToken(selectedToken?.id_token || "");
+                setToken(selectedToken.id_token!);
               }
             }}
           >
