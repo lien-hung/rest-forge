@@ -25,7 +25,7 @@ const SelectWrapperContainer = styled.div<ISelectWrapperStyledProps>`
   align-items: center;
   justify-content: ${(props) => props.secondary && "space-around"};
   width: ${(props) => props.secondary && "100%"};
-  margin: ${(props) => props.primary ? "0 0 0 1rem" : "1.3rem 1.3rem 2rem 1.3rem"};
+  margin: ${(props) => props.primary ? "0 0 0 1rem" : "1.3rem 1.3rem 0 1.3rem"};
 
   h3 {
     font-size: 1.2rem;

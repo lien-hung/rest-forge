@@ -37,6 +37,7 @@ const ResponseMenuOption = () => {
       return (
         <>
           <RequestBodyMenu />
+          <div style={{ height: "2rem" }}></div>
           <CodeEditor
             codeEditorValue={responseData ? responseData : ""}
             language={

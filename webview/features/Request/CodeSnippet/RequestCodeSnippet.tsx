@@ -152,6 +152,7 @@ const RequestCodeSnippet = () => {
         </SelectOptionWrapper>
         <CopyIcon handleClick={handleCopyIconClick} value={codeSnippetValue} />
       </SelectWrapper>
+      <div style={{ height: "2rem" }}></div>
       <CodeEditor
         codeEditorValue={codeSnippetValue}
         editorOption={OPTION.CODE_SNIPPET_EDITOR_OPTIONS}

@@ -62,24 +62,27 @@ const RequestBodySelectMenuOption = () => {
       );
     case REQUEST.RAW:
       return (
-        <CodeEditor
-          language={bodyRawOption}
-          editorOption={OPTION.EDITOR_OPTIONS}
-          codeEditorValue={
-            bodyRawData[
-            bodyRawOption as keyof {
-              text: string;
-              javascript: string;
-              json: string;
-              html: string;
-              xml: string;
+        <>
+          <div style={{ height: "2rem" }}></div>
+          <CodeEditor
+            language={bodyRawOption}
+            editorOption={OPTION.EDITOR_OPTIONS}
+            codeEditorValue={
+              bodyRawData[
+              bodyRawOption as keyof {
+                text: string;
+                javascript: string;
+                json: string;
+                html: string;
+                xml: string;
+              }
+              ]
             }
-            ]
-          }
-          handleEditorChange={handleRequestBodyEditorChange}
-          requestForm
-          {...codeEditorProps}
-        />
+            handleEditorChange={handleRequestBodyEditorChange}
+            requestForm
+            {...codeEditorProps}
+          />
+        </>
       );
     default:
       return <RequestNoBody />;
