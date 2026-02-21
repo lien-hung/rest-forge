@@ -123,7 +123,6 @@ function CodeEditor({
 
 const EditorWrapper = styled.div`
   flex: 1 1 auto;
-  margin-top: 2rem;
 
   .monaco-editor {
     .view-overlays {

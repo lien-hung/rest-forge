@@ -1,9 +1,8 @@
-import React, { MouseEvent } from "react";
+import React, { Fragment, MouseEvent } from "react";
 import { useShallow } from "zustand/shallow";
 
 import DetailOption from "../../../components/DetailOption";
 import MenuOption from "../../../components/MenuOption";
-import SelectWrapper from "../../../components/SelectWrapper";
 import { COMMON, OPTION, RESPONSE } from "../../../constants/index";
 import useStore from "../../../store/useStore";
 import ResponseMetaData from "../MetaData/ResponseMetaData";
@@ -28,24 +27,22 @@ const ResponseMenu = () => {
   };
 
   return (
-    <DetailOption>
+    <>
       <ResponseMetaData {...responseData} />
-      <SelectWrapper>
+      <DetailOption>
         {OPTION.RESPONSE_MENU_OPTIONS.map((responseMenuOption, index) => (
-          <React.Fragment key={RESPONSE.RESPONSE + index}>
+          <Fragment key={RESPONSE.RESPONSE + index}>
             <MenuOption
               currentOption={responseOption}
               menuOption={responseMenuOption}
             >
               <h3 onClick={handleHeadingTextClick}>{responseMenuOption}</h3>
             </MenuOption>
-            {responseMenuOption === COMMON.HEADERS && (
-              <p>({responseData?.headersLength})</p>
-            )}
-          </React.Fragment>
+            {responseMenuOption === COMMON.HEADERS && <p>({responseData?.headersLength})</p>}
+          </Fragment>
         ))}
-      </SelectWrapper>
-    </DetailOption>
+      </DetailOption>
+    </>
   );
 };
 

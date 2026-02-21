@@ -20,11 +20,6 @@ export interface ICopyIconProps {
   value: string | undefined;
 }
 
-export interface IDetailOptionProps {
-  children: ReactNode;
-  requestMenu?: boolean;
-}
-
 export interface IMenuOptionProps {
   children: ReactElement;
   currentOption: string | null;

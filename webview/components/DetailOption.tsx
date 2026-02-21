@@ -1,18 +1,17 @@
 import React from "react";
 import styled from "styled-components";
-import { IDetailOptionProps } from "./type";
+import { ICommonChildProps } from "./type";
 
-const DetailOption = ({ children, requestMenu }: IDetailOptionProps) => {
+const DetailOption = ({ children }: ICommonChildProps) => {
   return (
-    <DetailOptionWrapper purpose={requestMenu}>{children}</DetailOptionWrapper>
+    <DetailOptionWrapper>{children}</DetailOptionWrapper>
   );
 };
 
-const DetailOptionWrapper = styled.div<{ purpose?: boolean }>`
+const DetailOptionWrapper = styled.div`
   display: flex;
-  flex-flow: ${(props) => props.purpose ? "row" : "column"};
-  margin: 0;
-  padding-left: ${(props) => props.purpose ? "1.3rem" : "0"};
+  flex-flow: row;
+  padding-left: 1.3rem;
   flex: 0 1 auto;
   border-bottom: 1px solid rgba(128, 128, 128, 0.7);
   

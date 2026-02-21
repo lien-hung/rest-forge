@@ -26,7 +26,7 @@ const RequestMenu = () => {
 
   return (
     <>
-      <DetailOption requestMenu>
+      <DetailOption>
         {OPTION.REQUEST_MENU_OPTIONS.map((requestMenuOption, index) => (
           <Fragment key={REQUEST.REQUEST + index}>
             <MenuOption
