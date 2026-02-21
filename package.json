@@ -327,7 +327,6 @@
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
     "fast-xml-parser": "^5.3.6",
-    "form-data": "^4.0.5",
     "postman-code-generators": "^2.1.0",
     "postman-collection": "^5.2.0",
     "react": "^19.2.3",

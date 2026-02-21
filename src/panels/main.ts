@@ -197,15 +197,13 @@ class MainWebviewPanel {
           tableData,
         };
         const flatTableData = Object.keys(tableData).reduce(
-          (data, key) => [...data, tableData[key].map((row: any) => ({ ...row, optionType: key }))],
+          (data, key) => [...data, ...tableData[key].map((row: any) => ({ ...row, optionType: key }))],
           new Array<IParameterKeyValueData>
         );
 
         this.url = getUrl(requestUrl);
         this.method = requestMethod;
         this.headers = getHeaders(flatTableData, authOption, authData);
-
-        // @ts-expect-error
         this.body = getBody(
           flatTableData,
           bodyOption,

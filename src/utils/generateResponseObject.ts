@@ -11,6 +11,11 @@ async function generateResponseObject(
   const sentTime = new Date().getTime();
 
   try {
+    // The "Content-Type" header is set automatically if form data is submitted
+    if (request.data instanceof FormData) {
+      delete request.headers["Content-Type"];
+    }
+
     const response = (request.method === "GET" || request.method === "HEAD")
       ? await fetch(request.url)
       : await fetch(

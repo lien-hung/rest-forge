@@ -1,5 +1,3 @@
-import FormData from "form-data";
-
 import { TYPE } from "../constants";
 import { IBodyRawData, IParameterKeyValueData } from "./type";
 
