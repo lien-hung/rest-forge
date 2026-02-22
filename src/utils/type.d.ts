@@ -93,7 +93,7 @@ export interface IRequestData {
   url: string;
   method: string;
   headers: IRequestHeaderInformation;
-  data: string | FormData | URLSearchParams;
+  body: string | FormData | URLSearchParams;
   responseType: string;
 }
 

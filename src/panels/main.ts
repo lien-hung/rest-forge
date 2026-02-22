@@ -223,7 +223,7 @@ class MainWebviewPanel {
       url: this.url,
       method: this.method,
       headers: this.headers,
-      data: this.body,
+      body: this.body,
       responseType: TYPE.TEXT
     };
 

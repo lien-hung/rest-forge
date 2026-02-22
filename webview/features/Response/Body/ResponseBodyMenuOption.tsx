@@ -10,13 +10,12 @@ const ResponseBodyViewOption = () => {
   const {
     responseBodyOption,
     responseBodyViewFormat,
-    handleResponseBodyViewFormatChange,
+    handleResponseBodyViewFormat,
   } = useStore(
     useShallow((state) => ({
       responseBodyOption: state.responseBodyOption,
       responseBodyViewFormat: state.responseBodyViewFormat,
-      handleResponseBodyViewFormatChange:
-        state.handleResponseBodyViewFormatChange,
+      handleResponseBodyViewFormat: state.handleResponseBodyViewFormat,
     }))
   );
 
@@ -25,9 +24,7 @@ const ResponseBodyViewOption = () => {
       {responseBodyOption === "Pretty" && (
         <SelectWrapper primary requestMenu={false} secondary={false}>
           <SelectOptionWrapper
-            onChange={(event) =>
-              handleResponseBodyViewFormatChange(event.target.value)
-            }
+            onChange={(event) => handleResponseBodyViewFormat(event.target.value)}
             value={responseBodyViewFormat}
           >
             {OPTION.RESPONSE_BODY_VIEW_FORMAT_OPTIONS.map((option, index) => (

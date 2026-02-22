@@ -21,13 +21,13 @@ const responseDataSlice: StateCreator<
   handleRequestProcessStatus: (processStatus: string) =>
     set(() => ({ requestInProcess: processStatus })),
 
-  handleResponseOptionChange: (option: string) =>
+  handleResponseOption: (option: string) =>
     set(() => ({ responseOption: option })),
 
-  handleResponseBodyOptionChange: (option: string) =>
+  handleResponseBodyOption: (option: string) =>
     set(() => ({ responseBodyOption: option })),
 
-  handleResponseBodyViewFormatChange: (option: string) =>
+  handleResponseBodyViewFormat: (option: string) =>
     set(() => ({ responseBodyViewFormat: option })),
 });
 

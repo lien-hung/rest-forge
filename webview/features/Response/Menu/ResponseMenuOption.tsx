@@ -16,7 +16,7 @@ const ResponseMenuOption = () => {
     responseBodyViewFormat,
   } = useStore(
     useShallow((state) => ({
-      responseData: state.responseData?.data,
+      responseData: state.responseData?.body,
       responseOption: state.responseOption,
       responseHeaders: state.responseData?.headers,
       responseBodyOption: state.responseBodyOption,

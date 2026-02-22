@@ -14,7 +14,7 @@ const RequestBodyMenu = () => {
       useShallow((state) => ({
         responseData: state.responseData,
         responseBodyOption: state.responseBodyOption,
-        handleResponseBodyOptionChange: state.handleResponseBodyOptionChange,
+        handleResponseBodyOptionChange: state.handleResponseBodyOption,
       }))
     );
 
@@ -48,7 +48,7 @@ const RequestBodyMenu = () => {
       {responseBodyOption !== COMMON.PREVIEW && (
         <CopyIcon
           handleClick={handleCopyIconClick}
-          value={responseData?.data}
+          value={responseData?.body}
         />
       )}
     </SelectWrapper>

@@ -14,7 +14,7 @@ const ResponseMenu = () => {
     useShallow((state) => ({
       responseData: state.responseData,
       responseOption: state.responseOption,
-      handleResponseOptionChange: state.handleResponseOptionChange,
+      handleResponseOptionChange: state.handleResponseOption,
     }))
   );
 

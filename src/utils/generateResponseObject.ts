@@ -12,7 +12,7 @@ async function generateResponseObject(
 
   try {
     // The "Content-Type" header is set automatically if form data is submitted
-    if (request.data instanceof FormData) {
+    if (request.body instanceof FormData) {
       delete request.headers["Content-Type"];
     }
 
@@ -23,7 +23,7 @@ async function generateResponseObject(
         {
           method: request.method,
           headers: request.headers,
-          body: request.data
+          body: request.body
         }
       );
 
@@ -41,7 +41,7 @@ async function generateResponseObject(
 
     const responseDataObject = {
       type: TYPE.RESPONSE,
-      data: responseBody,
+      body: responseBody,
       headers: headersArray,
       headersLength: headersArray.length,
       statusCode: response.status,

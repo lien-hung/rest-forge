@@ -128,7 +128,7 @@ const TableIconButton = styled.button`
 const TableContainerWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin: 1.3rem;
+  padding: 1.3rem;
   flex: 1 1 auto;
   overflow-y: auto;
 `;

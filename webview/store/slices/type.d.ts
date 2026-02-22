@@ -34,16 +34,16 @@ export interface IResponseDataSlice {
   responseOption: string;
   responseBodyOption: string;
   responseBodyViewFormat: string;
-  handleResponseData: (any) => void;
+  handleResponseData: (data: IResponseData) => void;
   handleRequestProcessStatus: (processStatus: string) => void;
-  handleResponseOptionChange: (option: string) => void;
-  handleResponseBodyOptionChange: (option: string) => void;
-  handleResponseBodyViewFormatChange: (option: string) => void;
+  handleResponseOption: (option: string) => void;
+  handleResponseBodyOption: (option: string) => void;
+  handleResponseBodyViewFormat: (option: string) => void;
 }
 
 export interface IResponseData {
   type: string;
-  data: string;
+  body: string;
   headers: IResponseDataHeader[];
   headersLength: number;
   statusCode: number;
