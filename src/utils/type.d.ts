@@ -32,6 +32,7 @@ export interface IRequestObject {
   requestUrl: string;
   authOption: string;
   authData: IAuthData;
+  oauth2Data: IOAuth2Data;
   bodyOption: string;
   bodyRawOption: string;
   bodyRawData: IBodyRawData;
@@ -79,6 +80,13 @@ export interface ITableData {
   "Headers": ITableRow[];
   "Form Data": ITableRow[];
   "Form Encoded": ITableRow[];
+}
+
+export interface IOAuth2Data {
+  token: string;
+  prefix: string;
+  tokenType: string;
+  addTo: string;
 }
 
 export interface IRequestData {

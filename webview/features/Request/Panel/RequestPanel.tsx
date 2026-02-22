@@ -14,12 +14,13 @@ const RequestPanel = () => {
   const requestData = useStore(
     useShallow((state) => ({
       authData: state.authData,
-      requestUrl: state.requestUrl,
       authOption: state.authOption,
-      bodyOption: state.bodyOption,
-      bodyRawData: state.bodyRawData,
-      bodyRawOption: state.bodyRawOption,
+      oauth2Data: state.oauth2Data,
+      requestUrl: state.requestUrl,
       requestMethod: state.requestMethod,
+      bodyOption: state.bodyOption,
+      bodyRawOption: state.bodyRawOption,
+      bodyRawData: state.bodyRawData,
       tableData: state.tableData,
     }))
   );

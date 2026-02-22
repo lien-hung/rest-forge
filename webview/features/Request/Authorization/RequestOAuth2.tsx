@@ -10,25 +10,29 @@ import Wrapper from "../../../components/Wrapper";
 import clockIcon from "../../../assets/svg/clock-icon.svg";
 import errorIcon from "../../../assets/svg/validate-error.svg";
 import { COMMON, OPTION, REQUEST } from "../../../constants";
-import { IOAuth2Token } from "../../../store/slices/type";
+import { IOAuth2Token, ITableRow } from "../../../store/slices/type";
 import useStore from "../../../store/useStore";
 import { refreshOAuth2Token } from "../../../utils/getOAuth2Token";
 import RequestOAuth2NewToken from "./RequestOAuth2NewToken";
 
 const RequestOAuth2 = () => {
   const {
+    tableData,
     tokens,
     setTokens,
-    tableData,
+    oauth2,
+    setOAuth2,
     addAuthTableRow,
     removeAuthTableRow,
     handleRequestValue,
     handleHeaderPrefix,
   } = useStore(
     useShallow((state) => ({
+      tableData: state.tableData,
       tokens: state.oauth2Tokens,
       setTokens: state.setOAuth2Tokens,
-      tableData: state.tableData,
+      oauth2: state.oauth2Data,
+      setOAuth2: state.setOAuth2Data,
       addAuthTableRow: state.addAuthTableRow,
       removeAuthTableRow: state.removeAuthTableRow,
       handleRequestValue: state.handleRequestValue,
@@ -36,38 +40,19 @@ const RequestOAuth2 = () => {
     }))
   );
 
-  const tokenRowHeader = tableData["Headers"].find(
-    d => d.authType === REQUEST.ACCESS_TOKEN || d.authType === REQUEST.ID_TOKEN
-  );
-  const tokenRowParam = tableData["Params"].find(
-    d => d.authType === REQUEST.ACCESS_TOKEN || d.authType === REQUEST.ID_TOKEN
-  );
+  const isToken = (row: ITableRow) => row.authType === REQUEST.ACCESS_TOKEN || row.authType === REQUEST.ID_TOKEN
+
+  const tokenRowHeader = tableData["Headers"].find(isToken);
+  const tokenRowParam = tableData["Params"].find(isToken);
   const tokenRow = tokenRowHeader || tokenRowParam;
 
-  const tokenRowPrefix = tokenRow?.prefix || "Bearer";
-  const initialToken = tokenRow?.value || "";
-
-  const [addTo, setAddTo] = useState(
-    tokenRow
-      ? (tokenRowHeader
-        ? REQUEST.ADD_TO_HEADERS
-        : REQUEST.ADD_TO_QUERY_PARAMS)
-      : REQUEST.ADD_TO_HEADERS
-  );
-  const [token, setToken] = useState(
-    addTo === REQUEST.ADD_TO_HEADERS
-      ? initialToken.slice(tokenRowPrefix.length + 1)
-      : initialToken
-  );
-  const [headerPrefix, setHeaderPrefix] = useState(tokenRowPrefix);
-  const [tokenType, setTokenType] = useState(tokenRow?.authType || REQUEST.ACCESS_TOKEN);
   const [selectedIndex, setSelectedIndex] = useState(
-    tokens.findIndex(t => t.access_token === token || t.id_token === token) + 1
+    tokens.findIndex(t => t.access_token === oauth2.token || t.id_token === oauth2.token) + 1
   );
   const [isRefreshPending, setIsRefreshPending] = useState(false);
 
   const selectedToken = tokens[selectedIndex - 1];
-  const tokenHeader = `${headerPrefix} ${token}`;
+  const tokenHeader = `${oauth2.prefix} ${oauth2.token}`;
 
   const isTokenExpired = (token: IOAuth2Token) => {
     return Date.now() >= token.timestamp + token.expires_in * 1000;
@@ -82,11 +67,11 @@ const RequestOAuth2 = () => {
     removeAuthTableRow("Headers");
     removeAuthTableRow("Params");
 
-    if (token) {
-      if (addTo === REQUEST.ADD_TO_HEADERS) {
-        addAuthTableRow(tokenType, "Headers", { key: REQUEST.AUTH, value: tokenHeader, prefix: headerPrefix });
+    if (oauth2.token) {
+      if (oauth2.addTo === REQUEST.ADD_TO_HEADERS) {
+        addAuthTableRow(oauth2.tokenType, "Headers", { key: REQUEST.AUTH, value: tokenHeader, prefix: oauth2.prefix });
       } else {
-        addAuthTableRow(tokenType, "Params", { key: "access_token", value: token });
+        addAuthTableRow(oauth2.tokenType, "Params", { key: "access_token", value: oauth2.token });
       }
     }
   };
@@ -111,10 +96,10 @@ const RequestOAuth2 = () => {
     setTokens(newTokenList);
     vscode.postMessage({ command: COMMON.SET_OAUTH2_TOKENS, newTokenList });
 
-    if (tokenType === REQUEST.ACCESS_TOKEN) {
-      setToken(newToken.access_token);
+    if (oauth2.tokenType === REQUEST.ACCESS_TOKEN) {
+      setOAuth2({ ...oauth2, token: newToken.access_token });
     } else {
-      setToken(newToken.id_token);
+      setOAuth2({ ...oauth2, token: newToken.id_token });
     }
     setIsRefreshPending(false);
   };
@@ -124,7 +109,7 @@ const RequestOAuth2 = () => {
       const newTokenList = event.data.tokenList as IOAuth2Token[];
       if (!selectedToken || newTokenList.findIndex((t) => t.timestamp === selectedToken.timestamp) === -1) {
         setSelectedIndex(0);
-        setToken("");
+        setOAuth2({ ...oauth2, token: "" });
       }
     }
   };
@@ -135,15 +120,14 @@ const RequestOAuth2 = () => {
 
   useEffect(() => {
     if (selectedToken && !selectedToken.id_token) {
-      setToken(selectedToken.access_token);
-      setTokenType(REQUEST.ACCESS_TOKEN);
+      setOAuth2({ ...oauth2, token: selectedToken.access_token, tokenType: REQUEST.ACCESS_TOKEN });
     }
   }, [selectedIndex]);
 
-  useEffect(() => setAuthTableRow(), [selectedIndex, addTo, tokenType]);
+  useEffect(() => setAuthTableRow(), [selectedIndex, oauth2.addTo, oauth2.tokenType]);
 
   useEffect(() => {
-    if (!token) {
+    if (!oauth2.token) {
       removeAuthTableRow("Headers");
       removeAuthTableRow("Params");
       return;
@@ -152,24 +136,22 @@ const RequestOAuth2 = () => {
     if (!tokenRow) {
       setAuthTableRow();
     } else {
-      if (addTo === REQUEST.ADD_TO_HEADERS) {
+      if (oauth2.addTo === REQUEST.ADD_TO_HEADERS) {
         handleRequestValue("Headers", tokenRow.id, tokenHeader);
       } else {
-        handleRequestValue("Params", tokenRow.id, token);
+        handleRequestValue("Params", tokenRow.id, oauth2.token);
       }
     }
-  }, [token]);
+  }, [oauth2.token]);
 
   useEffect(() => {
-    if (tokenRow && addTo === REQUEST.ADD_TO_HEADERS) {
-      handleHeaderPrefix(tokenRow.id, headerPrefix);
+    if (tokenRow && oauth2.addTo === REQUEST.ADD_TO_HEADERS) {
+      handleHeaderPrefix(tokenRow.id, oauth2.prefix);
       handleRequestValue("Headers", tokenRow.id, tokenHeader);
     }
-  }, [headerPrefix]);
+  }, [oauth2.prefix]);
 
-  useEffect(() => {
-    if (isRefreshPending) handleRefreshToken();
-  }, [isRefreshPending]);
+  useEffect(() => { if (isRefreshPending) handleRefreshToken(); }, [isRefreshPending]);
 
   return (
     <Wrapper>
@@ -178,10 +160,10 @@ const RequestOAuth2 = () => {
         <label htmlFor="token">Token:</label>
         <TokenWrapper>
           <OptionWrapper
-            value={token}
+            value={oauth2.token}
             onChange={(event) => {
               setSelectedIndex(event.target.selectedIndex);
-              setToken(event.target.value);
+              setOAuth2({ ...oauth2, token: event.target.value })
             }}
           >
             <option key="emptyToken" value="">
@@ -191,7 +173,7 @@ const RequestOAuth2 = () => {
               <option
                 key={token.timestamp}
                 value={
-                  tokenType === REQUEST.ACCESS_TOKEN
+                  oauth2.tokenType === REQUEST.ACCESS_TOKEN
                     ? token.access_token
                     : token.id_token
                 }
@@ -214,14 +196,15 @@ const RequestOAuth2 = () => {
         <InputWrapper>
           <label htmlFor="tokenType">Token Type:</label>
           <OptionWrapper
-            value={tokenType}
+            value={oauth2.tokenType}
             onChange={(event) => {
-              setTokenType(event.target.value);
-              if (event.target.value === REQUEST.ACCESS_TOKEN) {
-                setToken(selectedToken.access_token);
-              } else {
-                setToken(selectedToken.id_token!);
-              }
+              const newData = {
+                token: event.target.value === REQUEST.ACCESS_TOKEN
+                  ? selectedToken.access_token
+                  : selectedToken.id_token!,
+                tokenType: event.target.value,
+              };
+              setOAuth2({ ...oauth2, ...newData });
             }}
           >
             {OPTION.OAUTH2_TOKEN_TYPES.map((option, index) => (
@@ -240,8 +223,8 @@ const RequestOAuth2 = () => {
             type="text"
             name="token"
             placeholder="Token"
-            value={token}
-            onChange={(event) => setToken(event.target.value)}
+            value={oauth2.token}
+            onChange={(event) => setOAuth2({ ...oauth2, token: event.target.value })}
           />
           {selectedToken && (isRefreshPending ? (
             <div>
@@ -278,15 +261,15 @@ const RequestOAuth2 = () => {
         <input
           name="prefix"
           placeholder="e.g. Bearer"
-          value={headerPrefix}
-          onChange={(event) => setHeaderPrefix(event.target.value)}
+          value={oauth2.prefix}
+          onChange={(event) => setOAuth2({ ...oauth2, prefix: event.target.value })}
         />
       </InputWrapper>
       <InputWrapper>
         <label htmlFor="prefix">Add to:</label>
         <OptionWrapper
-          value={addTo}
-          onChange={(event) => setAddTo(event.target.value)}
+          value={oauth2.addTo}
+          onChange={(event) => setOAuth2({ ...oauth2, addTo: event.target.value })}
         >
           {OPTION.ADD_TO_OPTIONS.map((option, index) => (
             <option key={REQUEST.ADD_TO_OPTION + index} value={option}>

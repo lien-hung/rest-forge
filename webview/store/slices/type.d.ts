@@ -67,11 +67,11 @@ export interface IRequestDataSlice extends ITreeViewResponse {
     variant: string;
     editorLanguage: string;
   };
-  bodyRawData: BodyRawData;
   handleRequestUrlChange: (url: string) => void;
   handleRequestMethodChange: (method: string) => void;
   handleRequestAuthType: (authOption: string) => void;
   handleRequestAuthData: (authType: string, data: string) => void;
+  setOAuth2Data: (data: IOAuth2Data) => void;
   handleRequestOptionChange: (option: string) => void;
   handleRequestAuthType: (type: string) => void;
   handleRequestBodyOption: (type: string) => void;
@@ -91,6 +91,7 @@ export interface IRequestDataSlice extends ITreeViewResponse {
 export interface ITreeViewResponse {
   authData: AuthData;
   authOption: string;
+  oauth2Data: IOAuth2Data;
   requestUrl: string;
   requestMethod: string;
   bodyOption: string;
@@ -152,7 +153,14 @@ export interface IOAuth2Token {
   timestamp: number;
 }
 
+export interface IOAuth2Data {
+  token: string;
+  prefix: string;
+  tokenType: string;
+  addTo: string;
+}
+
 export interface IOAuth2TokenSlice {
-  oauth2Tokens: IOAuth2Token[];
+  oauth2Tokens: IOAuth2Token[];  
   setOAuth2Tokens: (tokens: IOAuth2Token[]) => void;
 }

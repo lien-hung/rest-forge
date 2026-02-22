@@ -41,6 +41,7 @@ const ResponsePanel = () => {
         tableData,
         authData,
         authOption,
+        oauth2Data,
         requestUrl,
         requestMethod,
         bodyOption,
@@ -51,6 +52,7 @@ const ResponsePanel = () => {
       handleTreeViewClick({
         authData,
         authOption,
+        oauth2Data,
         requestUrl,
         requestMethod,
         bodyOption,

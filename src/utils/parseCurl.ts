@@ -31,6 +31,7 @@ function parseCurl(command: string) {
     requestUrl: "",
     authOption: TYPE.NO_AUTH,
     authData: { username: "", password: "", token: "", tokenPrefix: "Bearer" },
+    oauth2Data: { token: "", prefix: "Bearer", tokenType: "Access token", addTo: "Headers" },
     bodyOption: "None",
     bodyRawOption: "Text",
     bodyRawData: { text: "", javascript: "", json: "", html: "", xml: "" },
