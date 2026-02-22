@@ -6,18 +6,25 @@ const MenuOption = ({
   children,
   currentOption,
   menuOption,
+  isSeparate,
+  isLast,
 }: IMenuOptionProps) => {
   return (
-    <MenuOptionWrapper primary={currentOption === menuOption}>
+    <MenuOptionWrapper
+      primary={currentOption === menuOption}
+      isSeparate={isSeparate}
+      isLast={isLast}
+    >
       {children}
     </MenuOptionWrapper>
   );
 };
 
-const MenuOptionWrapper = styled.div<{ primary: boolean }>`
+const MenuOptionWrapper = styled.div<{ primary: boolean, isSeparate?: boolean, isLast?: boolean }>`
   display: flex;
   align-items: center;
-  margin-right: 2rem;
+  margin-left: ${(props) => (props.isSeparate && "auto")};
+  margin-right: ${(props) => (props.isLast ? "0" : "2rem")};
   padding: ${(props) =>
     props.primary ? "0 0.2rem 0.4rem 0.2rem" : "0 0.2rem 0.6rem 0.2rem"};
   border-bottom: ${(props) =>

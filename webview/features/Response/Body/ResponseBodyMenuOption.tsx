@@ -43,7 +43,7 @@ const ResponseBodyViewOption = () => {
 };
 
 const SelectOptionWrapper = styled.select`
-  width: 7rem;
+  width: auto;
   height: 2.3rem;
   margin-left: 1rem;
   padding-left: 0.7rem;

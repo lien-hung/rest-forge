@@ -133,7 +133,6 @@ const RequestCodeSnippet = () => {
             </option>
           ))}
         </SelectOptionWrapper>
-        <h3 className="variantsLabel">Variants: </h3>
         <SelectOptionWrapper
           onChange={(event) =>
             handleCodeSnippetVariantChange(event.target.value)
@@ -165,7 +164,7 @@ const RequestCodeSnippet = () => {
 };
 
 const SelectOptionWrapper = styled.select`
-  width: 9rem;
+  width: auto;
   height: 2.3rem;
   margin: 0 0 0 1rem;
   padding-left: 0.7rem;

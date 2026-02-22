@@ -24,6 +24,8 @@ export interface IMenuOptionProps {
   children: ReactElement;
   currentOption: string | null;
   menuOption: string;
+  isSeparate?: boolean;
+  isLast?: boolean;
 }
 
 export interface IMessageProps {

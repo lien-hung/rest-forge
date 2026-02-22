@@ -32,6 +32,8 @@ const RequestMenu = () => {
             <MenuOption
               currentOption={requestOption}
               menuOption={requestMenuOption}
+              isSeparate={index === OPTION.REQUEST_MENU_OPTIONS.length - 1}
+              isLast={index === OPTION.REQUEST_MENU_OPTIONS.length - 1}
             >
               <h3 onClick={handleOptionChange}>{requestMenuOption}</h3>
             </MenuOption>

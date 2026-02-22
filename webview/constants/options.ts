@@ -13,13 +13,7 @@ const OPTION = {
     "Send client credentials in body",
   ],
   REQUEST_METHOD_OPTIONS: ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"],
-  REQUEST_MENU_OPTIONS: [
-    "Params",
-    "Authorization",
-    "Headers",
-    "Body",
-    "Code Snippet",
-  ],
+  REQUEST_MENU_OPTIONS: ["Params", "Auth", "Headers", "Body", "{ }"],
   REQUEST_BODY_RAW_OPTIONS: [
     { option: "Text", headerField: "text/plain" },
     { option: "JavaScript", headerField: "application/javascript" },

@@ -12,6 +12,7 @@ const REQUEST = {
   // Menu options
   PARAMS: "Params",
   AUTH: "Authorization",
+  AUTH_SHORT: "Auth",
   ADD_TO_OPTION: "Add To Option",
   GRANT_TYPE: "Grant Type",
   CLIENT_AUTH_OPTION: "Client Auth Option",

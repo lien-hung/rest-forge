@@ -35,7 +35,7 @@ const RequestMenuOption = () => {
           title={requestOption}
         />
       );
-    case REQUEST.AUTH:
+    case REQUEST.AUTH_SHORT:
       return <RequestAuthSelectMenu />;
     case COMMON.BODY:
       return <RequestBodySelectMenu />;

@@ -11,7 +11,7 @@ const DetailOption = ({ children }: ICommonChildProps) => {
 const DetailOptionWrapper = styled.div`
   display: flex;
   flex-flow: row;
-  padding-left: 1.3rem;
+  padding: 0 1.3rem;
   flex: 0 1 auto;
   border-bottom: 1px solid rgba(128, 128, 128, 0.7);
   

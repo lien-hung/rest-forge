@@ -30,10 +30,6 @@ const SelectWrapperContainer = styled.div<ISelectWrapperStyledProps>`
   h3 {
     font-size: 1.2rem;
   }
-
-  .variantsLabel {
-    margin-left: 1.5rem;
-  }
 `;
 
 export default SelectWrapper;
