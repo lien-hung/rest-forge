@@ -23,17 +23,6 @@ export interface ITableRow {
   prefix?: string;
 }
 
-export interface TreeViewTableRow {
-  id: string;
-  optionType: string;
-  isChecked: boolean;
-  key: string;
-  value: string;
-  rowReadOnly: boolean;
-  authType?: string;
-  prefix?: string;
-}
-
 export interface IResizeBarSlice {
   requestMenuWidth: string;
   handleRequestWidthChange: (value: number) => void;
@@ -118,13 +107,19 @@ export interface ITableData {
   "Form Encoded": ITableRow[];
 }
 
+export interface RowDataParam {
+  key?: string;
+  value?: string;
+  prefix?: string;
+}
+
 export interface IKeyValueTableDataSlice {
   tableData: ITableData;
   addNewTableRow: (type: OptionType) => void;
   deleteTableRow: (type: OptionType, id: string) => void;
   addRequestBodyHeaders: (value: string) => void;
   removeRequestBodyHeaders: () => void;
-  addAuthTableRow: (authType: string, optionType: OptionType, key?: string, value?: string, prefix?: string) => void;
+  addAuthTableRow: (authType: string, optionType: OptionType, data?: RowDataParam) => void;
   removeAuthTableRow: (type: OptionType) => void;
   handleRequestCheckbox: (type: OptionType, id: string) => void;
   handleRequestKey: (type: OptionType, id: string, detail: string) => void;

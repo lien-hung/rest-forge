@@ -84,9 +84,9 @@ const RequestOAuth2 = () => {
 
     if (token) {
       if (addTo === REQUEST.ADD_TO_HEADERS) {
-        addAuthTableRow(tokenType, "Headers", REQUEST.AUTH, tokenHeader, headerPrefix);
+        addAuthTableRow(tokenType, "Headers", { key: REQUEST.AUTH, value: tokenHeader, prefix: headerPrefix });
       } else {
-        addAuthTableRow(tokenType, "Params", "access_token", token);
+        addAuthTableRow(tokenType, "Params", { key: "access_token", value: token });
       }
     }
   };

@@ -137,7 +137,7 @@ const keyValueTableDataSlice: StateCreator<
     }));
   },
 
-  addAuthTableRow: (authType, optionType, key, value, prefix) => {
+  addAuthTableRow: (authType, optionType, data) => {
     set((state) => ({
       tableData: {
         ...state.tableData,
@@ -145,10 +145,11 @@ const keyValueTableDataSlice: StateCreator<
           {
             id: crypto.randomUUID(),
             isChecked: true,
-            key: key || "",
-            value: value || "",
+            key: data?.key || "",
+            value: data?.value || "",
             rowReadOnly: true,
-            authType, prefix,
+            authType,
+            prefix: data?.prefix,
           },
           ...state.tableData[optionType],
         ],
