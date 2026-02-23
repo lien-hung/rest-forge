@@ -34,9 +34,16 @@ async function generateResponseObject(
     response.headers.forEach((value, key) => {
       headersArray.push({ key: key, value: value });
     });
-    const responseBody = await response.text();
     
-    const responseBodySize = Buffer.from(responseBody).length;
+    const contentTypeHeader = headersArray.find((header) => header.key.toLowerCase() === "content-type");
+    let responseBody: string | ArrayBuffer;
+    if (contentTypeHeader && contentTypeHeader.value.includes("image")) {
+      responseBody = await response.blob().then(blob => blob.arrayBuffer());
+    } else {
+      responseBody = await response.text();
+    }
+    
+    const responseBodySize = responseBody instanceof ArrayBuffer ? responseBody.byteLength : Buffer.from(responseBody).length;
     const headersSize = Buffer.from(JSON.stringify(headersArray)).length;
 
     const responseDataObject = {

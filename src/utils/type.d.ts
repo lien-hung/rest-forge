@@ -16,7 +16,6 @@ export interface IRequestTreeItemState {
   url: string;
   method: string;
   headers: Headers;
-  responseType: string;
   requestedTime: number;
   id: string;
   name: string;
@@ -96,7 +95,6 @@ export interface IRequestData {
   method: string;
   headers: IRequestHeaderInformation;
   body: string | FormData | URLSearchParams;
-  responseType: string;
 }
 
 export interface IExtensionConfig {

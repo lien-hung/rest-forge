@@ -233,7 +233,6 @@ class MainWebviewPanel {
       method: this.method,
       headers: this.headers,
       body: this.body,
-      responseType: TYPE.TEXT
     };
 
     const responseObject = await generateResponseObject(requestData);

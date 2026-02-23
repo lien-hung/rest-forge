@@ -24,6 +24,7 @@ const ResponsePanel = () => {
       responseData: state.responseData,
       requestInProcess: state.requestInProcess,
       handleResponseData: state.handleResponseData,
+      handleResponseBodyOption: state.handleResponseBodyOption,
       handleResponseBodyViewFormat: state.handleResponseBodyViewFormat,
       handleRequestProcessStatus: state.handleRequestProcessStatus,
       handleTreeViewClick: state.handleTreeViewClick,
@@ -56,16 +57,23 @@ const ResponsePanel = () => {
     return formatted;
   };
 
-  const hasXmlContentType = (headers: { key: string, value: string }[]) =>
-    headers.some(({ key, value }) => 
-      key.toLowerCase() === "content-type" && value.toLowerCase().includes("application/xml")
+  const hasContentType = (headers: { key: string, value: string }[], type: string) =>
+    headers.some(({ key, value }) =>
+      key.toLowerCase() === "content-type" && value.toLowerCase().includes(type)
     );
 
   const handleExtensionMessage = (event: MessageEvent) => {
     if (event.data.type === RESPONSE.RESPONSE) {
-      if (hasXmlContentType(event.data.headers)) {
+      if (hasContentType(event.data.headers, "xml")) {
         handleResponseData({ ...event.data, body: formatXml(event.data.body) });
         handleResponseBodyViewFormat("XML");
+      } else if (hasContentType(event.data.headers, "image")) {
+        const contentType = event.data.headers.find((header: any) => header.key.toLowerCase() === "content-type");
+        const imageBuffer = event.data.body;
+        const imageBlob = new Blob([imageBuffer], { type: contentType && contentType.value });
+        const imageObjUrl = URL.createObjectURL(imageBlob);
+        const srcDoc = `<!DOCTYPE html><img src="${imageObjUrl}" />`;
+        handleResponseData({ ...event.data, body: srcDoc });
       } else {
         handleResponseData(event.data);
       }

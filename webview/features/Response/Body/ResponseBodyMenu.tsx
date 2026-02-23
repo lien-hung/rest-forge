@@ -9,19 +9,19 @@ import useStore from "../../../store/useStore";
 import ResponseBodyViewOption from "./ResponseBodyMenuOption";
 
 const RequestBodyMenu = () => {
-  const { responseData, responseBodyOption, handleResponseBodyOptionChange } =
+  const { responseData, responseBodyOption, handleResponseBodyOption } =
     useStore(
       useShallow((state) => ({
         responseData: state.responseData,
         responseBodyOption: state.responseBodyOption,
-        handleResponseBodyOptionChange: state.handleResponseBodyOption,
+        handleResponseBodyOption: state.handleResponseBodyOption,
       }))
     );
 
   const handleOptionChange = (event: MouseEvent) => {
     const clickedTarget = event.target as HTMLDivElement;
 
-    handleResponseBodyOptionChange(clickedTarget.innerText);
+    handleResponseBodyOption(clickedTarget.innerText);
   };
 
   const handleCopyIconClick = (value: string | undefined) => {
