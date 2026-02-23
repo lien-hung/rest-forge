@@ -203,12 +203,11 @@ class MainWebviewPanel {
           new Array<IParameterKeyValueData>
         );
 
-        // Convert string (base64) to blob for form data
+        // Convert array buffer to blob for form data
         flatTableData.forEach((row) => {
           if (row.optionType === TYPE.BODY_FORM_DATA && row.isChecked && row.valueType === "File") {
-            fetch(row.value)
-              .then(res => res.blob())
-              .then(blob => row.value = blob);
+            const file = new File([row.value], row.fileName);
+            row.value = file;
           }
         });
 
@@ -244,6 +243,7 @@ class MainWebviewPanel {
         requestObject.tableData["Form Data"].forEach((row) => {
           if (row.valueType === "File") {
             row.value = "";
+            delete row.fileName;
           }
         });
 

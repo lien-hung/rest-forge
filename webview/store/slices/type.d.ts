@@ -17,11 +17,12 @@ export interface ITableRow {
   id: string;
   isChecked: boolean;
   key: string;
-  value: string;
+  value: string | ArrayBuffer;
   rowReadOnly: boolean;
   authType?: string;
   prefix?: string;
   valueType?: string;
+  fileName?: string;
   contentType?: string;
 }
 
@@ -126,9 +127,10 @@ export interface IKeyValueTableDataSlice {
   removeAuthTableRow: (type: OptionType) => void;
   handleRequestCheckbox: (type: OptionType, id: string) => void;
   handleRequestKey: (type: OptionType, id: string, detail: string) => void;
-  handleRequestValue: (type: OptionType, id: string, detail: string) => void;
+  handleRequestValue: (type: OptionType, id: string, detail: string | ArrayBuffer) => void;
   handleHeaderPrefix: (id: string, detail: string) => void;
   handleFormValueType: (id: string, detail: string) => void;
+  handleFormFileName: (id: string, detail: string) => void;
   handleFormContentType: (id: string, detail: string) => void;
   handleParamsTableData: (params: ITableRow[]) => void;
   handleTreeViewTableData: (tableData: ITableData) => void;

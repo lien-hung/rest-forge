@@ -35,10 +35,12 @@ const RequestAuthApiKey = () => {
 
   const handleAddOptionChange = (event: ChangeEvent<HTMLSelectElement>) => {
     removeAuthTableRow(apiKeyOptionType);
-    if (event.target.value === REQUEST.ADD_TO_HEADERS) {
-      addAuthTableRow(REQUEST.API_KEY, "Headers", { key: apiKeyRow.key, value: apiKeyRow.value });
-    } else {
-      addAuthTableRow(REQUEST.API_KEY, "Params", { key: apiKeyRow.key, value: apiKeyRow.value });
+    if (typeof apiKeyRow.value === "string") {
+      if (event.target.value === REQUEST.ADD_TO_HEADERS) {
+        addAuthTableRow(REQUEST.API_KEY, "Headers", { key: apiKeyRow.key, value: apiKeyRow.value });
+      } else {
+        addAuthTableRow(REQUEST.API_KEY, "Params", { key: apiKeyRow.key, value: apiKeyRow.value });
+      }
     }
   };
   
@@ -60,7 +62,7 @@ const RequestAuthApiKey = () => {
           type="text"
           name="value"
           placeholder="Value"
-          value={apiKeyRow.value}
+          value={apiKeyRow.value as string}
           onChange={(event) => handleRequestValue(apiKeyOptionType, apiKeyRow.id, event.target.value)}
         />
       </InputWrapper>

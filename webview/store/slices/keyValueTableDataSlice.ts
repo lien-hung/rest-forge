@@ -63,6 +63,7 @@ const keyValueTableDataSlice: StateCreator<
         value: "",
         rowReadOnly: false,
         valueType: "",
+        fileName: "",
         contentType: "",
       },
     ],
@@ -120,7 +121,15 @@ const keyValueTableDataSlice: StateCreator<
         [REQUEST.FORM_DATA]: state.tableData["Form Data"].map((row) => dataId === row.id ? { ...row, valueType: detail } : row),
       }
     })),
-    
+
+  handleFormFileName: (dataId, detail) =>
+    set((state) => ({
+      tableData: {
+        ...state.tableData,
+        [REQUEST.FORM_DATA]: state.tableData["Form Data"].map((row) => dataId === row.id ? { ...row, fileName: detail } : row),
+      }
+    })),
+
   handleFormContentType: (dataId, detail) =>
     set((state) => ({
       tableData: {

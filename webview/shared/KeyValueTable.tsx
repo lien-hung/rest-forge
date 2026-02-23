@@ -12,19 +12,12 @@ interface IKeyValueTableProps {
   addNewTableRow?: (type: OptionType, id?: string) => void;
   deleteTableRow?: (type: OptionType, id: string) => void;
   handleRequestKey?: (type: OptionType, id: string, value: string) => void;
-  handleRequestValue?: (type: OptionType, id: string, value: string) => void;
+  handleRequestValue?: (type: OptionType, id: string, value: string | ArrayBuffer) => void;
   handleRequestCheckbox?: (type: OptionType, id: string) => void;
   handleFormValueType?: (id: string, valueType: string) => void;
+  handleFormFileName?: (id: string, fileName: string) => void;
   handleFormContentType?: (id: string, contentType: string) => void;
 }
-
-const toBase64 = (blob: Blob) => {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(blob);
-    reader.onloadend = () => resolve(reader.result);
-  });
-};
 
 const KeyValueTable = ({
   type,
@@ -37,6 +30,7 @@ const KeyValueTable = ({
   handleRequestValue,
   handleRequestCheckbox,
   handleFormValueType,
+  handleFormFileName,
   handleFormContentType,
 }: IKeyValueTableProps) => {
   const addRow = (id: any, type?: OptionType) => {
@@ -110,10 +104,11 @@ const KeyValueTable = ({
                           type="file"
                           onChange={(event) => {
                             const curFiles = event.target.files;
-                            if (handleRequestValue && curFiles && curFiles.length) {
-                              const file = curFiles[0];
-                              const blob = new Blob([file], { type: contentType || file.type });
-                              toBase64(blob).then((res) => typeof res === "string" && handleRequestValue(type, id, res));
+                            if (curFiles && curFiles.length) {
+                              curFiles[0].arrayBuffer().then(res => {
+                                handleRequestValue && handleRequestValue(type, id, res);
+                                handleFormFileName && handleFormFileName(id, curFiles[0].name);
+                              });
                             }
                           }}
                         />
