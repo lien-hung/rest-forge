@@ -15,6 +15,7 @@ const ResponsePanel = () => {
     responseData,
     requestInProcess,
     handleResponseData,
+    handleResponseBodyOption,
     handleResponseBodyViewFormat,
     handleRequestProcessStatus,
     handleTreeViewTableData,
@@ -72,8 +73,9 @@ const ResponsePanel = () => {
         const imageBuffer = event.data.body;
         const imageBlob = new Blob([imageBuffer], { type: contentType && contentType.value });
         const imageObjUrl = URL.createObjectURL(imageBlob);
-        const srcDoc = `<!DOCTYPE html><img src="${imageObjUrl}" />`;
+        const srcDoc = `<!DOCTYPE html><style>* { padding: 0; margin: 0 }</style><img src="${imageObjUrl}" />`;
         handleResponseData({ ...event.data, body: srcDoc });
+        handleResponseBodyOption(COMMON.PREVIEW);
       } else {
         handleResponseData(event.data);
       }

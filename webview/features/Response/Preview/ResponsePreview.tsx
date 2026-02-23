@@ -20,8 +20,8 @@ const IframeWrapper = styled.div`
   iframe {
     width: 100%;
     height: 100%;
-    background: white;
-    overflow: scroll;
+    border: 0;
+    overflow: auto;
   }
 `;
 
