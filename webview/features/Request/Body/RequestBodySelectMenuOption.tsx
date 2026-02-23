@@ -30,9 +30,9 @@ const RequestBodySelectMenuOption = () => {
       deleteTableRow: state.deleteTableRow,
       handleRequestKey: state.handleRequestKey,
       handleRequestValue: state.handleRequestValue,
-      addRequestBodyHeaders: state.addRequestBodyHeaders,
       handleRequestCheckbox: state.handleRequestCheckbox,
-      removeRequestBodyHeaders: state.removeRequestBodyHeaders,
+      handleFormValueType: state.handleFormValueType,
+      handleFormContentType: state.handleFormContentType,
     }))
   );
 

@@ -43,7 +43,9 @@ function getBody(
     );
 
     for (const { key, value } of formDataArray) {
-      urlEncodedFormData.append(key, value);
+      if (typeof value === "string") {
+        urlEncodedFormData.append(key, value);
+      }
     }
 
     return urlEncodedFormData;

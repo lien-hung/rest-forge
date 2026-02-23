@@ -47,7 +47,7 @@ export interface IParameterKeyValueData {
   optionType: string;
   isChecked: boolean;
   key: string;
-  value: string;
+  value: string | Blob;
 }
 
 export interface IBodyRawData {
@@ -69,10 +69,12 @@ export interface ITableRow {
   id: string;
   isChecked: boolean;
   key: string;
-  value: string;
+  value: string | Blob;
   rowReadOnly: boolean;
   authType?: string;
   prefix?: string;
+  valueType?: string;
+  contentType?: string;
 }
 
 export interface ITableData {

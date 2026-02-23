@@ -203,6 +203,15 @@ class MainWebviewPanel {
           new Array<IParameterKeyValueData>
         );
 
+        // Convert string (base64) to blob for form data
+        flatTableData.forEach((row) => {
+          if (row.optionType === TYPE.BODY_FORM_DATA && row.isChecked && row.valueType === "File") {
+            fetch(row.value)
+              .then(res => res.blob())
+              .then(blob => row.value = blob);
+          }
+        });
+
         this.url = getUrl(requestUrl);
         this.method = requestMethod;
         this.headers = getHeaders(flatTableData, authOption, authData);
@@ -233,6 +242,11 @@ class MainWebviewPanel {
     if (responseObject && responseObject.type !== MESSAGE.ERROR) {
       if (this.mainPanel) {
         this.mainPanel.webview.postMessage(responseObject);
+        requestObject.tableData["Form Data"].forEach((row) => {
+          if (row.valueType === "File") {
+            row.value = "";
+          }
+        });
 
         if (this.collectionName && this.requestName) {
           const newRequest = {

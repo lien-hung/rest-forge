@@ -14,7 +14,17 @@ interface IKeyValueTableProps {
   handleRequestKey?: (type: OptionType, id: string, value: string) => void;
   handleRequestValue?: (type: OptionType, id: string, value: string) => void;
   handleRequestCheckbox?: (type: OptionType, id: string) => void;
+  handleFormValueType?: (id: string, valueType: string) => void;
+  handleFormContentType?: (id: string, contentType: string) => void;
 }
+
+const toBase64 = (blob: Blob) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => resolve(reader.result);
+  });
+};
 
 const KeyValueTable = ({
   type,
@@ -26,7 +36,14 @@ const KeyValueTable = ({
   handleRequestKey,
   handleRequestValue,
   handleRequestCheckbox,
+  handleFormValueType,
+  handleFormContentType,
 }: IKeyValueTableProps) => {
+  const addRow = (id: any, type?: OptionType) => {
+    type && addNewTableRow && addNewTableRow(type);
+    type && handleRequestCheckbox && handleRequestCheckbox(type, id);
+  };
+
   return (
     <TableContainerWrapper>
       <TableContainer>
@@ -37,13 +54,14 @@ const KeyValueTable = ({
               {!tableReadOnly && <th></th>}
               <th>Key</th>
               <th>Value</th>
+              {type === "Form Data" && <th>Content type</th>}
               {!tableReadOnly && <th className="tableDelete"></th>}
             </tr>
           </thead>
           <tbody>
             {tableData.map(
               (
-                { id, isChecked, key, value, rowReadOnly, authType }: any,
+                { id, isChecked, key, value, rowReadOnly, authType, valueType, contentType }: any,
                 index: number,
               ) => (
                 <React.Fragment key={id}>
@@ -67,31 +85,66 @@ const KeyValueTable = ({
                         placeholder="Key"
                         value={key}
                         onChange={(event) => {
-                          if (index === tableData.length - 1) {
-                            type && addNewTableRow && addNewTableRow(type);
-                            type && handleRequestCheckbox && handleRequestCheckbox(type, id);
-                          }
+                          if (index === tableData.length - 1) addRow(id, type);
                           type && handleRequestKey && handleRequestKey(type, id, event.target.value);
                         }}
                         readOnly={tableReadOnly || rowReadOnly}
                       />
+                      {type === "Form Data" && (
+                        <TypeOptionWrapper
+                          value={valueType}
+                          onChange={(event) => {
+                            if (index === tableData.length - 1) addRow(id, type);
+                            handleFormValueType && handleFormValueType(id, event.target.value);
+                          }}
+                        >
+                          <option value="" selected hidden></option>
+                          <option value="Text">Text</option>
+                          <option value="File">File</option>
+                        </TypeOptionWrapper>
+                      )}
                     </td>
                     <td>
-                      <input
-                        type="text"
-                        name="Value"
-                        placeholder="Value"
-                        value={value}
-                        onChange={(event) => {
-                          if (index === tableData.length - 1) {
-                            type && addNewTableRow && addNewTableRow(type);
-                            type && handleRequestCheckbox && handleRequestCheckbox(type, id);
-                          }
-                          type && handleRequestValue && handleRequestValue(type, id, event.target.value);
-                        }}
-                        readOnly={tableReadOnly || rowReadOnly}
-                      />
+                      {(type === "Form Data" && valueType === "File") ? (
+                        <input
+                          type="file"
+                          onChange={(event) => {
+                            const curFiles = event.target.files;
+                            if (handleRequestValue && curFiles && curFiles.length) {
+                              const file = curFiles[0];
+                              const blob = new Blob([file], { type: contentType || file.type });
+                              toBase64(blob).then((res) => typeof res === "string" && handleRequestValue(type, id, res));
+                            }
+                          }}
+                        />
+                      ) : (
+                        <input
+                          type="text"
+                          name="Value"
+                          placeholder="Value"
+                          value={value}
+                          onChange={(event) => {
+                            if (index === tableData.length - 1) addRow(id, type);
+                            type && handleRequestValue && handleRequestValue(type, id, event.target.value);
+                          }}
+                          readOnly={tableReadOnly || rowReadOnly}
+                        />
+                      )}
                     </td>
+                    {type === "Form Data" && (
+                      <td>
+                        <input
+                          type="text"
+                          name="Content type"
+                          placeholder="Auto"
+                          value={contentType}
+                          onChange={(event) => {
+                            if (index === tableData.length - 1) addRow(id, type);
+                            handleFormContentType && handleFormContentType(id, event.target.value);
+                          }}
+                        />
+                      </td>
+                    )}
                     {!tableReadOnly && (
                       <th className="tableDelete">
                         {!rowReadOnly && index !== tableData.length - 1 && (
@@ -115,9 +168,20 @@ const KeyValueTable = ({
   );
 };
 
+const TypeOptionWrapper = styled.select`
+  visibility: hidden;
+  width: auto;
+  float: right;
+  margin: -1.55rem -0.35rem 0 0;
+  font-size: 1rem;
+  font-weight: 500;
+  background-color: var(--vscode-editor-background);
+  color: rgba(255, 255, 255, 0.5);
+`;
+
 const TableIconButton = styled.button`
   background: none;
-  display: none;
+  visibility: hidden;
 
   &:hover {
     background-color: transparent;
@@ -162,8 +226,10 @@ const Table = styled.table<{ readOnlyMode: boolean }>`
   }
 
   tbody tr {
-    &:hover button {
-      display: inline-block;
+    &:hover {
+      select, button {
+        visibility: visible;
+      }
     }
   }
 

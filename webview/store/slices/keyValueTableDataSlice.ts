@@ -62,6 +62,8 @@ const keyValueTableDataSlice: StateCreator<
         key: "",
         value: "",
         rowReadOnly: false,
+        valueType: "",
+        contentType: "",
       },
     ],
     "Form Encoded": [
@@ -109,6 +111,22 @@ const keyValueTableDataSlice: StateCreator<
         ...state.tableData,
         [COMMON.HEADERS]: state.tableData["Headers"].map((row) => dataId === row.id ? { ...row, prefix: detail } : row),
       },
+    })),
+
+  handleFormValueType: (dataId, detail) =>
+    set((state) => ({
+      tableData: {
+        ...state.tableData,
+        [REQUEST.FORM_DATA]: state.tableData["Form Data"].map((row) => dataId === row.id ? { ...row, valueType: detail } : row),
+      }
+    })),
+    
+  handleFormContentType: (dataId, detail) =>
+    set((state) => ({
+      tableData: {
+        ...state.tableData,
+        [REQUEST.FORM_DATA]: state.tableData["Form Data"].map((row) => dataId === row.id ? { ...row, contentType: detail } : row),
+      }
     })),
 
   addRequestBodyHeaders: (headerValue) =>

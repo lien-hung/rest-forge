@@ -21,6 +21,8 @@ export interface ITableRow {
   rowReadOnly: boolean;
   authType?: string;
   prefix?: string;
+  valueType?: string;
+  contentType?: string;
 }
 
 export interface IResizeBarSlice {
@@ -126,6 +128,8 @@ export interface IKeyValueTableDataSlice {
   handleRequestKey: (type: OptionType, id: string, detail: string) => void;
   handleRequestValue: (type: OptionType, id: string, detail: string) => void;
   handleHeaderPrefix: (id: string, detail: string) => void;
+  handleFormValueType: (id: string, detail: string) => void;
+  handleFormContentType: (id: string, detail: string) => void;
   handleParamsTableData: (params: ITableRow[]) => void;
   handleTreeViewTableData: (tableData: ITableData) => void;
 }
