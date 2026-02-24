@@ -10,8 +10,9 @@ import { COMMON } from "../constants";
 import useStore from "../store/useStore";
 
 function MainPage() {
-  const { setConfig, setOAuth2Tokens } = useStore(
+  const { setThemeKind, setConfig, setOAuth2Tokens } = useStore(
     useShallow((state) => ({
+      setThemeKind: state.setThemeKind,
       setConfig: state.setConfig,
       setOAuth2Tokens: state.setOAuth2Tokens,
     }))
@@ -19,8 +20,8 @@ function MainPage() {
   
   const handleExtensionMessage = (event: MessageEvent) => {
     if (event.data.type === COMMON.HAS_CONFIG) {
-      const config = event.data.config;
-      setConfig(config);
+      setConfig(event.data.config);
+      setThemeKind(event.data.themeKind);
     } else if (event.data.type === COMMON.HAS_OAUTH2_TOKENS) {
       const tokens = event.data.tokenList;
       setOAuth2Tokens(tokens);

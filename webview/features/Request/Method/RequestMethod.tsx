@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useShallow } from "zustand/shallow";
 
-import { OPTION, REQUEST } from "../../../constants/index";
+import { COMMON, OPTION, REQUEST } from "../../../constants/index";
 import useStore from "../../../store/useStore";
 
 const RequestMethod = () => {
   const customMethods = useStore((state) => state.customMethods);
+  const { themeKind, setThemeKind } = useStore(
+    useShallow((state) => ({
+      themeKind: state.themeKind,
+      setThemeKind: state.setThemeKind,
+    }))
+  );
   const { requestMethod, handleRequestMethodChange } = useStore(
     useShallow((state) => ({
       requestMethod: state.requestMethod,
@@ -15,6 +21,15 @@ const RequestMethod = () => {
   );
 
   const requestMethodOptions = [...OPTION.REQUEST_METHOD_OPTIONS, ...customMethods];
+  const handleExtensionMessage = (event: MessageEvent) => {
+    if (event.data.type === COMMON.THEME_CHANGED) {
+      setThemeKind(event.data.themeKind);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("message", handleExtensionMessage);
+  }, []);
 
   return (
     <MethodSelectOptionWrapper
@@ -22,12 +37,16 @@ const RequestMethod = () => {
       value={requestMethod}
       onChange={(event) => handleRequestMethodChange(event.target.value)}
     >
-      <button className={requestMethod.toLowerCase()}>
+      <button className={requestMethod.toLowerCase() + (themeKind === 1 ? "-light" : "")}>
         {/* @ts-ignore */}
         <selectedcontent></selectedcontent>
       </button>
       {requestMethodOptions.map((method, index) => (
-        <option className={method.toLowerCase()} key={REQUEST.METHOD + index} value={method}>
+        <option
+          key={REQUEST.METHOD + index}
+          value={method}
+          className={method.toLowerCase() + (themeKind === 1 ? "-light" : "")}
+        >
           {method}
         </option>
       ))}
@@ -71,6 +90,14 @@ const MethodSelectOptionWrapper = styled.select`
   .delete  { color: #F79A8E; }
   .head    { color: #6BDD9A; }
   .options { color: #F15EB0; }
+
+  .get-light     { color: #007F31; }
+  .post-light    { color: #AD7A03; }
+  .put-light     { color: #0053B8; }
+  .patch-light   { color: #623497; }
+  .delete-light  { color: #8E1A10; }
+  .head-light    { color: #007F31; }
+  .options-light { color: #A61468; }
 `;
 
 export default RequestMethod;

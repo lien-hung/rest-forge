@@ -141,7 +141,9 @@ export interface ExtensionConfig {
 }
 
 export interface IConfigSlice {
+  themeKind: number;
   customMethods: string[];
+  setThemeKind: (themeKind: number) => void;
   setConfig: (config: ExtensionConfig) => void;
 }
 

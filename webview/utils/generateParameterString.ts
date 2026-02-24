@@ -6,6 +6,10 @@ function generateParameterString(searchParamsData: ITableRow[]) {
   }
 
   const searchParams = searchParamsData.map((param) => {
+    if (typeof param.value !== "string") {
+      return;
+    }
+
     const key = param.key.replaceAll("&", "%26");
     const value = param.value.replaceAll("&", "%26");
     return value ? `${key}=${value}` : key;

@@ -265,12 +265,16 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	);
 
-	const disp_onThemeChangeHandler = vscode.window.onDidChangeActiveColorTheme(() => {
+	const disp_onThemeChangeHandler = vscode.window.onDidChangeActiveColorTheme((e) => {
 		if (currentMainPanel) {
 			const workbenchConfig = vscode.workspace.getConfiguration("workbench");
 			const themeName: string = workbenchConfig.get("colorTheme") || "";
 			const tokenColors = getTokenColors(themeName);
-			currentMainPanel.webview.postMessage({ tokenColors, type: TYPE.THEME_CHANGED });
+			currentMainPanel.webview.postMessage({
+				type: TYPE.THEME_CHANGED,
+				tokenColors,
+				themeKind: e.kind,
+			});
 		}
 	});
 

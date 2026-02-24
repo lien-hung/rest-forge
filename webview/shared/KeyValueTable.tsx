@@ -253,7 +253,7 @@ const Table = styled.table<{ readOnlyMode: boolean }>`
     font-weight: 500;
     text-align: left;
     padding: 0.6rem;
-    border: 0.1rem solid rgb(55, 55, 55);
+    border: 0.1rem solid rgba(128, 128, 128, 0.7);
   }
 
   tbody tr {

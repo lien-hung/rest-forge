@@ -7,7 +7,12 @@ const configSlice: StateCreator<
   [],
   IConfigSlice
 > = (set) => ({
+  themeKind: 2,
   customMethods: [],
+
+  setThemeKind: (themeKind) => {
+    set(() => ({ themeKind }));
+  },
 
   setConfig: (config) => {
     set(() => ({

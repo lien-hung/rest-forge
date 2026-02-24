@@ -105,6 +105,7 @@ class MainWebviewPanel {
         if (command === COMMAND.INIT_CONFIG) {
           const configObject = {
             type: COMMAND.HAS_CONFIG,
+            themeKind: vscode.window.activeColorTheme.kind,
             config: getExtensionConfig()
           };
 
