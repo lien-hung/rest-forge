@@ -142,6 +142,11 @@ const EditorWrapper = styled.div`
 
     .suggest-widget {
       border: var(--vscode-editorSuggestWidget-border);
+
+      .monaco-list .monaco-list-row.focused {
+        background-color: color-mix(in srgb, var(--vscode-editorCursor-foreground) 50%, transparent);
+        color: var(--vscode-editorSuggestWidget-selectedForeground);
+      }
     }
   }
 `;
