@@ -55,7 +55,7 @@ const KeyValueTable = ({
           <tbody>
             {tableData.map(
               (
-                { id, isChecked, key, value, rowReadOnly, authType, valueType, contentType }: any,
+                { id, isChecked, key, value, rowReadOnly, authType, valueType, contentType, fileName }: any,
                 index: number,
               ) => (
                 <React.Fragment key={id}>
@@ -100,18 +100,23 @@ const KeyValueTable = ({
                     </td>
                     <td>
                       {(type === "Form Data" && valueType === "File") ? (
-                        <input
-                          type="file"
-                          onChange={(event) => {
-                            const curFiles = event.target.files;
-                            if (curFiles && curFiles.length) {
-                              curFiles[0].arrayBuffer().then(res => {
-                                handleRequestValue && handleRequestValue(type, id, res);
-                                handleFormFileName && handleFormFileName(id, curFiles[0].name);
-                              });
-                            }
-                          }}
-                        />
+                        <FileInputWrapper>
+                          <input
+                            id={`file-${id}`}
+                            type="file"
+                            onChange={(event) => {
+                              const curFiles = event.target.files;
+                              if (curFiles && curFiles.length) {
+                                curFiles[0].arrayBuffer().then(res => {
+                                  handleRequestValue && handleRequestValue(type, id, res);
+                                  handleFormFileName && handleFormFileName(id, curFiles[0].name);
+                                });
+                              }
+                            }}
+                          />
+                          <FileNameDisplay>{fileName || "No file selected"}</FileNameDisplay>
+                          <FileSelectButton htmlFor={`file-${id}`}>Select</FileSelectButton>
+                        </FileInputWrapper>
                       ) : (
                         <input
                           type="text"
@@ -171,7 +176,38 @@ const TypeOptionWrapper = styled.select`
   font-size: 1rem;
   font-weight: 500;
   background-color: var(--vscode-editor-background);
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--default-text);
+`;
+
+const FileInputWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const FileNameDisplay = styled.div`
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--default-text);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.95rem;
+`;
+
+const FileSelectButton = styled.label`
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: transparent;
+  font-size: 0.95rem;
+
+  &:hover {
+    opacity: 0.9;
+  }
 `;
 
 const TableIconButton = styled.button`
