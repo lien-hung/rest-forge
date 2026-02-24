@@ -1,7 +1,7 @@
 export interface ITableRow {
   isChecked: boolean;
   key: string;
-  value: string;
+  value: string | ArrayBuffer;
 }
 
 export type OptionType = "Params" | "Headers" | "Form Data" | "Form Encoded";
