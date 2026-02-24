@@ -20,6 +20,11 @@ export interface ICopyIconProps {
   value: string | undefined;
 }
 
+export interface ISaveIconProps {
+  handleClick: (value: string | undefined) => void;
+  value: string | undefined;
+}
+
 export interface IMenuOptionProps {
   children: ReactElement;
   currentOption: string | null;

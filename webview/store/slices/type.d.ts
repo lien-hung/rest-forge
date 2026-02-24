@@ -45,7 +45,6 @@ export interface IResponseDataSlice {
 }
 
 export interface IResponseData {
-  type: string;
   body: string;
   headers: IResponseDataHeader[];
   headersLength: number;
@@ -54,6 +53,7 @@ export interface IResponseData {
   requestTime: number;
   responseSize: number;
   message?: string;
+  blobUri?: string;
 }
 
 export interface IResponseDataHeader {

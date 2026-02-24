@@ -1,8 +1,10 @@
+import FileSaver from "file-saver";
 import React, { MouseEvent } from "react";
 import styled from "styled-components";
 import { useShallow } from "zustand/shallow";
 
 import CopyIcon from "../../../components/CopyIcon";
+import SaveIcon from "../../../components/SaveIcon";
 import SelectWrapper from "../../../components/SelectWrapper";
 import { COMMON, OPTION, RESPONSE } from "../../../constants/index";
 import useStore from "../../../store/useStore";
@@ -32,6 +34,17 @@ const RequestBodyMenu = () => {
     }
   };
 
+  const handleSaveIconClick = (value: string | undefined) => {
+    if (value) {
+      if (value.startsWith("blob:vscode-webview://")) {
+        FileSaver.saveAs(value, "response.jpg");
+      } else {
+        const textBlob = new Blob([value], { type: "text/plain;charset=utf-8" });
+        FileSaver.saveAs(textBlob, "response.txt");
+      }
+    }
+  };
+
   return (
     <SelectWrapper primary={false} secondary={false} requestMenu={false}>
       {OPTION.RESPONSE_BODY_OPTIONS.map((option, index) => (
@@ -45,12 +58,18 @@ const RequestBodyMenu = () => {
         </OptionContainer>
       ))}
       <ResponseBodyViewOption />
-      {responseBodyOption !== COMMON.PREVIEW && (
-        <CopyIcon
-          handleClick={handleCopyIconClick}
-          value={responseData?.body}
+      <SideIconsWrapper>
+        {responseBodyOption !== COMMON.PREVIEW && (
+          <CopyIcon
+            handleClick={handleCopyIconClick}
+            value={(typeof responseData?.body) === "string" ? responseData?.body : ""}
+          />
+        )}
+        <SaveIcon
+          handleClick={handleSaveIconClick}
+          value={responseData?.blobUri || responseData?.body}
         />
-      )}
+      </SideIconsWrapper>
     </SelectWrapper>
   );
 };
@@ -65,11 +84,16 @@ const OptionContainer = styled.div<{ primary: boolean; radius: number }>`
     props.radius === 0
       ? "0.5rem 0 0 0.5rem"
       : props.radius === 2
-      ? "0 0.5rem 0.5rem 0"
-      : "0"};
+        ? "0 0.5rem 0.5rem 0"
+        : "0"};
   font-weight: ${(props) => (props.primary ? "400" : "300")};
   color: var(--default-text);
   cursor: pointer;
+`;
+
+const SideIconsWrapper = styled.div`
+  display: flex;
+  margin-left: auto;
 `;
 
 export default RequestBodyMenu;

@@ -91,22 +91,7 @@ class MainWebviewPanel {
     }
 
     this.mainPanel.webview.onDidReceiveMessage(
-      ({
-        tokenRequest,
-        codeChallenge,
-        newTokenList,
-        errorMsg,
-        requestMethod,
-        requestUrl,
-        authOption,
-        authData,
-        oauth2Data,
-        bodyOption,
-        bodyRawOption,
-        bodyRawData,
-        tableData,
-        command
-      }) => {
+      ({ tokenRequest, codeChallenge, newTokenList, errorMsg, requestData, command }) => {
         if (command === COMMAND.ALERT_COPY) {
           vscode.window.showInformationMessage(MESSAGE.COPY_SUCCESFUL_MESSAGE);
           return;
@@ -182,22 +167,21 @@ class MainWebviewPanel {
           return;
         }
 
-        if (requestUrl.length === 0) {
+        if (requestData.requestUrl.length === 0) {
           vscode.window.showWarningMessage(MESSAGE.WARNING_MESSAGE);
           return;
         }
 
-        const requestObject: IRequestObject = {
+        const {
           requestMethod,
           requestUrl,
           authOption,
           authData,
-          oauth2Data,
           bodyOption,
           bodyRawOption,
           bodyRawData,
           tableData,
-        };
+        } = requestData;
         const flatTableData = Object.keys(tableData).reduce(
           (data, key) => [...data, ...tableData[key].map((row: any) => ({ ...row, optionType: key }))],
           new Array<IParameterKeyValueData>
@@ -221,7 +205,7 @@ class MainWebviewPanel {
           bodyRawData
         );
 
-        this.postWebviewMessage(requestObject);
+        this.postWebviewMessage(requestData);
       },
     );
   }

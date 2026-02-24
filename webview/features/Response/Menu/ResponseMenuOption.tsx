@@ -9,14 +9,16 @@ import RequestBodyMenu from "../Body/ResponseBodyMenu";
 
 const ResponseMenuOption = () => {
   const {
-    responseData,
+    responseBody,
+    responseBlobUri,
     responseOption,
     responseHeaders,
     responseBodyOption,
     responseBodyViewFormat,
   } = useStore(
     useShallow((state) => ({
-      responseData: state.responseData?.body,
+      responseBody: state.responseData?.body,
+      responseBlobUri: state.responseData?.blobUri,
       responseOption: state.responseOption,
       responseHeaders: state.responseData?.headers,
       responseBodyOption: state.responseBodyOption,
@@ -39,7 +41,7 @@ const ResponseMenuOption = () => {
           <RequestBodyMenu />
           <div style={{ height: "2rem" }}></div>
           <CodeEditor
-            codeEditorValue={responseData ? responseData : ""}
+            codeEditorValue={responseBlobUri || (responseBody || "")}
             language={
               responseBodyOption === REQUEST.RAW
                 ? REQUEST.RAW

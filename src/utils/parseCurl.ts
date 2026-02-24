@@ -88,6 +88,10 @@ function parseCurl(command: string) {
 
   const parseData = (data: any) => {
     const contentTypeHeader = request.tableData["Headers"].find(d => d.key.toLowerCase() === "content-type")?.value;
+    if (typeof contentTypeHeader !== "string") {
+      return;
+    }
+    
     if (contentTypeHeader?.includes("application/x-www-form-urlencoded")) {
       request.bodyOption = TYPE.BODY_FORM_URLENCODED;
       request.tableData["Form Encoded"].splice(-1, 0, ...parseDataUrlEncode(data));

@@ -13,7 +13,7 @@ import getTokenColors from './utils/getTokenColors';
 export async function activate(context: vscode.ExtensionContext) {
 	const requestHistoryProvider = new RequestHistoryProvider(context);
 	const collectionsProvider = new CollectionsProvider(context);
-
+	
 	const mainWebviewProvider = new MainWebviewPanel(
 		context.extensionUri,
 		requestHistoryProvider,

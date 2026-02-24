@@ -12,16 +12,13 @@ const CopyIcon = ({ handleClick, value }: ICopyIconProps) => {
 };
 
 const CopyIconWrapper = styled.div`
-  margin-left: auto;
-
   .copyIcon {
-    width: 1.3rem;
-    transition: all 0.2s ease-in-out;
+    opacity: 0.7;
+    width: 18px;
     cursor: pointer;
 
     &:hover {
-      opacity: 0.7;
-      transform: scale(1.15);
+      opacity: 1;
     }
   }
 `;

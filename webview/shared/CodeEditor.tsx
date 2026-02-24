@@ -107,7 +107,12 @@ function CodeEditor({
   return (
     <EditorWrapper>
       {viewOption === RESPONSE.PREVIEW && previewMode ? (
-        <ResponsePreview sourceCode={codeEditorValue} />
+        <ResponsePreview
+          sourceCode={codeEditorValue.startsWith("blob:vscode-webview://")
+            ? `<!DOCTYPE html><style>* { padding: 0; margin: 0 }</style><img src="${codeEditorValue}" />`
+            : codeEditorValue
+          }
+        />
       ) : (
         <Editor
           language={language}
