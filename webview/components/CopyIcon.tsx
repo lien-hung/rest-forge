@@ -12,6 +12,8 @@ const CopyIcon = ({ handleClick, value }: ICopyIconProps) => {
 };
 
 const CopyIconWrapper = styled.div`
+  margin-left: auto;
+
   .copyIcon {
     opacity: 0.7;
     width: 18px;
