@@ -35,12 +35,7 @@ function parseCurl(command: string) {
     bodyOption: "None",
     bodyRawOption: "Text",
     bodyRawData: { text: "", javascript: "", json: "", html: "", xml: "" },
-    tableData: {
-      "Params": [emptyTableRow()],
-      "Headers": [emptyTableRow()],
-      "Form Data": [emptyTableRow()],
-      "Form Encoded": [emptyTableRow()],
-    }
+    tableData: { "Params": [], "Headers": [], "Form Data": [], "Form Encoded": [] }
   };
 
   const isJson = (str: string) => {
@@ -69,7 +64,7 @@ function parseCurl(command: string) {
   const addHeader = (item: string) => {
     const field = parseField(item);
     if (!isAuthHeader(field)) {
-      request.tableData["Headers"].splice(-1, 0, newTableRow({ key: field[0], value: field[1] }));
+      request.tableData["Headers"].push(newTableRow({ key: field[0], value: field[1] }));
     }
   };
 
@@ -94,7 +89,7 @@ function parseCurl(command: string) {
     
     if (contentTypeHeader?.includes("application/x-www-form-urlencoded")) {
       request.bodyOption = TYPE.BODY_FORM_URLENCODED;
-      request.tableData["Form Encoded"].splice(-1, 0, ...parseDataUrlEncode(data));
+      request.tableData["Form Encoded"].push(...parseDataUrlEncode(data));
     } else {
       request.bodyOption = TYPE.BODY_RAW;
       if (contentTypeHeader?.includes("application/json") || isJson(data)) {
@@ -117,7 +112,7 @@ function parseCurl(command: string) {
     const contentTypeHeader = request.tableData["Headers"].find(d => d.key.toLowerCase() === "content-type")?.value;
 
     if (!contentTypeHeader) {
-      request.tableData["Headers"].splice(-1, 0, newTableRow({
+      request.tableData["Headers"].push(newTableRow({
         key: "Content-Type",
         value: "application/x-www-form-urlencoded",
         rowReadOnly: true
@@ -184,7 +179,7 @@ function parseCurl(command: string) {
 
       case "A":
       case "user-agent":
-        request.tableData["Headers"].splice(-1, 0, newTableRow({ key: "user-agent", value: argvs[argv] }));
+        request.tableData["Headers"].push(newTableRow({ key: "user-agent", value: argvs[argv] }));
         break;
 
       case "I":
@@ -194,7 +189,7 @@ function parseCurl(command: string) {
 
       case "b":
       case "cookie":
-        request.tableData["Headers"].splice(-1, 0, newTableRow({ key: "Set-Cookie", value: argvs[argv] }));
+        request.tableData["Headers"].push(newTableRow({ key: "Set-Cookie", value: argvs[argv] }));
         break;
 
       case "d":
@@ -207,16 +202,16 @@ function parseCurl(command: string) {
 
       case "data-urlencode":
         request.bodyOption = TYPE.BODY_FORM_URLENCODED;
-        request.tableData["Form Encoded"].splice(-1, 0, ...parseDataUrlEncode(argvs[argv]));
+        request.tableData["Form Encoded"].push(...parseDataUrlEncode(argvs[argv]));
         setRequestMethod();
         break;
 
       case "compressed":
         const index = request.tableData["Headers"].findIndex(d => d.key.toLowerCase() === "accept-encoding");
         if (index === -1) {
-          request.tableData["Headers"].splice(-1, 0, newTableRow({
+          request.tableData["Headers"].push(newTableRow({
             key: "Accept-Encoding",
-            value: argvs[argv] ? (typeof argvs[argv] === "boolean" ? "gzip, deflate" : argvs[argv]) : "gzip, deflate",
+            value: (!argvs[argv] || typeof argvs[argv] === "boolean") ? "gzip, deflate" : argvs[argv],
           }));
         }
         break;
@@ -224,6 +219,11 @@ function parseCurl(command: string) {
       default:
         break;
     }
+  }
+
+  for (const optionType in request.tableData) {
+    // @ts-expect-error
+    request.tableData[optionType].push(emptyTableRow());
   }
 
   return request;
