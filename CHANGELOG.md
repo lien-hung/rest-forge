@@ -2,6 +2,21 @@
 
 All notable changes to the "api-tester" extension will be documented in this file.
 
+## [v3.0.0]
+- New local data storage structure, using an object for table data instead of a single array.
+- Features:
+  - Upload files for form data requests
+  - Import request data from cURL commands
+  - Auto formatting for XML responses
+  - Previews of image requests
+  - Save response data to file
+- Fixes:
+  - Synchronization of tokens between the main panel and "Manage Tokens" panel
+  - Safe URL to params table conversion, with simplified logic and proper handling of `&` and `?` characters
+  - Prompt for request name before saving a request from history to collection
+  - Drop the uppercase requirement for custom method settings
+- Other UI tweaks
+
 ## [v2.2.0]
 - Added support for OAuth 2.0 authorization
 - Added option for customization of header prefixes other than `Bearer`
