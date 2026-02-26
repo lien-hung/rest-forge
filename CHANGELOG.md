@@ -2,6 +2,9 @@
 
 All notable changes to the "api-tester" extension will be documented in this file.
 
+## [v3.0.1]
+- Patch for code snippets of file fields in Form Data requests
+
 ## [v3.0.0]
 - New local data storage structure, using an object for table data instead of a single array.
 - Features:
