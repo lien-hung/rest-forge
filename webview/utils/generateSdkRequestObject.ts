@@ -16,7 +16,11 @@ const generateSdkRequestObject = (
 ) => {
   const requestHeaders = tableData["Headers"].filter((data) => data.key.length > 0);
   const bodyData = tableData[bodyOption]
-    ? tableData[bodyOption].filter((data) => data.key.length > 0)
+    ? tableData[bodyOption]
+        .filter((data) => data.key.length > 0)
+        .map((data) => data.value instanceof ArrayBuffer
+          ? { ...data, src: `C:/fakepath/${data.fileName}`, type: data.valueType.toLowerCase() }
+          : data)
     : new Array<ITableRow>();
   
   const { username, password, token, tokenPrefix } = authData;
