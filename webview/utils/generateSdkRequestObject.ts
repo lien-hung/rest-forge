@@ -19,7 +19,7 @@ const generateSdkRequestObject = (
     ? tableData[bodyOption]
         .filter((data) => data.key.length > 0)
         .map((data) => data.value instanceof ArrayBuffer
-          ? { ...data, src: `C:/fakepath/${data.fileName}`, type: data.valueType.toLowerCase() }
+          ? { ...data, src: `C:/fakepath/${data.fileName}`, type: data.valueType?.toLowerCase() }
           : data)
     : new Array<ITableRow>();
   

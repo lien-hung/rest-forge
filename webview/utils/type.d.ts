@@ -2,8 +2,8 @@ export interface ITableRow {
   isChecked: boolean;
   key: string;
   value: string | ArrayBuffer;
-  valueType: string;
-  fileName: string;
+  valueType?: string;
+  fileName?: string;
 }
 
 export type OptionType = "Params" | "Headers" | "Form Data" | "Form Encoded";

@@ -43,8 +43,7 @@ const RequestPanel = () => {
 
   useEffect(() => {
     if (requestMenuRef.current) {
-      requestMenuRef.current.style.width = requestMenuWidth;
-      requestMenuRef.current.style.flexGrow = "0";
+      requestMenuRef.current.style.flex = `0 0 ${requestMenuWidth}`;
     }
   }, [requestMenuWidth]);
 

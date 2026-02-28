@@ -5,8 +5,7 @@ import { shallow, useShallow } from "zustand/shallow";
 import { REQUEST, RESPONSE } from "../../../constants";
 import { ITableRow } from "../../../store/slices/type";
 import useStore from "../../../store/useStore";
-import { generateParameterString, removeUrlParameter, usePrevious } from "../../../utils";
-import getUrlParameters from "../../../utils/getUrlParameters";
+import { generateParameterString, getUrlParameters, removeUrlParameter, usePrevious } from "../../../utils";
 
 const RequestUrl = () => {
   const {
@@ -115,7 +114,7 @@ const RequestUrl = () => {
 };
 
 const InputContainer = styled.input`
-  padding-left: 1rem;
+  padding-left: 0.85rem !important;
   font-size: 1.15rem;
   border: 1px solid color-mix(in srgb, var(--vscode-focusBorder), transparent 30%) !important;
   color: var(--vscode-foreground);

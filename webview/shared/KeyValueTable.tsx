@@ -43,15 +43,14 @@ const KeyValueTable = ({
       <TableContainer>
         {title && <h2>{title}</h2>}
         <Table readOnlyMode={tableReadOnly}>
-          <thead>
-            <tr>
-              {!tableReadOnly && <th></th>}
-              <th>Key</th>
-              <th>Value</th>
-              {type === "Form Data" && <th>Content type</th>}
-              {!tableReadOnly && <th className="tableDelete"></th>}
-            </tr>
-          </thead>
+          {tableReadOnly && (
+            <thead>
+              <tr>
+                <th className="col-key">Key</th>
+                <th className="col-value">Value</th>
+              </tr>
+            </thead>
+          )}
           <tbody>
             {tableData.map(
               (
@@ -59,9 +58,9 @@ const KeyValueTable = ({
                 index: number,
               ) => (
                 <React.Fragment key={id}>
-                  <tr className={rowReadOnly && "readOnlyRow"}>
+                  <tr className={rowReadOnly && "readonly-row"}>
                     {!tableReadOnly && (
-                      <th className={`tableCheckbox ${authType && "authRow"}`}>
+                      <th className={`table-checkbox ${authType && "auth-row"}`}>
                         {index !== tableData.length - 1 && (
                           <input
                             type="checkbox"
@@ -73,17 +72,19 @@ const KeyValueTable = ({
                       </th>
                     )}
                     <td>
-                      <input
-                        type="text"
-                        name="Key"
-                        placeholder="Key"
-                        value={key}
-                        onChange={(event) => {
-                          if (index === tableData.length - 1) addRow(id, type);
-                          type && handleRequestKey && handleRequestKey(type, id, event.target.value);
-                        }}
-                        readOnly={tableReadOnly || rowReadOnly}
-                      />
+                      {tableReadOnly ? key : (
+                        <input
+                          type="text"
+                          name="Key"
+                          placeholder="Key"
+                          value={key}
+                          onChange={(event) => {
+                            if (index === tableData.length - 1) addRow(id, type);
+                            type && handleRequestKey && handleRequestKey(type, id, event.target.value);
+                          }}
+                          readOnly={rowReadOnly}
+                        />
+                      )}
                       {type === "Form Data" && (
                         <TypeOptionWrapper
                           value={valueType}
@@ -99,7 +100,7 @@ const KeyValueTable = ({
                       )}
                     </td>
                     <td>
-                      {(type === "Form Data" && valueType === "File") ? (
+                      {tableReadOnly ? value : (type === "Form Data" && valueType === "File") ? (
                         <FileInputWrapper>
                           <input
                             id={`file-${id}`}
@@ -135,8 +136,7 @@ const KeyValueTable = ({
                       <td>
                         <input
                           type="text"
-                          name="Content type"
-                          placeholder="Auto"
+                          placeholder="Content type"
                           value={contentType}
                           onChange={(event) => {
                             if (index === tableData.length - 1) addRow(id, type);
@@ -146,7 +146,7 @@ const KeyValueTable = ({
                       </td>
                     )}
                     {!tableReadOnly && (
-                      <th className="tableDelete">
+                      <th className="delete-cell">
                         {!rowReadOnly && index !== tableData.length - 1 && (
                           <TableIconButton
                             type="button"
@@ -172,7 +172,7 @@ const TypeOptionWrapper = styled.select`
   visibility: hidden;
   width: auto;
   float: right;
-  margin: -1.55rem -0.35rem 0 0;
+  margin-top: -1.8rem;
   font-size: 1rem;
   font-weight: 500;
   background-color: var(--vscode-editor-background);
@@ -230,8 +230,10 @@ const TableContainerWrapper = styled.div`
 
 const TableContainer = styled.div`
   width: 100%;
+  height: max-content;
   display: flex;
   flex-direction: column;
+  margin-bottom: 2rem;
 
   h2 {
     margin-bottom: 1.3rem;
@@ -241,6 +243,7 @@ const TableContainer = styled.div`
 
 const Table = styled.table<{ readOnlyMode: boolean }>`
   width: 100%;
+  table-layout: ${(props) => props.readOnlyMode && "fixed"};
   border-collapse: collapse;
 
   thead {
@@ -248,12 +251,21 @@ const Table = styled.table<{ readOnlyMode: boolean }>`
     user-select: none;
   }
 
+  th {
+    font-weight: 500;
+  }
+
+  td {
+    font-style: ${(props) => props.readOnlyMode && "italic"};
+    font-weight: ${(props) => props.readOnlyMode && "300"};
+    opacity: ${(props) => props.readOnlyMode && "0.75"};
+  }
+
   th,
   td {
-    font-weight: 500;
     text-align: left;
     padding: 0.6rem;
-    border: 0.1rem solid rgba(128, 128, 128, 0.7);
+    border: ${(props) => props.readOnlyMode && "0.1rem solid rgb(55, 55, 55)"};
   }
 
   tbody tr {
@@ -264,6 +276,10 @@ const Table = styled.table<{ readOnlyMode: boolean }>`
     }
   }
 
+  tbody:last-child {
+    margin-bottom: 2rem;
+  }
+
   input {
     background-color: transparent;
     color: var(--default-text);
@@ -272,7 +288,15 @@ const Table = styled.table<{ readOnlyMode: boolean }>`
     opacity: ${(props) => props.readOnlyMode && "0.75"};
   }
 
-  .readOnlyRow {
+  .col-key {
+    width: 30%;
+  }
+
+  .col-value {
+    width: 70%;
+  }
+
+  .readonly-row {
     background-color: color-mix(in srgb, var(--vscode-editor-background) 90%, var(--vscode-foreground));
 
     input {
@@ -280,17 +304,17 @@ const Table = styled.table<{ readOnlyMode: boolean }>`
     }
   }
 
-  .tableCheckbox, .tableDelete {
+  .table-checkbox, .delete-cell {
     width: 2.5rem;
     text-align: center;
     padding: 0 0.15rem 0 0.2rem;
   }
   
-  .tableDelete {
+  .delete-cell {
     border-left: hidden;
   }
   
-  .authRow input {
+  .auth-row input {
     &:checked:before {
       border-bottom-color: rgba(128, 128, 128, 0.7);
       border-right-color: rgba(128, 128, 128, 0.7);

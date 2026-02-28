@@ -66,12 +66,9 @@ const ResizeBar = () => {
 };
 
 const ResizeBarHitBox = styled.div`
-  width: 2px;
+  flex: 0 0 2px;
   height: 100vh;
   background: rgba(128, 128, 128, 0.7);
-  display: inline-block;
-  align-self: stretch;
-  align-items: center;
   cursor: ew-resize;
 
   &:hover {
