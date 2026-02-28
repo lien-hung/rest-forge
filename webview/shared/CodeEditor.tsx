@@ -52,10 +52,13 @@ function CodeEditor({
     monacoRef.current.editor.setTheme("currentTheme");
   }
 
-  const handleEditorDidMount = (editor: any, monaco: Monaco) => {
-    editorRef.current = editor;
+  const handleEditorWillMount = (monaco: Monaco) => {
     monacoRef.current = monaco;
     setCurrentTheme(getCurrentTheme());
+  }
+
+  const handleEditorDidMount = (editor: any) => {
+    editorRef.current = editor;
   };
 
   const handleExtensionMessage = (event: MessageEvent) => {
@@ -109,7 +112,7 @@ function CodeEditor({
       {viewOption === RESPONSE.PREVIEW && previewMode ? (
         <ResponsePreview
           sourceCode={codeEditorValue.startsWith("blob:vscode-webview://")
-            ? `<!DOCTYPE html><style>* { padding: 0; margin: 0 }</style><img src="${codeEditorValue}" />`
+            ? `<!DOCTYPE html><style>* { margin: 0; width: 100%; height: calc(100% - 1.5px); }</style><object data="${codeEditorValue}"></object>`
             : codeEditorValue
           }
         />
@@ -119,6 +122,7 @@ function CodeEditor({
           value={codeEditorValue}
           options={{ ...editorOption, fontFamily: currentTheme.fontFamily }}
           onChange={handleEditorChange}
+          beforeMount={handleEditorWillMount}
           onMount={handleEditorDidMount}
         />
       )}
@@ -144,7 +148,7 @@ const EditorWrapper = styled.div`
       border: var(--vscode-editorSuggestWidget-border);
 
       .monaco-list .monaco-list-row.focused {
-        background-color: color-mix(in srgb, var(--vscode-editorCursor-foreground) 50%, transparent);
+        background-color: color-mix(in srgb, var(--vscode-editor-background) 90%, var(--vscode-foreground));
         color: var(--vscode-editorSuggestWidget-selectedForeground);
       }
     }
