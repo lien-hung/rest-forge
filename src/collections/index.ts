@@ -1,5 +1,6 @@
 import fs from "fs";
-import { EventEmitter, ExtensionContext, TreeDataProvider } from "vscode";
+import path from "path";
+import { EventEmitter, ExtensionContext, TreeDataProvider, Uri } from "vscode";
 
 import { RequestCollection, RequestCollectionItem } from "./tree-items";
 import { IRequestTreeItemState } from "../utils/type";
@@ -16,6 +17,8 @@ export default class CollectionsProvider implements TreeDataProvider<Collections
   public getTreeItem(element: CollectionsProviderItem): CollectionsProviderItem {
     if (element instanceof RequestCollectionItem) {
       element.iconPath = getMethodIcons(this.extensionContext, element.request.method);
+    } else if (element instanceof RequestCollection) {
+      element.iconPath = Uri.file(this.extensionContext.asAbsolutePath(path.join("icons/svg", "collection.svg")));
     }
     return element;
   }
