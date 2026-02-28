@@ -37,8 +37,14 @@ async function generateResponseObject(
     
     const contentTypeHeader = headersArray.find((header) => header.key.toLowerCase() === "content-type");
     let responseBody: string | ArrayBuffer;
-    if (contentTypeHeader && contentTypeHeader.value.includes("image")) {
-      responseBody = await response.blob().then(blob => blob.arrayBuffer());
+    if (contentTypeHeader) {
+      const mediaTypes = ["image", "video", "audio"];
+      const isMediaFile = mediaTypes.reduce((cur, val) => cur || contentTypeHeader.value.includes(val), false);
+      if (isMediaFile) {
+        responseBody = await response.blob().then(blob => blob.arrayBuffer());
+      } else {
+        responseBody = await response.text();
+      }
     } else {
       responseBody = await response.text();
     }

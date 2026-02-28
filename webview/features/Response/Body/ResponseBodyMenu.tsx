@@ -37,7 +37,7 @@ const RequestBodyMenu = () => {
   const handleSaveIconClick = (value: string | undefined) => {
     if (value) {
       if (value.startsWith("blob:vscode-webview://")) {
-        FileSaver.saveAs(value, "response.jpg");
+        FileSaver.saveAs(value, "response");
       } else {
         const textBlob = new Blob([value], { type: "text/plain;charset=utf-8" });
         FileSaver.saveAs(textBlob, "response.txt");

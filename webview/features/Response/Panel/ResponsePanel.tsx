@@ -68,10 +68,10 @@ const ResponsePanel = () => {
       if (hasContentType(event.data.headers, "xml")) {
         handleResponseData({ ...event.data, body: formatXml(event.data.body) });
         handleResponseBodyViewFormat("XML");
-      } else if (hasContentType(event.data.headers, "image")) {
+      } else if (event.data.body instanceof ArrayBuffer) {
         const contentType = event.data.headers.find((header: any) => header.key.toLowerCase() === "content-type");
-        const imageBlob = new Blob([event.data.body], { type: contentType && contentType.value });
-        handleResponseData({ ...event.data, blobUri: URL.createObjectURL(imageBlob) });
+        const fileBlob = new Blob([event.data.body], { type: contentType && contentType.value });
+        handleResponseData({ ...event.data, blobUri: URL.createObjectURL(fileBlob) });
         handleResponseBodyOption(COMMON.PREVIEW);
       } else {
         handleResponseData(event.data);
