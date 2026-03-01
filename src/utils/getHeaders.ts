@@ -23,7 +23,9 @@ function getHeaders(
   };
 
   for (const { key, value } of headersData) {
-    headersObject[key] = value;
+    if (typeof value === "string") {
+      headersObject[key] = value;
+    }
   }
 
   if (authOption === TYPE.BASIC_AUTH) {

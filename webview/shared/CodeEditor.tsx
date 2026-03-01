@@ -149,7 +149,7 @@ const EditorWrapper = styled.div`
 
       .monaco-list .monaco-list-row.focused {
         background-color: color-mix(in srgb, var(--vscode-editor-background) 90%, var(--vscode-foreground));
-        color: var(--vscode-editorSuggestWidget-selectedForeground);
+        color: var(--vscode-foreground);
       }
     }
   }

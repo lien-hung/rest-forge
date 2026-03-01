@@ -95,6 +95,9 @@ function getTokenColors(themeName: string): TokenColor[] {
     { token: "metatag.xml",    ...tokenColorObject["entity.name.tag"] },
     { token: "delimiter.html", ...tokenColorObject["punctuation.definition.tag"] },
     { token: "delimiter.xml",  ...tokenColorObject["punctuation.definition.tag"] },
+
+    // Shell script
+    { token: "attribute.name.shell", ...tokenColorObject["string.unquoted"] },
   ];
 }
 
