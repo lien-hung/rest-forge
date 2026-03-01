@@ -21,6 +21,7 @@ const RequestAuthBearerToken = () => {
 
   return (
     <Wrapper>
+      <h2>Bearer Token</h2>
       <InputWrapper>
         <label htmlFor="token">Token:</label>
         <input

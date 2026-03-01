@@ -46,6 +46,7 @@ const RequestAuthApiKey = () => {
   
   return (
     <Wrapper>
+      <h2>API Key</h2>
       <InputWrapper>
         <label htmlFor="key">Key:</label>
         <input

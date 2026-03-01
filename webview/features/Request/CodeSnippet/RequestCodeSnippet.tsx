@@ -118,7 +118,7 @@ const RequestCodeSnippet = () => {
   return (
     <>
       <SelectWrapper primary={false} secondary={false} requestMenu={false}>
-        <h3>Language: </h3>
+        <h3>Language:</h3>
         <SelectOptionWrapper
           onChange={handleCodeSnippetOption}
           value={codeSnippetOption.language}

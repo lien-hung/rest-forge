@@ -24,6 +24,7 @@ const RequestBasicAuth = () => {
 
   return (
     <Wrapper>
+      <h2>Basic Auth</h2>
       <InputWrapper>
         <label htmlFor="username">Username:</label>
         <PasswordWrapper>

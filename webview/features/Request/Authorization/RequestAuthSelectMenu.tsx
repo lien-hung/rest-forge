@@ -36,7 +36,7 @@ const RequestAuthSelectMenu = () => {
   return (
     <>
       <SelectWrapper requestMenu primary={false} secondary={false}>
-        <h3>Type: </h3>
+        <h3>Type:</h3>
         <OptionWrapper
           onChange={handleAuthOptionChange}
           value={authOption}
@@ -61,7 +61,6 @@ const OptionWrapper = styled.select`
   border: 0.1rem solid rgba(128, 128, 128, 0.7);
   border-radius: 0.25rem;
   font-size: 1.1rem;
-  font-weight: 600;
   background-color: var(--vscode-editor-background);
   color: var(--default-text);
 `;

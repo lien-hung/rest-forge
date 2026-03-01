@@ -85,16 +85,6 @@ textarea {
   background-color: var(--vscode-input-background);
 }
 
-input[type="text"] {
-  padding: 4px 0;
-  outline: none;
-  border-bottom: 1px solid var(--vscode-tab-inactiveForeground);
-}
-
-input[type="text"]:focus {
-  border-bottom-color: 1px solid var(--vscode-tab-activeForeground);
-}
-
 input[type="checkbox"] {
   position: relative;
   box-sizing: content-box;
@@ -135,4 +125,14 @@ textarea::placeholder {
 
 table {
   border: var(--default-border-size) solid var(--border);
+}
+
+table input[type="text"] {
+  padding: 4px 0;
+  outline: none;
+  border-bottom: 1px solid var(--vscode-tab-inactiveForeground);
+}
+
+table input[type="text"]:focus {
+  border-bottom-color: 1px solid var(--vscode-tab-activeForeground);
 }

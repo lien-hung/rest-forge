@@ -28,6 +28,7 @@ const SelectWrapperContainer = styled.div<ISelectWrapperStyledProps>`
   margin: ${(props) => props.primary ? "0 0 0 1rem" : "1.3rem 1.3rem 0 1.3rem"};
 
   h3 {
+    font-weight: 600;
     font-size: 1.2rem;
   }
 `;

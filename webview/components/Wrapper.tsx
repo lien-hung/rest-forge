@@ -9,7 +9,7 @@ const Wrapper = ({ children }: ICommonChildProps) => {
 const ComponentWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 2rem 1.3rem 0 1.3rem;
+  margin: 1.3rem 1.3rem 0 1.3rem;
   overflow-y: auto;
   scrollbar-width: none;
 
