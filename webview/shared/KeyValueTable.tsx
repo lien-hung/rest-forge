@@ -61,14 +61,12 @@ const KeyValueTable = ({
                   <tr className={rowReadOnly && "readonly-row"}>
                     {!tableReadOnly && (
                       <th className={`table-checkbox ${authType && "auth-row"}`}>
-                        {index !== tableData.length - 1 && (
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={() => type && handleRequestCheckbox && handleRequestCheckbox(type, id)}
-                            disabled={authType}
-                          />
-                        )}
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => type && handleRequestCheckbox && handleRequestCheckbox(type, id)}
+                          disabled={authType || index === tableData.length - 1}
+                        />
                       </th>
                     )}
                     <td>
