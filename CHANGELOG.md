@@ -2,6 +2,11 @@
 
 All notable changes to the "api-tester" extension will be documented in this file.
 
+## [v3.1.0]
+- Support for all media responses (image/video/audio)
+- Added folder icon for collections in the collection tree view
+- UI styles tweaks: code editor, resize bar; simpler looking tables.
+
 ## [v3.0.1]
 - Patch for code snippets of file fields in Form Data requests
 
