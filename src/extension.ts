@@ -13,7 +13,7 @@ import getTokenColors from './utils/getTokenColors';
 export async function activate(context: vscode.ExtensionContext) {
 	const requestHistoryProvider = new RequestHistoryProvider(context);
 	const collectionsProvider = new CollectionsProvider(context);
-	
+
 	const mainWebviewProvider = new MainWebviewPanel(
 		context.extensionUri,
 		requestHistoryProvider,
@@ -37,7 +37,15 @@ export async function activate(context: vscode.ExtensionContext) {
 		return inputName;
 	};
 
-	const initializePanel = (collectionName?: string, requestName?: string, id?: string) => {
+	const initializePanel = ({
+		id,
+		collectionName,
+		requestName
+	}: {
+		id?: string,
+		collectionName?: string,
+		requestName?: string
+	}) => {
 		currentMainPanel = mainWebviewProvider.initializeWebview(id, collectionName, requestName);
 		manageTokenWebviewProvider.mainPanel = currentMainPanel;
 
@@ -65,22 +73,24 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const disp_newRequestCmd = vscode.commands.registerCommand(
 		COMMAND.NEW_REQUEST,
-		() => initializePanel()
+		() => initializePanel({})
 	);
 
 	const disp_openRequestCmd = vscode.commands.registerCommand(
 		COMMAND.OPEN_REQUEST,
 		(item: RequestHistoryTreeItem | RequestCollectionItem) => {
-			if (item instanceof RequestCollectionItem) {
-				initializePanel(item.parent.name, item.request.name, item.id);
-			} else {
-				initializePanel();
+			const requestMessage = { type: TYPE.TREEVIEW_DATA, ...item.request.requestObject };
+			if (!currentMainPanel) {
+				setTimeout(() => currentMainPanel?.webview.postMessage(requestMessage), 1000);
 			}
 
-			currentMainPanel?.webview.postMessage({
-				type: TYPE.TREEVIEW_DATA,
-				...item.request.requestObject,
-			});
+			if (item instanceof RequestCollectionItem) {
+				initializePanel({ id: item.id, collectionName: item.parent.name, requestName: item.request.name });
+			} else {
+				initializePanel({});
+			}
+
+			currentMainPanel?.webview.postMessage(requestMessage);
 		}
 	);
 
@@ -202,7 +212,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (!requestName) {
 				return;
 			}
-			initializePanel(collection.name, requestName.trim());
+			initializePanel({ collectionName: collection.name, requestName: requestName.trim() });
 		}
 	);
 
@@ -260,7 +270,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			}
 			const request = parseCurl(inputCurl);
 
-			initializePanel();
+			initializePanel({});
 			currentMainPanel?.webview.postMessage({ type: TYPE.TREEVIEW_DATA, ...request });
 		}
 	);
