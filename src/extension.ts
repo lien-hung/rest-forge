@@ -81,7 +81,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		(item: RequestHistoryTreeItem | RequestCollectionItem) => {
 			const requestMessage = { type: TYPE.TREEVIEW_DATA, ...item.request.requestObject };
 			if (!currentMainPanel) {
-				setTimeout(() => currentMainPanel?.webview.postMessage(requestMessage), 1000);
+				setTimeout(() => currentMainPanel?.webview.postMessage(requestMessage), 1500);
 			}
 
 			if (item instanceof RequestCollectionItem) {

@@ -30,15 +30,12 @@ const RequestBodySelectMenu = () => {
     (rawOption) => rawOption.option === bodyRawOption,
   );
 
-  const handleBodyOptionChoice = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleBodyOptionChoice = (event: ChangeEvent<HTMLSelectElement>) => {
     const inputTarget = event.target;
     handleRequestBodyOption(inputTarget.value);
+    removeRequestBodyHeaders();
 
-    if (event.target.value === REQUEST.NONE) {
-      removeRequestBodyHeaders();
-    } else {
-      removeRequestBodyHeaders();
-
+    if (event.target.value !== REQUEST.NONE) {
       addRequestBodyHeaders(inputTarget.getAttribute("header-type") || "");
     }
   };
@@ -46,25 +43,25 @@ const RequestBodySelectMenu = () => {
   return (
     <>
       <SelectWrapper primary={false} secondary={false} requestMenu>
-        {OPTION.REQUEST_BODY_OPTIONS.map(({ option, headerField }, index) => (
-          <RadioInputWrapper key={COMMON.BODY + index}>
-            <label>
-              <input
-                type="radio"
-                name="bodyOption"
-                checked={bodyOption === option}
-                value={option}
-                header-type={
-                  option === REQUEST.RAW
-                    ? rawOptionHeaderField[0].headerField
-                    : headerField
-                }
-                onChange={handleBodyOptionChoice}
-              />
-              <span>{option}</span>
-            </label>
-          </RadioInputWrapper>
-        ))}
+        <h3>Type:</h3>
+        <OptionWrapper
+          onChange={handleBodyOptionChoice}
+          value={bodyOption}
+        >
+          {OPTION.REQUEST_BODY_OPTIONS.map(({ option, headerField }, index) => (
+            <option
+              key={COMMON.BODY + index}
+              value={option}
+              header-type={
+                option === REQUEST.RAW
+                  ? rawOptionHeaderField[0].headerField
+                  : headerField
+              }
+            >
+              {option}
+            </option>
+          ))}
+        </OptionWrapper>
         {bodyOption === REQUEST.RAW && (
           <>
             <RequestBodyRawOptions />
@@ -77,42 +74,16 @@ const RequestBodySelectMenu = () => {
   );
 };
 
-const RadioInputWrapper = styled.div`
-  margin: 0.5rem 1rem 0.5rem 0;
-
-  label {
-    display: flex;
-    user-select: none;
-    position: relative;
-
-    input {
-      appearance: none;
-      position: absolute;
-      left: 0;
-
-      &:before {
-        content: '';
-        position: absolute;
-        width: 14px; height: 14px;
-        border: 1px solid rgba(128, 128, 128, 0.7);
-        border-radius: 100%;
-        left: 0;
-      }
-
-      &:checked:after {
-        content: '';
-        position: absolute;
-        left: 3px; top: 3px;
-        background: var(--vscode-button-background);
-        width: 8px; height: 8px;
-        border-radius: 100%;
-      }
-    }
-
-    span {
-      padding-left: 2rem;
-    }
-  }
+const OptionWrapper = styled.select`
+  width: auto;
+  height: 2.3rem;
+  margin-left: 1rem;
+  padding-left: 0.5rem;
+  border: 0.1rem solid rgba(128, 128, 128, 0.7);
+  border-radius: 0.25rem;
+  font-size: 1.1rem;
+  background-color: var(--vscode-editor-background);
+  color: var(--default-text);
 `;
 
 export default RequestBodySelectMenu;

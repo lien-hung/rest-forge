@@ -56,15 +56,15 @@ const RequestBodyRawOptions = () => {
 };
 
 const SelectOptionWrapper = styled.select`
-  width: 6.9rem;
+  width: auto;
   height: 2.3rem;
-  padding-left: 0.7rem;
+  margin-left: 0.3rem;
+  padding-left: 0.5rem;
   border: 0.1rem solid rgba(128, 128, 128, 0.7);
   border-radius: 0.25rem;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 1.1rem;
   background-color: var(--vscode-editor-background);
-  color: var(--vscode-foreground);
+  color: var(--default-text);
 `;
 
 export default RequestBodyRawOptions;
