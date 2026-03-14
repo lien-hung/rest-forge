@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { useShallow } from "zustand/shallow";
 
 import { OPTION, REQUEST } from "../../../constants/index";
@@ -14,12 +15,14 @@ const RequestBodySelectMenuOption = () => {
     bodyRawData,
     bodyRawOption,
     handleBodyRawOptionData,
+    handleBeautifyButton,
   } = useStore(
     useShallow((state) => ({
       bodyOption: state.bodyOption as OptionType,
       bodyRawData: state.bodyRawData,
-      bodyRawOption: state.bodyRawOption.toLowerCase(),
+      bodyRawOption: state.bodyRawOption,
       handleBodyRawOptionData: state.handleBodyRawOptionData,
+      handleBeautifyButton: state.handleBeautifyButton,
     }))
   );
 
@@ -63,14 +66,17 @@ const RequestBodySelectMenuOption = () => {
       );
     case REQUEST.RAW:
       return (
-        <>
-          <div style={{ height: "2rem" }}></div>
+        <RequestRawWrapper>
+          <RequestRawTitle>
+            <h2>{bodyRawOption} Content</h2>
+            <a onClick={handleBeautifyButton}>Beautify</a>
+          </RequestRawTitle>
           <CodeEditor
-            language={bodyRawOption}
+            language={bodyRawOption.toLowerCase()}
             editorOption={OPTION.EDITOR_OPTIONS}
             codeEditorValue={
               bodyRawData[
-              bodyRawOption as keyof {
+              bodyRawOption.toLowerCase() as keyof {
                 text: string;
                 javascript: string;
                 json: string;
@@ -83,11 +89,37 @@ const RequestBodySelectMenuOption = () => {
             requestForm
             {...codeEditorProps}
           />
-        </>
+        </RequestRawWrapper>
       );
     default:
       return <RequestNoBody />;
   }
 };
+
+const RequestRawTitle = styled.div`
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 1.3rem;
+
+  a {
+    margin-left: auto;
+    cursor: pointer;
+  }
+`;
+
+const RequestRawWrapper = styled.div`
+  display: flex;
+  flex-flow: column;
+  margin: 1.3rem;
+  height: 100%;
+
+  > div {
+    &:nth-child(2) {
+      border: 0.1rem solid rgba(128, 128, 128, 0.7);
+      border-radius: 0.25rem;
+      flex: 1 1 auto;
+    }
+  }
+`;
 
 export default RequestBodySelectMenuOption;

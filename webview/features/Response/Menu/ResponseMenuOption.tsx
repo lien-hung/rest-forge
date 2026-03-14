@@ -1,4 +1,5 @@
 import React from "react";
+import { styled } from "styled-components";
 import { useShallow } from "zustand/shallow";
 
 import { COMMON, OPTION, REQUEST } from "../../../constants/index";
@@ -39,21 +40,32 @@ const ResponseMenuOption = () => {
       return (
         <>
           <RequestBodyMenu />
-          <div style={{ height: "2rem" }}></div>
-          <CodeEditor
-            codeEditorValue={responseBlobUri || (responseBody || "")}
-            language={
-              responseBodyOption === REQUEST.RAW
-                ? REQUEST.RAW
-                : responseBodyViewFormat.toLowerCase()
-            }
-            viewOption={responseBodyOption}
-            editorOption={OPTION.EDITOR_OPTIONS}
-            previewMode
-          />
+          <ResponseBodyWrapper>
+            <CodeEditor
+              codeEditorValue={responseBlobUri || (responseBody || "")}
+              language={
+                responseBodyOption === REQUEST.RAW
+                  ? REQUEST.RAW
+                  : responseBodyViewFormat.toLowerCase()
+              }
+              viewOption={responseBodyOption}
+              editorOption={OPTION.EDITOR_OPTIONS}
+              previewMode
+            />
+          </ResponseBodyWrapper>
         </>
       );
   }
 };
+
+const ResponseBodyWrapper = styled.div`
+  display: flex;
+  margin-top: 2rem;
+  height: 100%;
+
+  > div {
+    flex: 1 1 auto;
+  }
+`;
 
 export default ResponseMenuOption;

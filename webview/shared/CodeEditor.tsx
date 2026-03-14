@@ -57,7 +57,35 @@ function CodeEditor({
     setCurrentTheme(getCurrentTheme());
   }
 
-  const handleEditorDidMount = (editor: any) => {
+  const handleEditorDidMount = (editor: any, monaco: Monaco) => {
+    editor.addAction({
+      id: 'custom-paste',
+      label: 'Paste',
+      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyV],
+      precondition: 'editorTextFocus && !findInputFocused',
+      run: async (editor: any) => {
+        try {
+          const text = await navigator.clipboard.readText();
+          const model = editor.getModel();
+          const selection = editor.getSelection();
+          if (!model || !selection) return;
+
+          editor.executeEdits('clipboard-paste', [
+            {
+              range: selection,
+              text,
+              forceMoveMarkers: true,
+            },
+          ]);
+
+          editor.pushUndoStop();
+          editor.focus();
+        } catch (err) {
+          console.error('Paste failed:', err);
+        }
+      },
+    });
+    
     editorRef.current = editor;
   };
 
@@ -73,7 +101,7 @@ function CodeEditor({
     vscode.postMessage({ command: COMMON.INIT_TOKEN_COLORS });
   }, []);
 
-  useEffect(() => setEditorTheme(), [currentTheme]);
+  useEffect(() => setEditorTheme(), [currentTheme, tokenColors]);
 
   useEffect(() => {
     if (shouldBeautifyEditor && requestForm) {
@@ -131,8 +159,6 @@ function CodeEditor({
 };
 
 const EditorWrapper = styled.div`
-  flex: 1 1 auto;
-
   .monaco-editor {
     .view-overlays {
       .current-line {

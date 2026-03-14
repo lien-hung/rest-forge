@@ -151,17 +151,28 @@ const RequestCodeSnippet = () => {
         </SelectOptionWrapper>
         <CopyIcon handleClick={handleCopyIconClick} value={codeSnippetValue} />
       </SelectWrapper>
-      <div style={{ height: "2rem" }}></div>
-      <CodeEditor
-        codeEditorValue={codeSnippetValue}
-        editorOption={OPTION.CODE_SNIPPET_EDITOR_OPTIONS}
-        language={codeSnippetOption.editorLanguage.toLowerCase()}
-        handleEditorChange={() => undefined}
-        handleBeautifyButton={() => undefined}
-      />
+      <CodeSnippetWrapper>
+        <CodeEditor
+          codeEditorValue={codeSnippetValue}
+          editorOption={OPTION.CODE_SNIPPET_EDITOR_OPTIONS}
+          language={codeSnippetOption.editorLanguage.toLowerCase()}
+          handleEditorChange={() => undefined}
+          handleBeautifyButton={() => undefined}
+        />
+      </CodeSnippetWrapper>
     </>
   );
 };
+
+const CodeSnippetWrapper = styled.div`
+  display: flex;
+  margin-top: 2rem;
+  height: 100%;
+
+  > div {
+    flex: 1 1 auto;
+  }
+`;
 
 const SelectOptionWrapper = styled.select`
   width: auto;

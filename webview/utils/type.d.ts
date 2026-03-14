@@ -6,7 +6,7 @@ export interface ITableRow {
   fileName?: string;
 }
 
-export type OptionType = "Params" | "Headers" | "Form Data" | "Form Encoded";
+export type OptionType = keyof ITableData;
 
 export interface ITableData {
   "Params": ITableRow[];

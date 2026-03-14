@@ -5,7 +5,6 @@ import { useShallow } from "zustand/shallow";
 import SelectWrapper from "../../../components/SelectWrapper";
 import { COMMON, OPTION, REQUEST } from "../../../constants/index";
 import useStore from "../../../store/useStore";
-import RequestBodyFormatButton from "../Button/RequestBodyFormatButton";
 import RequestBodyRawOptions from "./RequestBodyRawOptions";
 import RequestBodyMenuOption from "./RequestBodySelectMenuOption";
 
@@ -31,12 +30,14 @@ const RequestBodySelectMenu = () => {
   );
 
   const handleBodyOptionChoice = (event: ChangeEvent<HTMLSelectElement>) => {
-    const inputTarget = event.target;
-    handleRequestBodyOption(inputTarget.value);
+    const selectedOptionIndex = event.target.selectedIndex;
+    const selectedOptionElement = event.target.childNodes[selectedOptionIndex] as HTMLSelectElement;
+    
+    handleRequestBodyOption(event.target.value);
     removeRequestBodyHeaders();
 
     if (event.target.value !== REQUEST.NONE) {
-      addRequestBodyHeaders(inputTarget.getAttribute("header-type") || "");
+      addRequestBodyHeaders(selectedOptionElement.getAttribute("header-type") || "");
     }
   };
 
@@ -62,12 +63,7 @@ const RequestBodySelectMenu = () => {
             </option>
           ))}
         </OptionWrapper>
-        {bodyOption === REQUEST.RAW && (
-          <>
-            <RequestBodyRawOptions />
-            <RequestBodyFormatButton />
-          </>
-        )}
+        {bodyOption === REQUEST.RAW && <RequestBodyRawOptions />}
       </SelectWrapper>
       <RequestBodyMenuOption />
     </>
