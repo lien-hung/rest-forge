@@ -2,7 +2,7 @@ import { Buffer } from "buffer";
 import { Request } from "postman-collection";
 
 import { REQUEST } from "../constants";
-import { IAuthData, IBodyRawData, ITableData, ITableRow, OptionType } from "./type";
+import { IAuthData, IBodyRawData, IGraphqlData, ITableData, ITableRow, OptionType } from "./type";
 
 const generateSdkRequestObject = (
   url: string,
@@ -12,7 +12,8 @@ const generateSdkRequestObject = (
   authData: IAuthData,
   bodyOption: OptionType,
   bodyRawOption: string,
-  bodyRawData: IBodyRawData
+  bodyRawData: IBodyRawData,
+  graphqlData: IGraphqlData
 ) => {
   const requestHeaders = tableData["Headers"].filter((data) => data.key.length > 0);
   const bodyData = tableData[bodyOption]
@@ -22,6 +23,10 @@ const generateSdkRequestObject = (
           ? { ...data, src: `C:/fakepath/${data.fileName}`, type: data.valueType?.toLowerCase() }
           : data)
     : new Array<ITableRow>();
+  const graphqlObject = {
+    query: graphqlData.query,
+    variables: (() => { try { return JSON.parse(graphqlData.variables); } catch { return {}; } })(),
+  };
   
   const { username, password, token, tokenPrefix } = authData;
   let authHeaderObject: any = undefined;
@@ -54,6 +59,7 @@ const generateSdkRequestObject = (
     case REQUEST.FORM_URLENCODED:
       bodyMode = "urlencoded";
       break;
+    case REQUEST.GRAPHQL:
     case REQUEST.RAW:
       bodyMode = "raw";
       break;
@@ -69,7 +75,10 @@ const generateSdkRequestObject = (
       mode: bodyMode,
       [bodyMode]: bodyData.length
         ? bodyData
-        : bodyRawData[bodyRawOption.toLowerCase() as keyof IBodyRawData],
+        : (bodyOption === REQUEST.GRAPHQL
+          ? JSON.stringify(graphqlObject)
+          : bodyRawData[bodyRawOption.toLowerCase() as keyof IBodyRawData]
+        ),
     },
     auth: {
       type: authMode,

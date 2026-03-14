@@ -91,6 +91,7 @@ const ResponsePanel = () => {
         bodyOption,
         bodyRawOption,
         bodyRawData,
+        graphqlData,
       } = event.data;
 
       handleTreeViewClick({
@@ -102,6 +103,7 @@ const ResponsePanel = () => {
         bodyOption,
         bodyRawOption,
         bodyRawData,
+        graphqlData,
       });
 
       handleTreeViewTableData(tableData);

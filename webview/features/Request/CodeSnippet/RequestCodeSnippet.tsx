@@ -22,6 +22,7 @@ const RequestCodeSnippet = () => {
     bodyOption,
     bodyRawData,
     bodyRawOption,
+    graphqlData,
     codeSnippetValue,
     codeSnippetOption,
     tableData,
@@ -37,6 +38,7 @@ const RequestCodeSnippet = () => {
       bodyOption: state.bodyOption as OptionType,
       bodyRawData: state.bodyRawData,
       bodyRawOption: state.bodyRawOption,
+      graphqlData: state.graphqlData,
       codeSnippetValue: state.codeSnippetValue,
       codeSnippetOption: state.codeSnippetOption,
       tableData: state.tableData,
@@ -68,6 +70,7 @@ const RequestCodeSnippet = () => {
         bodyOption,
         bodyRawOption,
         bodyRawData,
+        graphqlData,
       ),
     [
       debouncedUrlValue,
@@ -78,6 +81,7 @@ const RequestCodeSnippet = () => {
       bodyOption,
       bodyRawOption,
       bodyRawData,
+      graphqlData,
     ],
   );
 

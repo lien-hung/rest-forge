@@ -8,6 +8,8 @@ import KeyValueTable from "../../../shared/KeyValueTable";
 import { OptionType } from "../../../store/slices/type";
 import useStore from "../../../store/useStore";
 import RequestNoBody from "./RequestNoBody";
+import RequestGraphqlQuery from "./RequestGraphqlQuery";
+import RequestGraphqlVariables from "./RequestGraphqlVariables";
 
 const RequestBodySelectMenuOption = () => {
   const {
@@ -64,6 +66,13 @@ const RequestBodySelectMenuOption = () => {
           {...keyValueProps}
         />
       );
+    case REQUEST.GRAPHQL:
+      return (
+        <RequestGraphqlWrapper>
+          <RequestGraphqlQuery />
+          <RequestGraphqlVariables />
+        </RequestGraphqlWrapper>
+      );
     case REQUEST.RAW:
       return (
         <RequestRawWrapper>
@@ -99,7 +108,7 @@ const RequestBodySelectMenuOption = () => {
 const RequestRawTitle = styled.div`
   display: flex;
   align-items: baseline;
-  margin-bottom: 1.3rem;
+  margin-bottom: 1rem;
 
   a {
     margin-left: auto;
@@ -120,6 +129,14 @@ const RequestRawWrapper = styled.div`
       flex: 1 1 auto;
     }
   }
+`;
+
+const RequestGraphqlWrapper = styled.div`
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  margin: 1.3rem;
+  gap: 1rem;
 `;
 
 export default RequestBodySelectMenuOption;

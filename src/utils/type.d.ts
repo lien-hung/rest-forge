@@ -36,6 +36,7 @@ export interface IRequestObject {
   bodyRawOption: string;
   bodyRawData: IBodyRawData;
   tableData: ITableData;
+  graphqlData: IGraphqlData;
 }
 
 export interface IRequestHeaderInformation {
@@ -55,6 +56,11 @@ export interface IBodyRawData {
   json: string;
   html: string;
   xml: string;
+}
+
+export interface IGraphqlData {
+  query: string;
+  variables: string;
 }
 
 export interface IHeaderAuth {

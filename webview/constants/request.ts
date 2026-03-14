@@ -23,6 +23,7 @@ const REQUEST = {
   NONE: "None",
   FORM_DATA: "Form Data",
   FORM_URLENCODED: "Form Encoded",
+  GRAPHQL: "GraphQL",
   RAW: "Raw",
 
   // Default headers

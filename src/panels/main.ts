@@ -182,6 +182,7 @@ class MainWebviewPanel {
           bodyRawOption,
           bodyRawData,
           tableData,
+          graphqlData,
         } = requestData;
         const flatTableData = Object.keys(tableData).reduce(
           (data, key) => [...data, ...tableData[key].map((row: any) => ({ ...row, optionType: key }))],
@@ -203,7 +204,8 @@ class MainWebviewPanel {
           flatTableData,
           bodyOption,
           bodyRawOption,
-          bodyRawData
+          bodyRawData,
+          graphqlData,
         );
 
         this.postWebviewMessage(requestData);

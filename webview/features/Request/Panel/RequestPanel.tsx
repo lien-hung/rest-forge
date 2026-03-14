@@ -22,6 +22,7 @@ const RequestPanel = () => {
       bodyRawOption: state.bodyRawOption,
       bodyRawData: state.bodyRawData,
       tableData: state.tableData,
+      graphqlData: state.graphqlData,
     }))
   );
   const { requestMenuWidth, handleRequestProcessStatus } = useStore(

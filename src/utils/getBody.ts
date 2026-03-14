@@ -1,11 +1,12 @@
 import { TYPE } from "../constants";
-import { IBodyRawData, IParameterKeyValueData } from "./type";
+import { IBodyRawData, IGraphqlData, IParameterKeyValueData } from "./type";
 
 function getBody(
   keyValueData: IParameterKeyValueData[],
   bodyOption: string,
   bodyRawOption: string,
   bodyRawData: IBodyRawData,
+  graphqlData: IGraphqlData,
 ) {
   if (bodyOption === "None") {
     return "";
@@ -21,6 +22,14 @@ function getBody(
         xml: string;
       }
     ];
+  }
+
+  if (bodyOption === TYPE.BODY_GRAPHQL) {
+    const graphqlBody = {
+      query: graphqlData.query,
+      variables: JSON.parse(graphqlData.variables),
+    };
+    return JSON.stringify(graphqlBody);
   }
   
   if (bodyOption === TYPE.BODY_FORM_DATA) {

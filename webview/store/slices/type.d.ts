@@ -13,6 +13,11 @@ export interface BodyRawData {
   xml: string;
 }
 
+export interface GraphqlData {
+  query: string;
+  variables: string;
+}
+
 export interface ITableRow {
   id: string;
   isChecked: boolean;
@@ -80,6 +85,8 @@ export interface IRequestDataSlice extends ITreeViewResponse {
   handleRequestBodyOption: (type: string) => void;
   handleBodyRawOption: (type: string) => void;
   handleBodyRawOptionData: (rawOption: string, data: string) => void;
+  handleGraphqlQuery: (data: string) => void;
+  handleGraphqlVariables: (data: string) => void;
   handleBeautifyButton: () => void;
   handleCodeSnippetOptionChange: (
     languageOption: string,
@@ -100,6 +107,7 @@ export interface ITreeViewResponse {
   bodyOption: string;
   bodyRawOption: string;
   bodyRawData: BodyRawData;
+  graphqlData: GraphqlData;
 }
 
 export type OptionType = keyof ITableData;

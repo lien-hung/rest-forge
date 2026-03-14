@@ -8,6 +8,7 @@ const TYPE = {
   TREEVIEW_DATA: "Selected Collection Data",
   
   BODY_RAW: "Raw",
+  BODY_GRAPHQL: "GraphQL",
   BODY_FORM_URLENCODED: "Form Encoded",
   BODY_FORM_DATA: "Form Data",
   

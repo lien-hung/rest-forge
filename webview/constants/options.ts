@@ -25,6 +25,7 @@ const OPTION = {
     { option: "None", headerField: "" },
     { option: "Form Data", headerField: "multipart/form-data" },
     { option: "Form Encoded", headerField: "application/x-www-form-urlencoded" },
+    { option: "GraphQL", headerField: "application/json" },
     { option: "Raw", headerField: "text/plain" },
   ],
   RESPONSE_MENU_OPTIONS: ["Body", "Headers"],

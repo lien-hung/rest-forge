@@ -23,6 +23,11 @@ export interface IBodyRawData {
   xml: string;
 }
 
+export interface IGraphqlData {
+  query: string;
+  variables: string;
+}
+
 export interface IAuthData {
   username: string;
   password: string;
