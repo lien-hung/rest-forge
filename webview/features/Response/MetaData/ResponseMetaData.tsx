@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import { OPTION, RESPONSE } from "../../../constants/index";
+import useStore from "../../../store/useStore";
 
 interface IResponseMetaDataProps {
   responseSize?: number;
@@ -16,6 +17,8 @@ const ResponseMetaData = ({
   statusCode = 0,
   statusText = "",
 }: IResponseMetaDataProps) => {
+  const themeKind = useStore((state) => state.themeKind);
+
   const time = requestTime >= 1000 ? `${(requestTime / 1000).toFixed(2)} s` : `${requestTime} ms`;
   const statusCodeAndText = `${statusCode} ${statusText}`;
   const size = responseSize >= 1000 ? `${(responseSize / 1000).toFixed(2)} KB` : `${responseSize} B`;
@@ -28,7 +31,7 @@ const ResponseMetaData = ({
           key={RESPONSE.METADATA + index}
         >
           <span>{option}:</span>
-          <span className="metaDataColor">
+          <span className={`metaDataColor ${themeKind === 1 ? "light" : ""}`}>
             {index === 0 ? statusCodeAndText : index === 2 ? size : time}
           </span>
         </MetaDataContainer>
@@ -39,7 +42,7 @@ const ResponseMetaData = ({
 
 const ResponseMetaDataContainer = styled.div`
   display: flex;
-  margin: 0.4rem 0 1.5rem 0;
+  margin: 0.5rem 0 1.5rem 0;
 `;
 
 const MetaDataContainer = styled.div<{ secondary: boolean }>`
@@ -49,15 +52,17 @@ const MetaDataContainer = styled.div<{ secondary: boolean }>`
   padding-bottom: 0.5rem;
 
   span {
-    margin-left: 0.2rem;
-    font-size: 1.2rem;
+    margin-left: 0.3rem;
+    font-size: 14px;
     font-weight: 400;
   }
 
   .metaDataColor {
-    color: ${(props) =>
-      props.secondary ? "rgb(255 100 100)" : "rgb(66 245 66)"};
-    font-weight: 300;
+    color: ${(props) => props.secondary ? "rgb(255 100 100)" : "rgb(66 245 66)"};
+  }
+
+  .metaDataColor.light {
+    color: ${(props) => props.secondary ? "rgb(234 91 91)" : "rgb(47 177 47)"};
   }
 `;
 

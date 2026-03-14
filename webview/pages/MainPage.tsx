@@ -25,6 +25,8 @@ function MainPage() {
     } else if (event.data.type === COMMON.HAS_OAUTH2_TOKENS) {
       const tokens = event.data.tokenList;
       setOAuth2Tokens(tokens);
+    } else if (event.data.type === COMMON.THEME_CHANGED) {
+      setThemeKind(event.data.themeKind);
     }
   };
   

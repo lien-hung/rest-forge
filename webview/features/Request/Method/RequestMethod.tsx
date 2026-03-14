@@ -1,18 +1,13 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useShallow } from "zustand/shallow";
 
-import { COMMON, OPTION, REQUEST } from "../../../constants/index";
+import { OPTION, REQUEST } from "../../../constants/index";
 import useStore from "../../../store/useStore";
 
 const RequestMethod = () => {
   const customMethods = useStore((state) => state.customMethods);
-  const { themeKind, setThemeKind } = useStore(
-    useShallow((state) => ({
-      themeKind: state.themeKind,
-      setThemeKind: state.setThemeKind,
-    }))
-  );
+  const themeKind = useStore((state) => state.themeKind);
   const { requestMethod, handleRequestMethodChange } = useStore(
     useShallow((state) => ({
       requestMethod: state.requestMethod,
@@ -21,15 +16,6 @@ const RequestMethod = () => {
   );
 
   const requestMethodOptions = [...OPTION.REQUEST_METHOD_OPTIONS, ...customMethods];
-  const handleExtensionMessage = (event: MessageEvent) => {
-    if (event.data.type === COMMON.THEME_CHANGED) {
-      setThemeKind(event.data.themeKind);
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("message", handleExtensionMessage);
-  }, []);
 
   return (
     <MethodSelectOptionWrapper

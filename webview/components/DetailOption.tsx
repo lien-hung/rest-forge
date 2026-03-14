@@ -21,6 +21,10 @@ const DetailOptionWrapper = styled.div`
     transform: translateX(-1.8rem);
     user-select: none;
   }
+
+  p.light {
+    color: rgb(47 177 47);
+  }
 `;
 
 export default DetailOption;

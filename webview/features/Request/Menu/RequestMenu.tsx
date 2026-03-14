@@ -8,8 +8,9 @@ import useStore from "../../../store/useStore";
 import RequestMenuOption from "./RequestMenuOption";
 
 const RequestMenu = () => {
-  const { requestOption, tableData, changeRequestOption } = useStore(
+  const { themeKind, requestOption, tableData, changeRequestOption } = useStore(
     useShallow((state) => ({
+      themeKind: state.themeKind,
       requestOption: state.requestOption,
       tableData: state.tableData,
       changeRequestOption: state.handleRequestOptionChange,
@@ -37,7 +38,11 @@ const RequestMenu = () => {
             >
               <h3 onClick={handleOptionChange}>{requestMenuOption}</h3>
             </MenuOption>
-            {requestMenuOption === COMMON.HEADERS && <p>({headersCount})</p>}
+            {requestMenuOption === COMMON.HEADERS && (
+              <p className={`${themeKind === 1 ? "light" : ""}`}>
+                ({headersCount})
+              </p>
+            )}
           </Fragment>
         ))}
       </DetailOption>

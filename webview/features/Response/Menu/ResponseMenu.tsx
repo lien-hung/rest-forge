@@ -10,8 +10,9 @@ import ResponseMetaData from "../MetaData/ResponseMetaData";
 type OnClickCallback = (event: MouseEvent<HTMLHeadingElement>) => void;
 
 const ResponseMenu = () => {
-  const { responseData, responseOption, handleResponseOptionChange } = useStore(
+  const { themeKind, responseData, responseOption, handleResponseOptionChange } = useStore(
     useShallow((state) => ({
+      themeKind: state.themeKind,
       responseData: state.responseData,
       responseOption: state.responseOption,
       handleResponseOptionChange: state.handleResponseOption,
@@ -38,7 +39,11 @@ const ResponseMenu = () => {
             >
               <h3 onClick={handleHeadingTextClick}>{responseMenuOption}</h3>
             </MenuOption>
-            {responseMenuOption === COMMON.HEADERS && <p>({responseData?.headersLength})</p>}
+            {responseMenuOption === COMMON.HEADERS && (
+              <p className={`${themeKind === 1 ? "light" : ""}`}>
+                ({responseData?.headersLength})
+              </p>
+            )}
           </Fragment>
         ))}
       </DetailOption>
