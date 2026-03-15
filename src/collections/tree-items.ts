@@ -1,14 +1,16 @@
 import { TreeItem, TreeItemCollapsibleState } from "vscode";
+
 import { COLLECTION, COMMAND } from "../constants";
 import { IRequestTreeItemState } from "../utils/type";
-import { getElapsedTime } from "../utils";
+import { generateId, getElapsedTime } from "../utils";
 
-export class RequestCollectionItem extends TreeItem {
+export class RequestItem extends TreeItem {
   public contextValue = `${COLLECTION.REQUEST_COLLECTION}.item`;
 
-  constructor(public request: IRequestTreeItemState, public parent: RequestCollection) {
+  constructor(public request: IRequestTreeItemState, public parent: RequestCollection | RequestFolder) {
     super(request.name, TreeItemCollapsibleState.None);
     this.id = request.id;
+    this.parent = parent;
     this.description = getElapsedTime(request.requestedTime);
     this.tooltip = `${request.method} ${request.url}\nCreated at ${new Date(request.requestedTime).toLocaleString()}`;
     this.command = {
@@ -17,51 +19,48 @@ export class RequestCollectionItem extends TreeItem {
       arguments: [this]
     };
   }
+
+  public toFileData() {
+    return {
+      parentId: this.parent.id,
+      request: this.request,
+    };
+  }
+}
+
+export class RequestFolder extends TreeItem {
+  public contextValue = `${COLLECTION.REQUEST_COLLECTION}.folder`;
+
+  constructor(public name: string, public parent: RequestCollection | RequestFolder, id?: string) {
+    super(name, TreeItemCollapsibleState.Collapsed);
+    this.parent = parent;
+    this.id = id || generateId();
+  }
+
+  public toFileData() {
+    return {
+      id: this.id,
+      name: this.name,
+      isFolder: true,
+      parentId: this.parent.id,
+    };
+  }
 }
 
 export class RequestCollection extends TreeItem {
-  public parent = null;
   public contextValue = `${COLLECTION.REQUEST_COLLECTION}.collection`;
-  public items: RequestCollectionItem[] = [];
+  public parent = null;
 
-  public addItem(request: IRequestTreeItemState) {
-    if (!request.name) {
-      return;
-    }
-    const requestIndex = this.items.findIndex(item => item.request.id === request.id);
-    const newRequestItem = new RequestCollectionItem(request, this);
-    if (requestIndex !== -1) {
-      this.items.splice(requestIndex, 1, newRequestItem);
-    } else {
-      this.items.push(newRequestItem);
-    }
-  }
-
-  public renameItem(id: string, newName: string) {
-    const requestIndex = this.items.findIndex(item => item.id === id);
-    if (requestIndex === -1) {
-      return;
-    }
-    const oldRequest = this.items[requestIndex];
-    const renamedRequest = { ...oldRequest.request, name: newName };
-    this.items.splice(requestIndex, 1, new RequestCollectionItem(renamedRequest, this));
-  }
-
-  public deleteItem(id: string) {
-    this.items = this.items.filter(item => item.id !== id);
-  }
-
-  public clearItems() {
-    this.items = [];
-  }
-
-  constructor(public name: string) {
+  constructor(public name: string, id?: string) {
     super(name, TreeItemCollapsibleState.Expanded);
-    this.tooltip = this.name;
+    this.id = id || generateId();
   }
 
-  public toJSON() {
-    const items = this.items.map((item) => item.request);
-    return { [this.name]: items };
+  public toFileData() {
+    return {
+      id: this.id,
+      name: this.name,
+      isCollection: true,
+    };
   }
 }

@@ -17,6 +17,7 @@ const RequestBodySelectMenuOption = () => {
     bodyRawData,
     bodyRawOption,
     handleBodyRawOptionData,
+    shouldBeautifyEditor,
     handleBeautifyButton,
   } = useStore(
     useShallow((state) => ({
@@ -24,6 +25,7 @@ const RequestBodySelectMenuOption = () => {
       bodyRawData: state.bodyRawData,
       bodyRawOption: state.bodyRawOption,
       handleBodyRawOptionData: state.handleBodyRawOptionData,
+      shouldBeautifyEditor: state.shouldBeautifyEditor,
       handleBeautifyButton: state.handleBeautifyButton,
     }))
   );
@@ -42,16 +44,11 @@ const RequestBodySelectMenuOption = () => {
     }))
   );
 
-  const codeEditorProps = useStore(
-    useShallow((state) => ({
-      shouldBeautifyEditor: state.shouldBeautifyEditor,
-      handleBeautifyButton: state.handleBeautifyButton,
-    }))
-  );
+  const bodyRawOptionLower = bodyRawOption.toLowerCase();
 
   function handleRequestBodyEditorChange(bodyValue: string | undefined) {
     if (bodyValue) {
-      handleBodyRawOptionData(bodyRawOption, bodyValue);
+      handleBodyRawOptionData(bodyRawOptionLower, bodyValue);
     }
   }
 
@@ -81,11 +78,11 @@ const RequestBodySelectMenuOption = () => {
             <a onClick={handleBeautifyButton}>Beautify</a>
           </RequestRawTitle>
           <CodeEditor
-            language={bodyRawOption.toLowerCase()}
+            language={bodyRawOptionLower}
             editorOption={OPTION.EDITOR_OPTIONS}
             codeEditorValue={
               bodyRawData[
-              bodyRawOption.toLowerCase() as keyof {
+              bodyRawOptionLower as keyof {
                 text: string;
                 javascript: string;
                 json: string;
@@ -96,7 +93,8 @@ const RequestBodySelectMenuOption = () => {
             }
             handleEditorChange={handleRequestBodyEditorChange}
             requestForm
-            {...codeEditorProps}
+            shouldBeautifyEditor={shouldBeautifyEditor}
+            handleBeautifyButton={handleBeautifyButton}
           />
         </RequestRawWrapper>
       );

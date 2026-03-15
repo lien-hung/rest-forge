@@ -88,6 +88,19 @@
         "command": "api-tester.deleteCollection"
       },
       {
+        "title": "New Folder",
+        "command": "api-tester.newFolder",
+        "category": "API Tester"
+      },
+      {
+        "title": "Rename",
+        "command": "api-tester.renameFolder"
+      },
+      {
+        "title": "Delete",
+        "command": "api-tester.deleteFolder"
+      },
+      {
         "title": "New Request",
         "command": "api-tester.newRequestInCollection",
         "icon": {
@@ -178,6 +191,18 @@
           "when": "false"
         },
         {
+          "command": "api-tester.newFolder",
+          "when": "false"
+        },
+        {
+          "command": "api-tester.renameFolder",
+          "when": "false"
+        },
+        {
+          "command": "api-tester.deleteFolder",
+          "when": "false"
+        },
+        {
           "command": "api-tester.newRequestInCollection",
           "when": "false"
         },
@@ -243,9 +268,14 @@
           "group": "inline"
         },
         {
+          "command": "api-tester.newFolder",
+          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
+          "group": "a@1"
+        },
+        {
           "command": "api-tester.newRequestInCollection",
           "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
-          "group": "a"
+          "group": "a@2"
         },
         {
           "command": "api-tester.renameCollection",
@@ -260,6 +290,31 @@
         {
           "command": "api-tester.clearItemsInCollection",
           "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
+          "group": "b@3"
+        },
+        {
+          "command": "api-tester.newFolder",
+          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.folder",
+          "group": "a@1"
+        },
+        {
+          "command": "api-tester.newRequestInCollection",
+          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.folder",
+          "group": "a@2"
+        },
+        {
+          "command": "api-tester.renameFolder",
+          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.folder",
+          "group": "b@1"
+        },
+        {
+          "command": "api-tester.deleteFolder",
+          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.folder",
+          "group": "b@2"
+        },
+        {
+          "command": "api-tester.clearItemsInCollection",
+          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.folder",
           "group": "b@3"
         },
         {
@@ -327,9 +382,10 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
+    "crypto-random-string": "^5.0.0",
     "fast-xml-parser": "^5.3.6",
     "file-saver": "^2.0.5",
-    "postman-code-generators": "^2.1.0",
+    "postman-code-generators": "2.1.0",
     "postman-collection": "^5.2.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",

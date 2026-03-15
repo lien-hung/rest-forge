@@ -1,4 +1,5 @@
 export { default as authorizeInBrowser } from "./authorizeInBrowser";
+export { default as generateId } from "./generateId";
 export { default as generateResponseObject } from "./generateResponseObject";
 export { default as getBody } from "./getBody";
 export { default as getElapsedTime } from "./getElapsedTime";

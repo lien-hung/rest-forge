@@ -3,12 +3,13 @@ import parser from "yargs-parser";
 
 import { ITableRow, IRequestObject } from "./type";
 import { TYPE } from "../constants";
+import generateId from "./generateId";
 
 const emptyTableRow = () =>
-  ({ id: crypto.randomUUID(), isChecked: false, key: "", value: "", rowReadOnly: false });
+  ({ id: generateId(), isChecked: false, key: "", value: "", rowReadOnly: false });
 
 const newTableRow = ({ key, value, rowReadOnly = false }: { key: string, value: string, rowReadOnly?: boolean }) =>
-  ({ id: crypto.randomUUID(), isChecked: true, key, value, rowReadOnly });
+  ({ id: generateId(), isChecked: true, key, value, rowReadOnly });
 
 function parseCurl(command: string) {
   if (!command.trim()) {
@@ -35,7 +36,8 @@ function parseCurl(command: string) {
     bodyOption: "None",
     bodyRawOption: "Text",
     bodyRawData: { text: "", javascript: "", json: "", html: "", xml: "" },
-    tableData: { "Params": [], "Headers": [], "Form Data": [], "Form Encoded": [] }
+    tableData: { "Params": [], "Headers": [], "Form Data": [], "Form Encoded": [] },
+    graphqlData: { query: "", variables: "" },
   };
 
   const isJson = (str: string) => {

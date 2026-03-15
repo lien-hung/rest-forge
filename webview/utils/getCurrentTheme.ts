@@ -24,6 +24,12 @@ const getCurrentTheme = (): IEditorTheme => {
     "foreground": editorStyles.getPropertyValue("--vscode-foreground"),
     "editor.background": editorStyles.getPropertyValue("--vscode-editor-background"),
 
+    // Inputs
+    "input.background": editorStyles.getPropertyValue("--vscode-input-background"),
+
+    // Dropdown
+    "dropdown.background": editorStyles.getPropertyValue("--vscode-dropdown-background"),
+
     // Cursor
     "editorCursor.foreground": editorStyles.getPropertyValue("--vscode-editorCursor-foreground"),
 
@@ -38,6 +44,10 @@ const getCurrentTheme = (): IEditorTheme => {
 
     // Sticky scroll
     "editorStickyScroll.shadow": "#00000022",
+
+    // Editor widgets
+    "widget.shadow": "#00000000",
+    "editorWidget.background": editorStyles.getPropertyValue("--vscode-editorWidget-background"),
 
     // Hover widget (variable/prop/method info etc.)
     "editorHoverWidget.background": editorStyles.getPropertyValue("--vscode-editorHoverWidget-background"),

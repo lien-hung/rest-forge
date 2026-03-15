@@ -13,6 +13,10 @@ const COMMAND = {
   RENAME_COLLECTION: "api-tester.renameCollection",
   DELETE_COLLECTION: "api-tester.deleteCollection",
 
+  NEW_FOLDER: "api-tester.newFolder",
+  RENAME_FOLDER: "api-tester.renameFolder",
+  DELETE_FOLDER: "api-tester.deleteFolder",
+
   NEW_COLLECTION_REQUEST: "api-tester.newRequestInCollection",
   CLEAR_COLLECTION_ITEMS: "api-tester.clearItemsInCollection",
   RENAME_COLLECTION_REQUEST: "api-tester.renameRequestInCollection",

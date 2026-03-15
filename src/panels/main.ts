@@ -4,6 +4,7 @@ import { writeFileSync } from "fs";
 import { COMMAND, MESSAGE, NAME, TYPE } from "../constants";
 import {
   authorizeInBrowser,
+  generateId,
   generateResponseObject,
   getBody,
   getExtensionConfig,
@@ -25,7 +26,7 @@ class MainWebviewPanel {
   private headers: IRequestHeaderInformation = { key: "" };
   public mainPanel: vscode.WebviewPanel | null = null;
   private id: string | undefined;
-  private collectionName: string | undefined;
+  private parentId: string | undefined;
   private requestName: string | undefined;
   private extensionUri;
   private requestHistoryProvider;
@@ -46,9 +47,9 @@ class MainWebviewPanel {
     this.collectionsProvider = collectionsProvider;
   }
 
-  initializeWebview(id?: string, collectionName?: string, requestName?: string) {
+  initializeWebview(id?: string, parentId?: string, requestName?: string) {
     this.id = id;
-    this.collectionName = collectionName;
+    this.parentId = parentId;
     this.requestName = requestName;
 
     if (this.mainPanel) {
@@ -234,21 +235,21 @@ class MainWebviewPanel {
           }
         });
 
-        if (this.collectionName && this.requestName) {
+        if (this.parentId && this.requestName) {
           const newRequest = {
             ...requestData,
             requestedTime,
-            id: this.id || crypto.randomUUID(),
+            id: this.id || generateId(),
             name: this.requestName,
             requestObject,
           };
-          this.collectionsProvider.add(this.collectionName, newRequest);
+          this.collectionsProvider.addRequest(newRequest, this.parentId);
           this.id = newRequest.id;
         } else {
           this.requestHistoryProvider.add({
             ...requestData,
             requestedTime,
-            id: crypto.randomUUID(),
+            id: generateId(),
             name: "",
             requestObject,
           });

@@ -1,100 +1,125 @@
 import fs from "fs";
 import path from "path";
-import { EventEmitter, ExtensionContext, TreeDataProvider, Uri } from "vscode";
+import { EventEmitter, ExtensionContext, TreeDataProvider, TreeItem, Uri } from "vscode";
 
-import { RequestCollection, RequestCollectionItem } from "./tree-items";
+import { RequestCollection, RequestFolder, RequestItem } from "./tree-items";
 import { IRequestTreeItemState } from "../utils/type";
 import { getHomePath, getMethodIcons } from "../utils";
 
-type CollectionsProviderItem = RequestCollectionItem | RequestCollection;
+type CollectionsProviderItem = RequestCollection | RequestFolder | RequestItem;
+type RequestFolderLike = RequestCollection | RequestFolder;
 
 export default class CollectionsProvider implements TreeDataProvider<CollectionsProviderItem> {
   private extensionContext: ExtensionContext;
   private _onDidChangeTreeData: EventEmitter<CollectionsProviderItem | undefined> = new EventEmitter();
   public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
-  private tree: { [collection: string]: RequestCollection } = {};
+  private tree: CollectionsProviderItem[] = [];
 
-  public getTreeItem(element: CollectionsProviderItem): CollectionsProviderItem {
-    if (element instanceof RequestCollectionItem) {
-      element.iconPath = getMethodIcons(this.extensionContext, element.request.method);
-    } else if (element instanceof RequestCollection) {
+  public getTreeItem(element: CollectionsProviderItem): TreeItem {
+    if (element instanceof RequestCollection) {
       element.iconPath = Uri.file(this.extensionContext.asAbsolutePath(path.join("icons/svg", "collection.svg")));
+    } else if (element instanceof RequestFolder) {
+      element.iconPath = Uri.file(this.extensionContext.asAbsolutePath(path.join("icons/svg", "folder.svg")));
+    } else if (element instanceof RequestItem) {
+      element.iconPath = getMethodIcons(this.extensionContext, element.request.method);
     }
     return element;
   }
 
   public getChildren(element?: CollectionsProviderItem): CollectionsProviderItem[] {
     if (!element) {
-      return Object.keys(this.tree).map(collection => this.tree[collection]);
-    } else if (element instanceof RequestCollection) {
-      return element.items;
+      return this.tree.filter(item => item instanceof RequestCollection);
+    } else {
+      return this.tree.filter(item => item.parent && item.parent.id === element.id);
     }
-    return [];
-  }
-
-  public getParent(element: CollectionsProviderItem) {
-    return element.parent || null;
   }
 
   public refresh(item?: CollectionsProviderItem) {
     this._onDidChangeTreeData.fire(item);
   }
 
-  public add(collection: string, request?: IRequestTreeItemState, skipSave?: boolean) {
-    if (!this.tree[collection]) {
-      this.tree[collection] = new RequestCollection(collection);
-    }
-    if (request) {
-      this.tree[collection].addItem(request);
+  public addFolderLike(name: string, parent?: RequestFolderLike) {
+    if (!parent) {
+      this.tree.push(new RequestCollection(name));
+    } else {
+      this.tree.push(new RequestFolder(name, parent));
     }
     this.refresh();
+    this.save();
+  }
+
+  public addRequest(request: IRequestTreeItemState, parentId: string) {
+    const existingRequest = this.tree.find(item => item.id === request.id && item.parent?.id === parentId) as RequestItem;
+    if (existingRequest) {
+      Object.assign(existingRequest.request, request);
+    } else {
+      const parent = this.tree.find(item => item.id === parentId) as RequestFolderLike;
+      this.tree.push(new RequestItem(request, parent));
+    }
+    this.refresh();
+    this.save();
+  }
+
+  public delete(toDelete: CollectionsProviderItem, skipSave?: boolean) {
+    const children = this.tree.filter(item => item.parent?.id === toDelete.id);
+    for (const child of children) {
+      this.delete(child, true);
+    }
+    this.tree = this.tree.filter(item => item.id !== toDelete.id);
     if (!skipSave) {
+      this.refresh();
       this.save();
     }
   }
 
-  public delete(item: CollectionsProviderItem) {
-    if (item instanceof RequestCollection) {
-      delete this.tree[item.name];
-    } else if (item instanceof RequestCollectionItem) {
-      const collection = item.parent.name;
-      this.tree[collection].deleteItem(item.id!);
+  public clearItems(folderLike: RequestFolderLike) {
+    const itemsToDelete = [];
+    const queue: CollectionsProviderItem[] = [folderLike];
+
+    while (queue.length) {
+      const queueItem = queue.shift();
+      if (queueItem?.id !== folderLike.id) {
+        itemsToDelete.push(queueItem);
+      }
+      queue.push(...this.tree.filter(item => item.parent?.id === queueItem?.id));
     }
-    this.refresh();
-    this.save();
-  }
 
-  public clearItems(collection: string) {
-    if (this.tree[collection]) {
-      this.tree[collection].clearItems();
-    }
-    this.refresh();
-    this.save();
-  }
-
-  public renameCollection(oldName: string, newName: string) {
-    this.tree[newName] = new RequestCollection(newName);
-    this.tree[newName].items = Array.from(this.tree[oldName].items);
-    delete this.tree[oldName];
+    itemsToDelete.forEach(toDelete => {
+      this.tree = this.tree.filter(item => item.id !== toDelete?.id);
+    });
 
     this.refresh();
     this.save();
   }
 
-  public renameItem(collection: string, id: string, newName: string) {
-    this.tree[collection].renameItem(id, newName);
+  public renameFolderLike(folderLike: RequestFolderLike, newName: string) {
+    Object.assign(folderLike, { label: newName, name: newName });
     this.refresh();
     this.save();
   }
 
-  public isCollectionExist(collection: string) {
-    return Object.keys(this.tree).findIndex(name => collection === name) !== -1;
-  }
-
-  public clear() {
-    this.tree = {};
+  public renameRequest(requestItem: RequestItem, newName: string) {
+    Object.assign(requestItem, { label: newName });
+    Object.assign(requestItem.request, { name: newName });
     this.refresh();
     this.save();
+  }
+
+  public isFolderLikeExist(name: string, parentId: string) {
+    const parentArray = this.tree.filter(item => item.parent?.id === parentId);
+    return parentArray.findIndex(item => !(item instanceof RequestItem) && item.name === name) !== -1;
+  }
+
+  public getCollectionByName(name?: string) {
+    return this.tree.find(item => item instanceof RequestCollection && item.name === name);
+  }
+
+  public getCollectionFolders(id: string): RequestFolder[] {
+    return this.tree.filter(item => item instanceof RequestFolder && item.parent.id === id) as RequestFolder[];
+  }
+
+  public getCollectionRequests(id: string): RequestItem[] {
+    return this.tree.filter(item => item instanceof RequestItem && item.parent.id === id) as RequestItem[];
   }
 
   private get filePath() {
@@ -102,33 +127,35 @@ export default class CollectionsProvider implements TreeDataProvider<Collections
   }
 
   public get collectionNames() {
-    return Object.keys(this.tree);
+    return this.tree.filter(item => item instanceof RequestCollection).map(item => item.name);
   }
 
   private readFile() {
     try {
       if (!fs.existsSync(this.filePath)) {
-        fs.writeFileSync(this.filePath, "{}");
+        fs.writeFileSync(this.filePath, "[]");
       }
       const dataStr = fs.readFileSync(this.filePath, { encoding: "utf8" });
       const data = JSON.parse(dataStr);
-      Object.keys(data).forEach((collection) => {
-        const requests = data[collection];
-        if (requests.length === 0) {
-          this.add(collection, undefined, true);
-          return;
+
+      for (const item of data) {
+        if (item.isCollection) {
+          this.tree.push(new RequestCollection(item.name, item.id));
+        } else if (item.isFolder) {
+          const parent = this.tree.find(i => i.id === item.parentId) as RequestFolderLike;
+          this.tree.push(new RequestFolder(item.name, parent, item.id));
+        } else {
+          const parent = this.tree.find(i => i.id === item.parentId) as RequestFolderLike;
+          this.tree.push(new RequestItem(item.request, parent));
         }
-        requests.forEach((request: IRequestTreeItemState) => {
-          this.add(collection, request, true);
-        });
-      });
+      }
     } catch (error) {
-      console.error("Error loading collections: ", error);
+      console.error("Error loading collection data:", error);
     }
   }
 
   private save() {
-    const data = Object.values(this.tree).reduce((collection, item) => ({ ...collection, ...item.toJSON() }), {});
+    const data = this.tree.map(item => item.toFileData());
     fs.writeFileSync(this.filePath, JSON.stringify(data));
   }
 

@@ -12,6 +12,7 @@ const MESSAGE = {
 
   NAME_EMPTY: "Name cannot be empty",
   COLLECTION_EXISTS: "A collection with this name already exists",
+  FOLDER_EXISTS: "A folder with this name already exists",
 };
 
 export default MESSAGE;

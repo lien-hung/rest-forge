@@ -5,7 +5,13 @@ import { shallow, useShallow } from "zustand/shallow";
 import { REQUEST, RESPONSE } from "../../../constants";
 import { ITableRow } from "../../../store/slices/type";
 import useStore from "../../../store/useStore";
-import { generateParameterString, getUrlParameters, removeUrlParameter, usePrevious } from "../../../utils";
+import {
+  generateId,
+  generateParameterString,
+  getUrlParameters,
+  removeUrlParameter,
+  usePrevious
+} from "../../../utils";
 
 const RequestUrl = () => {
   const {
@@ -92,7 +98,7 @@ const RequestUrl = () => {
 
       if (urlParams.length) {
         newTableParams.splice(-1, 0, ...urlParams.map(p => ({
-          id: crypto.randomUUID(),
+          id: generateId(),
           isChecked: true,
           key: p.key,
           value: p.value,

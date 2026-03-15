@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 import CollectionsProvider from './collections';
-import { RequestCollection, RequestCollectionItem } from './collections/tree-items';
+import { RequestCollection, RequestFolder, RequestItem } from './collections/tree-items';
 import { COMMAND, MESSAGE, TYPE } from "./constants";
 import MainWebviewPanel from './panels/main';
 import ManageTokenWebviewPanel from './panels/manage-tokens';
@@ -39,14 +39,14 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const initializePanel = ({
 		id,
-		collectionName,
+		parentId,
 		requestName
 	}: {
 		id?: string,
-		collectionName?: string,
+		parentId?: string,
 		requestName?: string
 	}) => {
-		currentMainPanel = mainWebviewProvider.initializeWebview(id, collectionName, requestName);
+		currentMainPanel = mainWebviewProvider.initializeWebview(id, parentId, requestName);
 		manageTokenWebviewProvider.mainPanel = currentMainPanel;
 
 		mainWebviewProvider.mainPanel?.onDidDispose(() => {
@@ -78,14 +78,14 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const disp_openRequestCmd = vscode.commands.registerCommand(
 		COMMAND.OPEN_REQUEST,
-		(item: RequestHistoryTreeItem | RequestCollectionItem) => {
+		(item: RequestHistoryTreeItem | RequestItem) => {
 			const requestMessage = { type: TYPE.TREEVIEW_DATA, ...item.request.requestObject };
 			if (!currentMainPanel) {
 				setTimeout(() => currentMainPanel?.webview.postMessage(requestMessage), 1500);
 			}
 
-			if (item instanceof RequestCollectionItem) {
-				initializePanel({ id: item.id, collectionName: item.parent.name, requestName: item.request.name });
+			if (item instanceof RequestItem) {
+				initializePanel({ id: item.id, parentId: item.parent.id, requestName: item.request.name });
 			} else {
 				initializePanel({});
 			}
@@ -125,15 +125,16 @@ export async function activate(context: vscode.ExtensionContext) {
 					canPickMany: false
 				}
 			);
+			const collection = collectionsProvider.getCollectionByName(collectionName);
 
-			if (collectionName) {
+			if (collection) {
 				const requestName = await handleInputName();
 				if (!requestName) {
 					return;
 				}
 
 				item.request.name = requestName;
-				collectionsProvider.add(collectionName, item.request);
+				collectionsProvider.addRequest(item.request, collection.id!);
 			}
 		}
 	);
@@ -168,11 +169,11 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (!collectionName) {
 				return;
 			}
-			if (collectionsProvider.isCollectionExist(collectionName.trim())) {
+			if (collectionsProvider.collectionNames.includes(collectionName.trim())) {
 				await vscode.window.showInformationMessage(MESSAGE.COLLECTION_EXISTS);
 				return;
 			}
-			collectionsProvider.add(collectionName.trim());
+			collectionsProvider.addFolderLike(collectionName.trim());
 		}
 	);
 
@@ -183,11 +184,11 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (!newName) {
 				return;
 			}
-			if (collectionsProvider.isCollectionExist(newName.trim())) {
+			if (collectionsProvider.collectionNames.includes(newName.trim())) {
 				await vscode.window.showInformationMessage(MESSAGE.COLLECTION_EXISTS);
 				return;
 			}
-			collectionsProvider.renameCollection(collection.name, newName.trim());
+			collectionsProvider.renameFolderLike(collection, newName.trim());
 		}
 	);
 
@@ -205,39 +206,86 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	);
 
+	const disp_newFolderCmd = vscode.commands.registerCommand(
+		COMMAND.NEW_FOLDER,
+		async (folderLike: RequestCollection | RequestFolder) => {
+			const folderName = await handleInputName();
+			if (!folderName) {
+				return;
+			}
+
+			const existingNames = collectionsProvider.getCollectionFolders(folderLike.id!).map(folder => folder.name);
+			if (existingNames.includes(folderName.trim())) {
+				await vscode.window.showInformationMessage(MESSAGE.FOLDER_EXISTS);
+				return;
+			}
+			collectionsProvider.addFolderLike(folderName.trim(), folderLike);
+		}
+	);
+
+	const disp_renameFolderCmd = vscode.commands.registerCommand(
+		COMMAND.RENAME_FOLDER,
+		async (folder: RequestFolder) => {
+			const newName = await handleInputName();
+			if (!newName) {
+				return;
+			}
+
+			const existingNames = collectionsProvider.getCollectionFolders(folder.parent.id!).map(folder => folder.name);
+			if (existingNames.includes(newName.trim())) {
+				await vscode.window.showInformationMessage(MESSAGE.FOLDER_EXISTS);
+				return;
+			}
+			collectionsProvider.renameFolderLike(folder, newName.trim());
+		}
+	);
+
+	const disp_deleteFolderCmd = vscode.commands.registerCommand(
+		COMMAND.DELETE_FOLDER,
+		async (folder: RequestFolder) => {
+			const action = await vscode.window.showWarningMessage(
+				MESSAGE.DELETE_COLLECTION_REMINDER,
+				MESSAGE.YES,
+				MESSAGE.NO
+			);
+			if (action === MESSAGE.YES) {
+				collectionsProvider.delete(folder);
+			}
+		}
+	);
+
 	const disp_newCollectionRequestCmd = vscode.commands.registerCommand(
 		COMMAND.NEW_COLLECTION_REQUEST,
-		async (collection: RequestCollection) => {
+		async (folderLike: RequestCollection | RequestFolder) => {
 			const requestName = await handleInputName();
 			if (!requestName) {
 				return;
 			}
-			initializePanel({ collectionName: collection.name, requestName: requestName.trim() });
+			initializePanel({ parentId: folderLike.id, requestName: requestName.trim() });
 		}
 	);
 
 	const disp_clearCollectionItemsCmd = vscode.commands.registerCommand(
 		COMMAND.CLEAR_COLLECTION_ITEMS,
-		(collection: RequestCollection) => {
-			collectionsProvider.clearItems(collection.name);
+		(folderLike: RequestCollection | RequestFolder) => {
+			collectionsProvider.clearItems(folderLike);
 		}
 	);
 
 	const disp_renameCollectionRequestCmd = vscode.commands.registerCommand(
 		COMMAND.RENAME_COLLECTION_REQUEST,
-		async (requestItem: RequestCollectionItem) => {
-			const collectionName = requestItem.parent.name;
+		async (requestItem: RequestItem) => {
 			const newRequestName = await handleInputName();
 			if (!newRequestName) {
 				return;
 			}
-			collectionsProvider.renameItem(collectionName, requestItem.id!, newRequestName.trim());
+			collectionsProvider.renameRequest(requestItem, newRequestName.trim());
 		}
 	);
 
 	const disp_deleteCollectionRequestCmd = vscode.commands.registerCommand(
 		COMMAND.DELETE_COLLECTION_REQUEST,
-		(requestItem: RequestCollectionItem) => {
+		(requestItem: RequestItem) => {
 			collectionsProvider.delete(requestItem);
 		}
 	);
@@ -330,6 +378,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disp_newCollectionCmd);
 	context.subscriptions.push(disp_renameCollectionCmd);
 	context.subscriptions.push(disp_deleteCollectionCmd);
+
+	context.subscriptions.push(disp_newFolderCmd);
+	context.subscriptions.push(disp_renameFolderCmd);
+	context.subscriptions.push(disp_deleteFolderCmd);
+
 	context.subscriptions.push(disp_newCollectionRequestCmd);
 	context.subscriptions.push(disp_clearCollectionItemsCmd);
 	context.subscriptions.push(disp_renameCollectionRequestCmd);

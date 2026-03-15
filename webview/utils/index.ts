@@ -1,3 +1,4 @@
+export { default as generateId } from "./generateId";
 export { default as generateParameterString } from "./generateParameterString";
 export { default as generateSdkRequestObject } from "./generateSdkRequestObject";
 export { default as getCurrentTheme } from "./getCurrentTheme";

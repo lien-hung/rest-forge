@@ -1,5 +1,7 @@
 import { StateCreator } from "zustand";
+
 import { COMMON, REQUEST } from "../../constants";
+import { generateId } from "../../utils";
 import { IKeyValueTableDataSlice } from "./type";
 
 const keyValueTableDataSlice: StateCreator<
@@ -11,7 +13,7 @@ const keyValueTableDataSlice: StateCreator<
   tableData: {
     "Params": [
       {
-        id: crypto.randomUUID(),
+        id: generateId(),
         isChecked: false,
         key: "",
         value: "",
@@ -20,35 +22,35 @@ const keyValueTableDataSlice: StateCreator<
     ],
     "Headers": [
       {
-        id: crypto.randomUUID(),
+        id: generateId(),
         isChecked: true,
         key: REQUEST.CACHE_CONTROL,
         value: REQUEST.NO_CACHE,
         rowReadOnly: true,
       },
       {
-        id: crypto.randomUUID(),
+        id: generateId(),
         isChecked: true,
         key: REQUEST.ACCEPT,
         value: REQUEST.ANY_MIME_TYPE,
         rowReadOnly: true,
       },
       {
-        id: crypto.randomUUID(),
+        id: generateId(),
         isChecked: true,
         key: REQUEST.ACCEPT_ENCODING,
         value: `${REQUEST.GZIP},${REQUEST.DEFLATE}`,
         rowReadOnly: true,
       },
       {
-        id: crypto.randomUUID(),
+        id: generateId(),
         isChecked: true,
         key: REQUEST.CONNECTION,
         value: REQUEST.KEEP_ALIVE,
         rowReadOnly: true,
       },
       {
-        id: crypto.randomUUID(),
+        id: generateId(),
         isChecked: false,
         key: "",
         value: "",
@@ -57,7 +59,7 @@ const keyValueTableDataSlice: StateCreator<
     ],
     "Form Data": [
       {
-        id: crypto.randomUUID(),
+        id: generateId(),
         isChecked: false,
         key: "",
         value: "",
@@ -69,7 +71,7 @@ const keyValueTableDataSlice: StateCreator<
     ],
     "Form Encoded": [
       {
-        id: crypto.randomUUID(),
+        id: generateId(),
         isChecked: false,
         key: "",
         value: "",
@@ -144,7 +146,7 @@ const keyValueTableDataSlice: StateCreator<
         ...state.tableData,
         [COMMON.HEADERS]: [
           {
-            id: crypto.randomUUID(),
+            id: generateId(),
             isChecked: true,
             key: REQUEST.CONTENT_TYPE,
             value: headerValue,
@@ -170,7 +172,7 @@ const keyValueTableDataSlice: StateCreator<
         ...state.tableData,
         [optionType]: [
           {
-            id: crypto.randomUUID(),
+            id: generateId(),
             isChecked: true,
             key: data?.key || "",
             value: data?.value || "",
@@ -200,7 +202,7 @@ const keyValueTableDataSlice: StateCreator<
         [type]: [
           ...state.tableData[type],
           {
-            id: crypto.randomUUID(),
+            id: generateId(),
             isChecked: false,
             key: "",
             value: "",
