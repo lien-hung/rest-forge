@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { shallow, useShallow } from "zustand/shallow";
+import { useShallow } from "zustand/shallow";
 
-import { REQUEST, RESPONSE } from "../../../constants";
+import { RESPONSE } from "../../../constants";
 import { ITableRow } from "../../../store/slices/type";
 import useStore from "../../../store/useStore";
 import {
@@ -10,7 +10,6 @@ import {
   generateParameterString,
   getUrlParameters,
   removeUrlParameter,
-  usePrevious
 } from "../../../utils";
 
 const RequestUrl = () => {
@@ -45,11 +44,10 @@ const RequestUrl = () => {
   const initDisplayUrl = () => tableParams.some(d => d.authType) ? removeFirstParam(requestUrl) : requestUrl;
 
   const [displayUrl, setDisplayUrl] = useState(initDisplayUrl);
-  const prevTableData = usePrevious(tableParams);
-  const prevDisplayUrl = usePrevious(displayUrl);
+  const [inputKey, setInputKey] = useState("");
 
   const toUrl = (tableData: ITableRow[]) => {
-    const parameterString = generateParameterString(tableData.map(d => ({ ...d, optionType: REQUEST.PARAMS })));
+    const parameterString = generateParameterString(tableData);
     const baseUrl = removeUrlParameter(displayUrl || requestUrl);
     return baseUrl + parameterString;
   };
@@ -66,55 +64,51 @@ const RequestUrl = () => {
   }, []);
 
   useEffect(() => {
-    // Case 1: Table data changed
-    if (prevTableData.length !== tableParams.length
-      || prevTableData.some((param, i) => !shallow(param, tableParams[i]))
-    ) {
-      const rows = tableParams.filter(d => d.isChecked);
-      handleRequestUrlChange(toUrl(rows));
+    const rows = tableParams.filter(d => d.isChecked);
+    handleRequestUrlChange(toUrl(rows));
 
-      const nonAuthRows = rows.filter(d => !d.authType);
-      setDisplayUrl(toUrl(nonAuthRows));
+    const nonAuthRows = rows.filter(d => !d.authType);
+    setDisplayUrl(toUrl(nonAuthRows));
+  }, [tableParams]);
 
+  useEffect(() => {
+    if (inputKey === "?" || inputKey === "=") {
       return;
     }
 
-    // Case 2: Request URL changed
-    if (prevDisplayUrl !== displayUrl) {
-      const urlParams = getUrlParameters(displayUrl);
-      if (!urlParams.length || !tableParams.find(p => p.authType)) {
-        handleRequestUrlChange(displayUrl);
-      }
-
-      const newTableParams = tableParams.map(row => {
-        if (row.authType || !row.isChecked) {
-          return row;
-        }
-        const urlParam = urlParams.shift();
-        if (urlParam) {
-          return { ...row, key: urlParam.key, value: urlParam.value };
-        }
-      }).filter(Boolean) as ITableRow[];
-
-      if (urlParams.length) {
-        newTableParams.splice(-1, 0, ...urlParams.map(p => ({
-          id: generateId(),
-          isChecked: true,
-          key: p.key,
-          value: p.value,
-          rowReadOnly: false,
-        })));
-      }
-
-      handleParamsTableData([...newTableParams]);
+    const urlParams = getUrlParameters(displayUrl);
+    if (!urlParams.length || !tableParams.find(p => p.authType)) {
+      handleRequestUrlChange(displayUrl);
     }
-  }, [tableParams, displayUrl]);
+
+    const newTableParams = tableParams.map(row => {
+      if (row.authType || !row.isChecked) {
+        return row;
+      }
+      const urlParam = urlParams.shift();
+      if (urlParam) {
+        return { ...row, key: urlParam.key, value: urlParam.value };
+      }
+    }).filter(Boolean) as ITableRow[];
+
+    if (urlParams.length) {
+      newTableParams.splice(-1, 0, ...urlParams.map(p => ({
+        id: generateId(),
+        isChecked: true,
+        key: p.key,
+        value: p.value,
+        rowReadOnly: false,
+      })));
+    }
+    handleParamsTableData([...newTableParams]);
+  }, [displayUrl]);
 
   return (
     <InputContainer
       placeholder="Enter request URL"
       value={displayUrl}
       onChange={(event) => setDisplayUrl(event.target.value)}
+      onBeforeInput={(event) => setInputKey(event.data)}
     />
   );
 };

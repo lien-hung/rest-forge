@@ -20,10 +20,7 @@ function getUrlParameters(url: string) {
       [key, value] = param.split("=");
     }
 
-    return {
-      key: key,
-      value: value
-    };
+    return { key, value };
   });
 
   return paramPairs;

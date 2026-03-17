@@ -10,8 +10,8 @@ function generateParameterString(searchParamsData: ITableRow[]) {
       return;
     }
 
-    const key = param.key.replaceAll("&", "%26");
-    const value = param.value.replaceAll("&", "%26");
+    const key = param.key.replaceAll("#", "%23").replaceAll("&", "%26");
+    const value = param.value.replaceAll("#", "%23").replaceAll("&", "%26");
     return value ? `${key}=${value}` : key;
   });
   const parameterString = "?" + searchParams.join("&");
