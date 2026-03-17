@@ -66,7 +66,7 @@ export default class RequestHistoryProvider implements TreeDataProvider<RequestH
 
   private save() {
     const data = this.tree.map((item) => item.request);
-    fs.writeFileSync(this.filePath, JSON.stringify(data));
+    fs.writeFileSync(this.filePath, JSON.stringify(data, null, 2));
   }
   
   constructor(context: ExtensionContext) {

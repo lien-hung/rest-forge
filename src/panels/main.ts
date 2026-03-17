@@ -237,20 +237,20 @@ class MainWebviewPanel {
 
         if (this.parentId && this.requestName) {
           const newRequest = {
-            ...requestData,
-            requestedTime,
             id: this.id || generateId(),
             name: this.requestName,
+            ...requestData,
+            requestedTime,
             requestObject,
           };
           this.collectionsProvider.addRequest(newRequest, this.parentId);
           this.id = newRequest.id;
         } else {
           this.requestHistoryProvider.add({
-            ...requestData,
-            requestedTime,
             id: generateId(),
             name: "",
+            ...requestData,
+            requestedTime,
             requestObject,
           });
         }

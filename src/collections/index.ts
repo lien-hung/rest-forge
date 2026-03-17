@@ -156,7 +156,7 @@ export default class CollectionsProvider implements TreeDataProvider<Collections
 
   private save() {
     const data = this.tree.map(item => item.toFileData());
-    fs.writeFileSync(this.filePath, JSON.stringify(data));
+    fs.writeFileSync(this.filePath, JSON.stringify(data, null, 2));
   }
 
   constructor(context: ExtensionContext) {

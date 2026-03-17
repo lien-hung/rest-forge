@@ -13,12 +13,13 @@ export interface IOAuth2Token {
 }
 
 export interface IRequestTreeItemState {
+  id: string;
+  name: string;
   url: string;
   method: string;
   headers: Headers;
+  body: string | FormData | URLSearchParams;
   requestedTime: number;
-  id: string;
-  name: string;
   requestObject: IRequestObject;
 }
 
