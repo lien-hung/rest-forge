@@ -19,7 +19,7 @@ const InputWrapperContainer = styled.div`
   }
 
   input {
-    border: 0.1rem solid rgba(128, 128, 128, 0.7);
+    border: 0.1rem solid rgba(128 128 128 / 0.7);
     border-radius: 0.3rem;
     padding: 0.5rem 0.7rem;
     color: var(--default-text);

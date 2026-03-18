@@ -183,7 +183,7 @@ const SelectOptionWrapper = styled.select`
   height: 2.3rem;
   margin-left: 1rem;
   padding-left: 0.5rem;
-  border: 0.1rem solid rgba(128, 128, 128, 0.7);
+  border: 0.1rem solid rgba(128 128 128 / 0.7);
   border-radius: 0.25rem;
   font-size: 1.1rem;
   background-color: var(--vscode-editor-background);

@@ -46,7 +46,7 @@ const ManageTokensWrapper = styled.div`
 
 const Sidebar = styled.aside`
   min-width: 14rem;
-  border-right: 2px solid rgba(128, 128, 128, 0.12);
+  border-right: 2px solid rgba(128 128 128 / 0.12);
   overflow-y: auto;
   scrollbar-width: none;
 `;

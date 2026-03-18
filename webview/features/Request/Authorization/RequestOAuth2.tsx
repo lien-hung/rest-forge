@@ -285,7 +285,7 @@ const RequestOAuth2 = () => {
 
 const OptionWrapper = styled.select`
   height: 2.5rem;
-  border: 0.1rem solid rgba(128, 128, 128, 0.7);
+  border: 0.1rem solid rgba(128 128 128 / 0.7);
   border-radius: 0.3rem;
   padding: 0.1rem 0.3rem;
   background-color: var(--vscode-editor-background);

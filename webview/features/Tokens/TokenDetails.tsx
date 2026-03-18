@@ -83,7 +83,7 @@ const Field = styled.div`
 
 const TokenArea = styled.div`
   background: var(--vscode-editor-background);
-  border: 1px solid rgba(128, 128, 128, 0.14);
+  border: 1px solid rgba(128 128 128 / 0.14);
   padding: 0.8rem;
   overflow: auto;
   margin-bottom: 0.8rem;

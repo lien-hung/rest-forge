@@ -71,6 +71,10 @@ const RequestOAuth2NewToken = () => {
   const stateRef = useRef<HTMLInputElement>(null);
   const clientAuthRef = useRef<HTMLSelectElement>(null);
 
+  // Content editable refs
+  const codeVerifierRef = useRef<HTMLInputElement>(null);
+  const codeVerifierPreviewRef = useRef<HTMLDivElement>(null);
+
   // Advanced option refs
   const resourceRef = useRef<HTMLInputElement>(null);
   const audienceRef = useRef<HTMLInputElement>(null);
@@ -90,6 +94,14 @@ const RequestOAuth2NewToken = () => {
       newTokenList: [...tokens, newToken]
     });
     vscode.postMessage({ command: COMMON.OAUTH2_TOKEN_ADDED });
+  };
+
+  const mirrorScroll = () => {
+    const inputElement = codeVerifierRef.current;
+    if (!inputElement) return;
+
+    const previewElement = codeVerifierPreviewRef.current;
+    previewElement?.scrollTo(inputElement?.scrollLeft, inputElement?.scrollTop);
   };
 
   const handleGetToken = async () => {
@@ -263,12 +275,26 @@ const RequestOAuth2NewToken = () => {
           <InputWrapper>
             <label htmlFor="codeVerifier">Code Verifier</label>
             <CodeVerifierWrapper>
+              <Preview ref={codeVerifierPreviewRef}>
+                {Array.from(codeVerifierValue).map((ch, i) => {
+                  const isInvalid = invalidChars.includes(ch);
+                  return (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <Char key={i} $invalid={isInvalid}>
+                      {ch}
+                    </Char>
+                  );
+                })}
+              </Preview>
               <input
+                ref={codeVerifierRef}
                 type="text"
                 name="codeVerifier"
                 placeholder="Automatically generated if left blank"
                 value={codeVerifierValue}
                 onChange={(e) => validateCodeVerifier(e.target.value)}
+                onScroll={mirrorScroll}
+                onInput={mirrorScroll}
                 aria-invalid={!!codeVerifierError}
               />
               {codeVerifierError && (
@@ -276,20 +302,6 @@ const RequestOAuth2NewToken = () => {
                   <img src={errorIcon} />
                   <ErrorText role="alert">{codeVerifierError}</ErrorText>
                 </div>
-              )}
-              {/* Preview with invalid chars highlighted */}
-              {codeVerifierValue && (
-                <Preview>
-                  {Array.from(codeVerifierValue).map((ch, i) => {
-                    const isInvalid = invalidChars.includes(ch);
-                    return (
-                      // eslint-disable-next-line react/no-array-index-key
-                      <Char key={i} $invalid={isInvalid}>
-                        {ch}
-                      </Char>
-                    );
-                  })}
-                </Preview>
               )}
             </CodeVerifierWrapper>
           </InputWrapper>
@@ -352,7 +364,7 @@ const RequestOAuth2NewToken = () => {
 const OptionWrapper = styled.select`
   width: auto;
   height: 2.5rem;
-  border: 0.1rem solid rgba(128, 128, 128, 0.7);
+  border: 0.1rem solid rgba(128 128 128 / 0.7);
   border-radius: 0.3rem;
   padding: 0.1rem 0.3rem;
   background-color: var(--vscode-editor-background);
@@ -367,26 +379,42 @@ const ErrorText = styled.span`
 
 const CodeVerifierWrapper = styled.div`
   flex: 1;
+  position: relative;
+
+  input {
+    position: relative;
+    outline: none;
+    color: transparent;
+    caret-color: var(--vscode-foreground);
+  }
 
   input[aria-invalid=true] {
-    border-color: var(--vscode-editorError-foreground, #ff4d4d);
+    border: 1px solid var(--vscode-editorError-foreground, #ff4d4d);
   }
 `;
 
 const Preview = styled.div`
-  margin-top: 0.35rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
-  font-size: 0.85rem;
-  display: flex;
-  flex-wrap: wrap;
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  border: 1px solid transparent;
+  padding: 0.5rem 0.7rem;
+  user-select: none;
+  overflow: scroll;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  white-space: nowrap;
 `;
 
 const Char = styled.span<{ $invalid?: boolean }>`
-  padding: 0 0.08rem;
+  padding-right: 0.15px;
   ${'' /* subtle highlight for invalid chars */}
   ${({ $invalid }) =>
     $invalid
-      ? `background: rgba(255,77,77,0.12); color: var(--vscode-editorError-foreground, #ff4d4d); border-radius: 2px;`
+      ? `
+        background: rgba(255 77 77 / 0.12);
+        color: var(--vscode-editorError-foreground, #ff4d4d);
+        border-radius: 2px;
+      `
       : `color: inherit;`}
 `;
 

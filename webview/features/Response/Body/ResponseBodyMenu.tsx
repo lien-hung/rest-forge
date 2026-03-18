@@ -79,7 +79,7 @@ const OptionContainer = styled.div<{ primary: boolean; radius: number }>`
   background: ${(props) =>
     props.primary
       ? "var(--vscode-button-hoverBackground)"
-      : "rgba(97, 97, 97, 0.15)"};
+      : "rgba(97 97 97 / 0.15)"};
   border-radius: ${(props) =>
     props.radius === 0
       ? "0.5rem 0 0 0.5rem"

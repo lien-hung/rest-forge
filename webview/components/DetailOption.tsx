@@ -13,7 +13,7 @@ const DetailOptionWrapper = styled.div`
   flex-flow: row;
   padding: 0 1.3rem;
   flex: 0 1 auto;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.7);
+  border-bottom: 1px solid rgba(128 128 128 / 0.7);
   
   p {
     padding-bottom: 0.65rem;

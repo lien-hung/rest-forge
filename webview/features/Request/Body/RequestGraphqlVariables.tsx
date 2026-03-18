@@ -64,7 +64,7 @@ const RequestVariablesWrapper = styled.div`
 
   > div {
     &:nth-child(2) {
-      border: 0.1rem solid rgba(128, 128, 128, 0.7);
+      border: 0.1rem solid rgba(128 128 128 / 0.7);
       border-radius: 0.25rem;
       flex: 1 1 auto;
     }

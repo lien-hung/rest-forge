@@ -91,7 +91,7 @@ input[type="checkbox"] {
   height: 14px;
   appearance: none;
   border-radius: 2px;
-  border: 1px solid rgba(128, 128, 128, 0.7);
+  border: 1px solid rgba(128 128 128 / 0.7);
   padding: 0 4px;
 }
 

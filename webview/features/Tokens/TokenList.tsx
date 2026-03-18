@@ -61,7 +61,7 @@ const Item = styled.div<{ active?: boolean, isExpired?: boolean }>`
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  background: ${(p) => (p.active ? "rgba(128, 128, 128, 0.08)" : "transparent")};
+  background: ${(p) => (p.active ? "rgba(128 128 128 / 0.08)" : "transparent")};
   border-left: ${(p) => (p.active && "3px solid var(--vscode-button-background)")};
 
   .tokenName {
@@ -84,7 +84,7 @@ const Item = styled.div<{ active?: boolean, isExpired?: boolean }>`
   }
 
   &:hover {
-    background: rgba(128, 128, 128, 0.08);
+    background: rgba(128 128 128 / 0.08);
     
     .delete {
       display: inline-block;

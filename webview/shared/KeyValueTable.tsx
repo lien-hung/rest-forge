@@ -184,7 +184,7 @@ const FileInputWrapper = styled.div`
 `;
 
 const FileNameDisplay = styled.div`
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255 255 255 / 0.03);
   color: var(--default-text);
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
@@ -199,7 +199,7 @@ const FileSelectButton = styled.label`
   cursor: pointer;
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255 255 255 / 0.06);
   background: transparent;
   font-size: 0.95rem;
 
@@ -263,7 +263,7 @@ const Table = styled.table<{ readOnlyMode: boolean }>`
   td {
     text-align: left;
     padding: 0.6rem;
-    border: ${(props) => props.readOnlyMode && "0.1rem solid rgb(55, 55, 55)"};
+    border: ${(props) => props.readOnlyMode && "0.1rem solid rgb(55 55 55)"};
   }
 
   tbody tr {
@@ -314,8 +314,8 @@ const Table = styled.table<{ readOnlyMode: boolean }>`
   
   .auth-row input {
     &:checked:before {
-      border-bottom-color: rgba(128, 128, 128, 0.7);
-      border-right-color: rgba(128, 128, 128, 0.7);
+      border-bottom-color: rgba(128 128 128 / 0.7);
+      border-right-color: rgba(128 128 128 / 0.7);
     }
   }
 `;
