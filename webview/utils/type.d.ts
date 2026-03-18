@@ -15,14 +15,6 @@ export interface ITableData {
   "Form Encoded": ITableRow[];
 }
 
-export interface IBodyRawData {
-  text: string;
-  javascript: string;
-  json: string;
-  html: string;
-  xml: string;
-}
-
 export interface IGraphqlData {
   query: string;
   variables: string;

@@ -48,7 +48,7 @@ const RequestBodySelectMenuOption = () => {
 
   function handleRequestBodyEditorChange(bodyValue: string | undefined) {
     if (bodyValue) {
-      handleBodyRawOptionData(bodyRawOptionLower, bodyValue);
+      handleBodyRawOptionData(bodyValue);
     }
   }
 
@@ -80,17 +80,7 @@ const RequestBodySelectMenuOption = () => {
           <CodeEditor
             language={bodyRawOptionLower}
             editorOption={OPTION.EDITOR_OPTIONS}
-            codeEditorValue={
-              bodyRawData[
-              bodyRawOptionLower as keyof {
-                text: string;
-                javascript: string;
-                json: string;
-                html: string;
-                xml: string;
-              }
-              ]
-            }
+            codeEditorValue={bodyRawData}
             handleEditorChange={handleRequestBodyEditorChange}
             requestForm
             shouldBeautifyEditor={shouldBeautifyEditor}

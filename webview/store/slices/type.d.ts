@@ -5,14 +5,6 @@ export interface AuthData {
   tokenPrefix: string;
 }
 
-export interface BodyRawData {
-  text: string;
-  javascript: string;
-  json: string;
-  html: string;
-  xml: string;
-}
-
 export interface GraphqlData {
   query: string;
   variables: string;
@@ -84,7 +76,7 @@ export interface IRequestDataSlice extends ITreeViewResponse {
   handleRequestAuthType: (type: string) => void;
   handleRequestBodyOption: (type: string) => void;
   handleBodyRawOption: (type: string) => void;
-  handleBodyRawOptionData: (rawOption: string, data: string) => void;
+  handleBodyRawOptionData: (data: string) => void;
   handleGraphqlQuery: (data: string) => void;
   handleGraphqlVariables: (data: string) => void;
   handleBeautifyButton: () => void;
@@ -106,7 +98,7 @@ export interface ITreeViewResponse {
   requestMethod: string;
   bodyOption: string;
   bodyRawOption: string;
-  bodyRawData: BodyRawData;
+  bodyRawData: string;
   graphqlData: GraphqlData;
 }
 

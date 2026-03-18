@@ -2,7 +2,7 @@ import { Buffer } from "buffer";
 import { Request } from "postman-collection";
 
 import { REQUEST } from "../constants";
-import { IAuthData, IBodyRawData, IGraphqlData, ITableData, ITableRow, OptionType } from "./type";
+import { IAuthData, IGraphqlData, ITableData, ITableRow, OptionType } from "./type";
 
 const generateSdkRequestObject = (
   url: string,
@@ -11,8 +11,7 @@ const generateSdkRequestObject = (
   authOption: string,
   authData: IAuthData,
   bodyOption: OptionType,
-  bodyRawOption: string,
-  bodyRawData: IBodyRawData,
+  bodyRawData: string,
   graphqlData: IGraphqlData
 ) => {
   const requestHeaders = tableData["Headers"].filter((data) => data.key.length > 0);
@@ -75,10 +74,7 @@ const generateSdkRequestObject = (
       mode: bodyMode,
       [bodyMode]: bodyData.length
         ? bodyData
-        : (bodyOption === REQUEST.GRAPHQL
-          ? JSON.stringify(graphqlObject)
-          : bodyRawData[bodyRawOption.toLowerCase() as keyof IBodyRawData]
-        ),
+        : (bodyOption === REQUEST.GRAPHQL ? JSON.stringify(graphqlObject) : bodyRawData),
     },
     auth: {
       type: authMode,

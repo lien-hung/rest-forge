@@ -35,7 +35,7 @@ function parseCurl(command: string) {
     oauth2Data: { token: "", prefix: "Bearer", tokenType: "Access token", addTo: "Headers" },
     bodyOption: "None",
     bodyRawOption: "Text",
-    bodyRawData: { text: "", javascript: "", json: "", html: "", xml: "" },
+    bodyRawData: "",
     tableData: { "Params": [], "Headers": [], "Form Data": [], "Form Encoded": [] },
     graphqlData: { query: "", variables: "" },
   };
@@ -94,18 +94,15 @@ function parseCurl(command: string) {
       request.tableData["Form Encoded"].push(...parseDataUrlEncode(data));
     } else {
       request.bodyOption = TYPE.BODY_RAW;
+      request.bodyRawData = data;
       if (contentTypeHeader?.includes("application/json") || isJson(data)) {
         request.bodyRawOption = "JSON";
-        request.bodyRawData.json = data;
       } else if (contentTypeHeader?.includes("application/xml") || XMLValidator.validate(data)) {
         request.bodyRawOption = "XML";
-        request.bodyRawData.xml = data;
       } else if (contentTypeHeader?.includes("text/html")) {
         request.bodyRawOption = "HTML";
-        request.bodyRawData.html = data;
       } else {
         request.bodyRawOption = "Text";
-        request.bodyRawData.text = data;
       }
     }
   };

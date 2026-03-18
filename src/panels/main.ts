@@ -180,7 +180,6 @@ class MainWebviewPanel {
           authOption,
           authData,
           bodyOption,
-          bodyRawOption,
           bodyRawData,
           tableData,
           graphqlData,
@@ -204,7 +203,6 @@ class MainWebviewPanel {
         this.body = getBody(
           flatTableData,
           bodyOption,
-          bodyRawOption,
           bodyRawData,
           graphqlData,
         );

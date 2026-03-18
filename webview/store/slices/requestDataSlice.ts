@@ -28,7 +28,7 @@ const requestDataSlice: StateCreator<
     prefix: "Bearer",
     addTo: REQUEST.ADD_TO_HEADERS
   },
-  bodyRawData: { text: "", javascript: "", json: "", html: "", xml: "" },
+  bodyRawData: "",
   graphqlData: { query: "", variables: "" },
 
   handleRequestUrlChange: (url: string) => set(() => ({ requestUrl: url })),
@@ -56,10 +56,8 @@ const requestDataSlice: StateCreator<
   handleBodyRawOption: (option: string) =>
     set(() => ({ bodyRawOption: option })),
 
-  handleBodyRawOptionData: (rawOption: string, data: string) =>
-    set((state) => ({
-      bodyRawData: { ...state.bodyRawData, [rawOption]: data },
-    })),
+  handleBodyRawOptionData: (data: string) =>
+    set(() => ({ bodyRawData: data })),
 
   handleGraphqlQuery: (data) =>
     set((state) => ({

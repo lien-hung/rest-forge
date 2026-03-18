@@ -35,7 +35,7 @@ export interface IRequestObject {
   oauth2Data: IOAuth2Data;
   bodyOption: string;
   bodyRawOption: string;
-  bodyRawData: IBodyRawData;
+  bodyRawData: string;
   tableData: ITableData;
   graphqlData: IGraphqlData;
 }
@@ -49,14 +49,6 @@ export interface IParameterKeyValueData {
   isChecked: boolean;
   key: string;
   value: string | File;
-}
-
-export interface IBodyRawData {
-  text: string;
-  javascript: string;
-  json: string;
-  html: string;
-  xml: string;
 }
 
 export interface IGraphqlData {

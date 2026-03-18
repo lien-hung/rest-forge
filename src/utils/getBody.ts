@@ -1,11 +1,10 @@
 import { TYPE } from "../constants";
-import { IBodyRawData, IGraphqlData, IParameterKeyValueData } from "./type";
+import { IGraphqlData, IParameterKeyValueData } from "./type";
 
 function getBody(
   keyValueData: IParameterKeyValueData[],
   bodyOption: string,
-  bodyRawOption: string,
-  bodyRawData: IBodyRawData,
+  bodyRawData: string,
   graphqlData: IGraphqlData,
 ) {
   if (bodyOption === "None") {
@@ -13,15 +12,7 @@ function getBody(
   }
 
   if (bodyOption === TYPE.BODY_RAW) {
-    return bodyRawData[
-      bodyRawOption.toLowerCase() as keyof {
-        text: string;
-        javascript: string;
-        json: string;
-        html: string;
-        xml: string;
-      }
-    ];
+    return bodyRawData;
   }
 
   if (bodyOption === TYPE.BODY_GRAPHQL) {
