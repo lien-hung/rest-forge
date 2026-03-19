@@ -62,6 +62,7 @@ const RequestOAuth2NewToken = () => {
 
   // Configuration option refs
   const tokenNameRef = useRef<HTMLInputElement>(null);
+  const callbackUrlRef = useRef<HTMLInputElement>(null);
   const authUrlRef = useRef<HTMLInputElement>(null);
   const accessTokenUrlRef = useRef<HTMLInputElement>(null);
   const clientIdRef = useRef<HTMLInputElement>(null);
@@ -113,7 +114,7 @@ const RequestOAuth2NewToken = () => {
     const tokenRequest: IOAuth2Request = {
       authorizationUrl: authUrlRef.current?.value || "",
       accessTokenUrl: accessTokenUrlRef.current?.value || "",
-      callbackUrl: "https://lien-hung.github.io/oauth2/callback",
+      callbackUrl: callbackUrlRef.current?.value || "",
       clientId: clientIdRef.current?.value || "",
       clientSecret: clientSecretRef.current?.value || "",
       credsPlacement: clientAuthRef.current?.value === REQUEST.SEND_BASIC_AUTH ? 'basic_auth_header' : '',
@@ -214,9 +215,10 @@ const RequestOAuth2NewToken = () => {
             <label htmlFor="callbackUrl">Callback URL</label>
             <input
               type="text"
-              disabled
               name="callbackUrl"
-              value="https://lien-hung.github.io/oauth2/callback"
+              required
+              defaultValue="https://lien-hung.github.io/oauth2/callback"
+              ref={callbackUrlRef}
             />
           </InputWrapper>
           <InputWrapper>
@@ -406,15 +408,13 @@ const Preview = styled.div`
 `;
 
 const Char = styled.span<{ $invalid?: boolean }>`
-  padding-right: 0.15px;
+  padding-right: 0.01rem;
   ${'' /* subtle highlight for invalid chars */}
   ${({ $invalid }) =>
     $invalid
-      ? `
-        background: rgba(255 77 77 / 0.12);
+      ? `background: rgba(255 77 77 / 0.12);
         color: var(--vscode-editorError-foreground, #ff4d4d);
-        border-radius: 2px;
-      `
+        border-radius: 2px;`
       : `color: inherit;`}
 `;
 

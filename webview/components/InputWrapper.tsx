@@ -29,11 +29,6 @@ const InputWrapperContainer = styled.div`
       opacity: 0.7;
     }
   }
-
-  input[disabled] {
-    opacity: 0.8;
-    font-style: italic;
-  }
 `;
 
 export default InputWrapper;
