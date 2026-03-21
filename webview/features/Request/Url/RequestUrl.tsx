@@ -6,7 +6,6 @@ import { RESPONSE } from "../../../constants";
 import { ITableRow } from "../../../store/slices/type";
 import useStore from "../../../store/useStore";
 import {
-  generateId,
   generateParameterString,
   getUrlParameters,
   removeUrlParameter,
@@ -92,13 +91,7 @@ const RequestUrl = () => {
     }).filter(Boolean) as ITableRow[];
 
     if (urlParams.length) {
-      newTableParams.splice(-1, 0, ...urlParams.map(p => ({
-        id: generateId(),
-        isChecked: true,
-        key: p.key,
-        value: p.value,
-        rowReadOnly: false,
-      })));
+      newTableParams.splice(-1, 0, ...urlParams.map(p => ({ isChecked: true, key: p.key, value: p.value })));
     }
     handleParamsTableData([...newTableParams]);
   }, [displayUrl]);

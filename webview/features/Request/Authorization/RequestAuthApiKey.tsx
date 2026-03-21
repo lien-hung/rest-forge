@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React, { useEffect } from "react";
 import { styled } from "styled-components";
 import { useShallow } from "zustand/shallow";
 
@@ -9,41 +9,32 @@ import { OPTION, REQUEST } from "../../../constants";
 
 const RequestAuthApiKey = () => {
   const {
-    tableData,
+    apiKeyData,
+    setApiKeyData,
     addAuthTableRow,
     removeAuthTableRow,
-    handleRequestKey,
-    handleRequestValue,
   } = useStore(
     useShallow((state) => ({
-      tableData: state.tableData,
+      apiKeyData: state.apiKeyData,
+      setApiKeyData: state.setApiKeyData,
       addAuthTableRow: state.addAuthTableRow,
       removeAuthTableRow: state.removeAuthTableRow,
-      handleRequestKey: state.handleRequestKey,
-      handleRequestValue: state.handleRequestValue,
     }))
   );
 
-  const apiKeyHeader = tableData["Headers"].find((d) => d.authType === REQUEST.API_KEY);
-  const apiKeyParam = tableData["Params"].find((d) => d.authType === REQUEST.API_KEY);
-  const apiKeyRow = apiKeyHeader || apiKeyParam;
+  const setApiKeyTableRow = () => {
+    removeAuthTableRow("Headers");
+    removeAuthTableRow("Params");
 
-  if (!apiKeyRow) return;
-
-  const addTo = apiKeyHeader ? REQUEST.ADD_TO_HEADERS : REQUEST.ADD_TO_QUERY_PARAMS;
-  const apiKeyOptionType = apiKeyHeader ? "Headers" : "Params";
-
-  const handleAddOptionChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    removeAuthTableRow(apiKeyOptionType);
-    if (typeof apiKeyRow.value === "string") {
-      if (event.target.value === REQUEST.ADD_TO_HEADERS) {
-        addAuthTableRow(REQUEST.API_KEY, "Headers", { key: apiKeyRow.key, value: apiKeyRow.value });
-      } else {
-        addAuthTableRow(REQUEST.API_KEY, "Params", { key: apiKeyRow.key, value: apiKeyRow.value });
-      }
+    if (apiKeyData.addTo === REQUEST.ADD_TO_HEADERS) {
+      addAuthTableRow(REQUEST.API_KEY, "Headers", { key: apiKeyData.key, value: apiKeyData.value });
+    } else {
+      addAuthTableRow(REQUEST.API_KEY, "Params", { key: apiKeyData.key, value: apiKeyData.value });
     }
   };
   
+  useEffect(() => setApiKeyTableRow(), [apiKeyData]);
+
   return (
     <Wrapper>
       <h2>API Key</h2>
@@ -53,8 +44,8 @@ const RequestAuthApiKey = () => {
           type="text"
           name="key"
           placeholder="Key"
-          value={apiKeyRow.key}
-          onChange={(event) => handleRequestKey(apiKeyOptionType, apiKeyRow.id, event.target.value)}
+          value={apiKeyData.key}
+          onChange={(event) => setApiKeyData({ ...apiKeyData, key: event.target.value })}
         />
       </InputWrapper>
       <InputWrapper>
@@ -63,15 +54,15 @@ const RequestAuthApiKey = () => {
           type="text"
           name="value"
           placeholder="Value"
-          value={apiKeyRow.value as string}
-          onChange={(event) => handleRequestValue(apiKeyOptionType, apiKeyRow.id, event.target.value)}
+          value={apiKeyData.value}
+          onChange={(event) => setApiKeyData({ ...apiKeyData, value: event.target.value })}
         />
       </InputWrapper>
       <InputWrapper>
         <label htmlFor="addTo">Add to:</label>
         <OptionWrapper
-          value={addTo}
-          onChange={handleAddOptionChange}
+          value={apiKeyData.addTo}
+          onChange={(event) => setApiKeyData({ ...apiKeyData, addTo: event.target.value })}
         >
           {OPTION.ADD_TO_OPTIONS.map((option, index) => (
             <option key={REQUEST.ADD_TO_OPTION + index} value={option}>

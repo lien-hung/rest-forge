@@ -9,14 +9,14 @@ interface IKeyValueTableProps {
   title?: string;
   tableData: ITableRow[] | IResponseDataHeader[];
   tableReadOnly: boolean;
-  addNewTableRow?: (type: OptionType, id?: string) => void;
-  deleteTableRow?: (type: OptionType, id: string) => void;
-  handleRequestKey?: (type: OptionType, id: string, value: string) => void;
-  handleRequestValue?: (type: OptionType, id: string, value: string | ArrayBuffer) => void;
-  handleRequestCheckbox?: (type: OptionType, id: string) => void;
-  handleFormValueType?: (id: string, valueType: string) => void;
-  handleFormFileName?: (id: string, fileName: string) => void;
-  handleFormContentType?: (id: string, contentType: string) => void;
+  addNewTableRow?: (type: OptionType) => void;
+  deleteTableRow?: (type: OptionType, index: number) => void;
+  handleRequestKey?: (type: OptionType, index: number, value: string) => void;
+  handleRequestValue?: (type: OptionType, index: number, value: string | ArrayBuffer) => void;
+  handleRequestCheckbox?: (type: OptionType, index: number) => void;
+  handleFormValueType?: (index: number, valueType: string) => void;
+  handleFormFileName?: (index: number, fileName: string) => void;
+  handleFormContentType?: (index: number, contentType: string) => void;
 }
 
 const KeyValueTable = ({
@@ -54,17 +54,17 @@ const KeyValueTable = ({
           <tbody>
             {tableData.map(
               (
-                { id, isChecked, key, value, rowReadOnly, authType, valueType, contentType, fileName }: any,
+                { isChecked, key, value, readOnly, authType, valueType, contentType, fileName }: any,
                 index: number,
               ) => (
-                <React.Fragment key={id}>
-                  <tr className={rowReadOnly && "readonly-row"}>
+                <React.Fragment key={index}>
+                  <tr className={readOnly && "readonly-row"}>
                     {!tableReadOnly && (
                       <th className={`table-checkbox ${authType && "auth-row"}`}>
                         <input
                           type="checkbox"
                           checked={isChecked}
-                          onChange={() => type && handleRequestCheckbox && handleRequestCheckbox(type, id)}
+                          onChange={() => type && handleRequestCheckbox && handleRequestCheckbox(type, index)}
                           disabled={authType || index === tableData.length - 1}
                         />
                       </th>
@@ -77,18 +77,18 @@ const KeyValueTable = ({
                           placeholder="Key"
                           value={key}
                           onChange={(event) => {
-                            if (index === tableData.length - 1) addRow(id, type);
-                            type && handleRequestKey && handleRequestKey(type, id, event.target.value);
+                            if (index === tableData.length - 1) addRow(index, type);
+                            type && handleRequestKey && handleRequestKey(type, index, event.target.value);
                           }}
-                          readOnly={rowReadOnly}
+                          readOnly={readOnly}
                         />
                       )}
                       {type === "Form Data" && (
                         <TypeOptionWrapper
                           value={valueType}
                           onChange={(event) => {
-                            if (index === tableData.length - 1) addRow(id, type);
-                            handleFormValueType && handleFormValueType(id, event.target.value);
+                            if (index === tableData.length - 1) addRow(index, type);
+                            handleFormValueType && handleFormValueType(index, event.target.value);
                           }}
                         >
                           <option value="" selected hidden></option>
@@ -101,20 +101,20 @@ const KeyValueTable = ({
                       {tableReadOnly ? value : (type === "Form Data" && valueType === "File") ? (
                         <FileInputWrapper>
                           <input
-                            id={`file-${id}`}
+                            id={`file-${index}`}
                             type="file"
                             onChange={(event) => {
                               const curFiles = event.target.files;
                               if (curFiles && curFiles.length) {
                                 curFiles[0].arrayBuffer().then(res => {
-                                  handleRequestValue && handleRequestValue(type, id, res);
-                                  handleFormFileName && handleFormFileName(id, curFiles[0].name);
+                                  handleRequestValue && handleRequestValue(type, index, res);
+                                  handleFormFileName && handleFormFileName(index, curFiles[0].name);
                                 });
                               }
                             }}
                           />
                           <FileNameDisplay>{fileName || "No file selected"}</FileNameDisplay>
-                          <FileSelectButton htmlFor={`file-${id}`}>Select</FileSelectButton>
+                          <FileSelectButton htmlFor={`file-${index}`}>Select</FileSelectButton>
                         </FileInputWrapper>
                       ) : (
                         <input
@@ -123,10 +123,10 @@ const KeyValueTable = ({
                           placeholder="Value"
                           value={value}
                           onChange={(event) => {
-                            if (index === tableData.length - 1) addRow(id, type);
-                            type && handleRequestValue && handleRequestValue(type, id, event.target.value);
+                            if (index === tableData.length - 1) addRow(index, type);
+                            type && handleRequestValue && handleRequestValue(type, index, event.target.value);
                           }}
-                          readOnly={tableReadOnly || rowReadOnly}
+                          readOnly={tableReadOnly || readOnly}
                         />
                       )}
                     </td>
@@ -137,18 +137,18 @@ const KeyValueTable = ({
                           placeholder="Content type"
                           value={contentType}
                           onChange={(event) => {
-                            if (index === tableData.length - 1) addRow(id, type);
-                            handleFormContentType && handleFormContentType(id, event.target.value);
+                            if (index === tableData.length - 1) addRow(index, type);
+                            handleFormContentType && handleFormContentType(index, event.target.value);
                           }}
                         />
                       </td>
                     )}
                     {!tableReadOnly && (
                       <th className="delete-cell">
-                        {!rowReadOnly && index !== tableData.length - 1 && (
+                        {!readOnly && index !== tableData.length - 1 && (
                           <TableIconButton
                             type="button"
-                            onClick={() => type && deleteTableRow && deleteTableRow(type, id)}
+                            onClick={() => type && deleteTableRow && deleteTableRow(type, index)}
                           >
                             <img src={deleteIcon} />
                           </TableIconButton>

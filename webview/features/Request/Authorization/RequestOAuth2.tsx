@@ -20,8 +20,8 @@ const RequestOAuth2 = () => {
     tableData,
     tokens,
     setTokens,
-    oauth2,
-    setOAuth2,
+    oauth2Data,
+    setOAuth2Data,
     addAuthTableRow,
     removeAuthTableRow,
     handleRequestValue,
@@ -31,8 +31,8 @@ const RequestOAuth2 = () => {
       tableData: state.tableData,
       tokens: state.oauth2Tokens,
       setTokens: state.setOAuth2Tokens,
-      oauth2: state.oauth2Data,
-      setOAuth2: state.setOAuth2Data,
+      oauth2Data: state.oauth2Data,
+      setOAuth2Data: state.setOAuth2Data,
       addAuthTableRow: state.addAuthTableRow,
       removeAuthTableRow: state.removeAuthTableRow,
       handleRequestValue: state.handleRequestValue,
@@ -42,17 +42,17 @@ const RequestOAuth2 = () => {
 
   const isToken = (row: ITableRow) => row.authType === REQUEST.ACCESS_TOKEN || row.authType === REQUEST.ID_TOKEN
 
-  const tokenRowHeader = tableData["Headers"].find(isToken);
-  const tokenRowParam = tableData["Params"].find(isToken);
-  const tokenRow = tokenRowHeader || tokenRowParam;
+  const headerIndex = tableData["Headers"].findIndex(isToken);
+  const paramIndex = tableData["Params"].findIndex(isToken);
+  const hasRow = headerIndex !== -1 || paramIndex !== -1;
 
   const [selectedIndex, setSelectedIndex] = useState(
-    tokens.findIndex(t => t.access_token === oauth2.token || t.id_token === oauth2.token) + 1
+    tokens.findIndex(t => t.access_token === oauth2Data.token || t.id_token === oauth2Data.token) + 1
   );
   const [isRefreshPending, setIsRefreshPending] = useState(false);
 
   const selectedToken = tokens[selectedIndex - 1];
-  const tokenHeader = `${oauth2.prefix} ${oauth2.token}`;
+  const tokenHeader = `${oauth2Data.prefix} ${oauth2Data.token}`;
 
   const isTokenExpired = (token: IOAuth2Token) => {
     return Date.now() >= token.timestamp + token.expires_in * 1000;
@@ -67,11 +67,11 @@ const RequestOAuth2 = () => {
     removeAuthTableRow("Headers");
     removeAuthTableRow("Params");
 
-    if (oauth2.token) {
-      if (oauth2.addTo === REQUEST.ADD_TO_HEADERS) {
-        addAuthTableRow(oauth2.tokenType, "Headers", { key: REQUEST.AUTH, value: tokenHeader, prefix: oauth2.prefix });
+    if (oauth2Data.token) {
+      if (oauth2Data.addTo === REQUEST.ADD_TO_HEADERS) {
+        addAuthTableRow(oauth2Data.tokenType, "Headers", { key: REQUEST.AUTH, value: tokenHeader, prefix: oauth2Data.prefix });
       } else {
-        addAuthTableRow(oauth2.tokenType, "Params", { key: "access_token", value: oauth2.token });
+        addAuthTableRow(oauth2Data.tokenType, "Params", { key: "access_token", value: oauth2Data.token });
       }
     }
   };
@@ -96,10 +96,10 @@ const RequestOAuth2 = () => {
     setTokens(newTokenList);
     vscode.postMessage({ command: COMMON.SET_OAUTH2_TOKENS, newTokenList });
 
-    if (oauth2.tokenType === REQUEST.ACCESS_TOKEN) {
-      setOAuth2({ ...oauth2, token: newToken.access_token });
+    if (oauth2Data.tokenType === REQUEST.ACCESS_TOKEN) {
+      setOAuth2Data({ ...oauth2Data, token: newToken.access_token });
     } else {
-      setOAuth2({ ...oauth2, token: newToken.id_token });
+      setOAuth2Data({ ...oauth2Data, token: newToken.id_token });
     }
     setIsRefreshPending(false);
   };
@@ -109,7 +109,7 @@ const RequestOAuth2 = () => {
       const newTokenList = event.data.tokenList as IOAuth2Token[];
       if (!selectedToken || newTokenList.findIndex((t) => t.timestamp === selectedToken.timestamp) === -1) {
         setSelectedIndex(0);
-        setOAuth2({ ...oauth2, token: "" });
+        setOAuth2Data({ ...oauth2Data, token: "" });
       }
     }
   };
@@ -120,36 +120,36 @@ const RequestOAuth2 = () => {
 
   useEffect(() => {
     if (selectedToken && !selectedToken.id_token) {
-      setOAuth2({ ...oauth2, token: selectedToken.access_token, tokenType: REQUEST.ACCESS_TOKEN });
+      setOAuth2Data({ ...oauth2Data, token: selectedToken.access_token, tokenType: REQUEST.ACCESS_TOKEN });
     }
   }, [selectedIndex]);
 
-  useEffect(() => setAuthTableRow(), [selectedIndex, oauth2.addTo, oauth2.tokenType]);
+  useEffect(() => setAuthTableRow(), [selectedIndex, oauth2Data.addTo, oauth2Data.tokenType]);
 
   useEffect(() => {
-    if (!oauth2.token) {
+    if (!oauth2Data.token) {
       removeAuthTableRow("Headers");
       removeAuthTableRow("Params");
       return;
     }
 
-    if (!tokenRow) {
+    if (!hasRow) {
       setAuthTableRow();
     } else {
-      if (oauth2.addTo === REQUEST.ADD_TO_HEADERS) {
-        handleRequestValue("Headers", tokenRow.id, tokenHeader);
+      if (oauth2Data.addTo === REQUEST.ADD_TO_HEADERS) {
+        handleRequestValue("Headers", headerIndex, tokenHeader);
       } else {
-        handleRequestValue("Params", tokenRow.id, oauth2.token);
+        handleRequestValue("Params", paramIndex, oauth2Data.token);
       }
     }
-  }, [oauth2.token]);
+  }, [oauth2Data.token]);
 
   useEffect(() => {
-    if (tokenRow && oauth2.addTo === REQUEST.ADD_TO_HEADERS) {
-      handleHeaderPrefix(tokenRow.id, oauth2.prefix);
-      handleRequestValue("Headers", tokenRow.id, tokenHeader);
+    if (hasRow && oauth2Data.addTo === REQUEST.ADD_TO_HEADERS) {
+      handleHeaderPrefix(headerIndex, oauth2Data.prefix);
+      handleRequestValue("Headers", headerIndex, tokenHeader);
     }
-  }, [oauth2.prefix]);
+  }, [oauth2Data.prefix]);
 
   useEffect(() => { if (isRefreshPending) handleRefreshToken(); }, [isRefreshPending]);
 
@@ -160,10 +160,10 @@ const RequestOAuth2 = () => {
         <label htmlFor="token">Token:</label>
         <TokenWrapper>
           <OptionWrapper
-            value={oauth2.token}
+            value={oauth2Data.token}
             onChange={(event) => {
               setSelectedIndex(event.target.selectedIndex);
-              setOAuth2({ ...oauth2, token: event.target.value })
+              setOAuth2Data({ ...oauth2Data, token: event.target.value })
             }}
           >
             <option key="emptyToken" value="">
@@ -173,7 +173,7 @@ const RequestOAuth2 = () => {
               <option
                 key={token.timestamp}
                 value={
-                  oauth2.tokenType === REQUEST.ACCESS_TOKEN
+                  oauth2Data.tokenType === REQUEST.ACCESS_TOKEN
                     ? token.access_token
                     : token.id_token
                 }
@@ -196,7 +196,7 @@ const RequestOAuth2 = () => {
         <InputWrapper>
           <label htmlFor="tokenType">Token Type:</label>
           <OptionWrapper
-            value={oauth2.tokenType}
+            value={oauth2Data.tokenType}
             onChange={(event) => {
               const newData = {
                 token: event.target.value === REQUEST.ACCESS_TOKEN
@@ -204,7 +204,7 @@ const RequestOAuth2 = () => {
                   : selectedToken.id_token!,
                 tokenType: event.target.value,
               };
-              setOAuth2({ ...oauth2, ...newData });
+              setOAuth2Data({ ...oauth2Data, ...newData });
             }}
           >
             {OPTION.OAUTH2_TOKEN_TYPES.map((option, index) => (
@@ -223,8 +223,8 @@ const RequestOAuth2 = () => {
             type="text"
             name="token"
             placeholder="Token"
-            value={oauth2.token}
-            onChange={(event) => setOAuth2({ ...oauth2, token: event.target.value })}
+            value={oauth2Data.token}
+            onChange={(event) => setOAuth2Data({ ...oauth2Data, token: event.target.value })}
           />
           {selectedToken && (isRefreshPending ? (
             <div>
@@ -261,15 +261,15 @@ const RequestOAuth2 = () => {
         <input
           name="prefix"
           placeholder="e.g. Bearer"
-          value={oauth2.prefix}
-          onChange={(event) => setOAuth2({ ...oauth2, prefix: event.target.value })}
+          value={oauth2Data.prefix}
+          onChange={(event) => setOAuth2Data({ ...oauth2Data, prefix: event.target.value })}
         />
       </InputWrapper>
       <InputWrapper>
         <label htmlFor="prefix">Add to:</label>
         <OptionWrapper
-          value={oauth2.addTo}
-          onChange={(event) => setOAuth2({ ...oauth2, addTo: event.target.value })}
+          value={oauth2Data.addTo}
+          onChange={(event) => setOAuth2Data({ ...oauth2Data, addTo: event.target.value })}
         >
           {OPTION.ADD_TO_OPTIONS.map((option, index) => (
             <option key={REQUEST.ADD_TO_OPTION + index} value={option}>

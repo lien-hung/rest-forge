@@ -64,11 +64,10 @@ export interface IHeaderAuth {
 }
 
 export interface ITableRow {
-  id: string;
   isChecked: boolean;
   key: string;
   value: string | File;
-  rowReadOnly: boolean;
+  readOnly?: boolean;
   authType?: string;
   prefix?: string;
   valueType?: string;

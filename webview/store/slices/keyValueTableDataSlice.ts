@@ -1,7 +1,6 @@
 import { StateCreator } from "zustand";
 
 import { COMMON, REQUEST } from "../../constants";
-import { generateId } from "../../utils";
 import { IKeyValueTableDataSlice } from "./type";
 
 const keyValueTableDataSlice: StateCreator<
@@ -13,130 +12,125 @@ const keyValueTableDataSlice: StateCreator<
   tableData: {
     "Params": [
       {
-        id: generateId(),
         isChecked: false,
         key: "",
         value: "",
-        rowReadOnly: false,
       }
     ],
     "Headers": [
       {
-        id: generateId(),
         isChecked: true,
         key: REQUEST.CACHE_CONTROL,
         value: REQUEST.NO_CACHE,
-        rowReadOnly: true,
+        readOnly: true,
       },
       {
-        id: generateId(),
         isChecked: true,
         key: REQUEST.ACCEPT,
         value: REQUEST.ANY_MIME_TYPE,
-        rowReadOnly: true,
+        readOnly: true,
       },
       {
-        id: generateId(),
         isChecked: true,
         key: REQUEST.ACCEPT_ENCODING,
         value: `${REQUEST.GZIP},${REQUEST.DEFLATE}`,
-        rowReadOnly: true,
+        readOnly: true,
       },
       {
-        id: generateId(),
         isChecked: true,
         key: REQUEST.CONNECTION,
         value: REQUEST.KEEP_ALIVE,
-        rowReadOnly: true,
+        readOnly: true,
       },
       {
-        id: generateId(),
         isChecked: false,
         key: "",
         value: "",
-        rowReadOnly: false,
       },
     ],
     "Form Data": [
       {
-        id: generateId(),
         isChecked: false,
         key: "",
         value: "",
-        rowReadOnly: false,
-        valueType: "",
-        fileName: "",
-        contentType: "",
       },
     ],
     "Form Encoded": [
       {
-        id: generateId(),
         isChecked: false,
         key: "",
         value: "",
-        rowReadOnly: false,
       },
     ]
   },
 
-  handleRequestCheckbox: (type, dataId) =>
+  handleRequestCheckbox: (type, dataIndex) =>
     set((state) => ({
       tableData: {
         ...state.tableData,
-        [type]: state.tableData[type].map((row) =>
-          dataId === row.id
-            ? { ...row, isChecked: !row.isChecked }
-            : row
+        [type]: state.tableData[type].map((row, index) =>
+          dataIndex === index ? { ...row, isChecked: !row.isChecked } : row
         ),
       },
     })),
 
-  handleRequestKey: (type, dataId, detail) =>
+  handleRequestKey: (type, dataIndex, detail) =>
     set((state) => ({
       tableData: {
         ...state.tableData,
-        [type]: state.tableData[type].map((row) => dataId === row.id ? { ...row, key: detail } : row),
+        [type]: state.tableData[type].map((row, index) => 
+          dataIndex === index ? { ...row, key: detail } : row
+        ),
       },
     })),
 
-  handleRequestValue: (type, dataId, detail) =>
+  handleRequestValue: (type, dataIndex, detail) =>
     set((state) => ({
       tableData: {
         ...state.tableData,
-        [type]: state.tableData[type].map((row) => dataId === row.id ? { ...row, value: detail } : row),
+        [type]: state.tableData[type].map((row, index) =>
+          dataIndex === index ? { ...row, value: detail } : row
+        ),
       },
     })),
 
-  handleHeaderPrefix: (dataId, detail) =>
+  handleHeaderPrefix: (dataIndex, detail) =>
     set((state) => ({
       tableData: {
         ...state.tableData,
-        [COMMON.HEADERS]: state.tableData["Headers"].map((row) => dataId === row.id ? { ...row, prefix: detail } : row),
+        [COMMON.HEADERS]: state.tableData["Headers"].map((row, index) =>
+          dataIndex === index ? { ...row, prefix: detail } : row
+        ),
       },
     })),
 
-  handleFormValueType: (dataId, detail) =>
+  handleFormValueType: (dataIndex, detail) =>
     set((state) => ({
       tableData: {
         ...state.tableData,
-        [REQUEST.FORM_DATA]: state.tableData["Form Data"].map((row) => dataId === row.id ? { ...row, valueType: detail } : row),
+        [REQUEST.FORM_DATA]: state.tableData["Form Data"].map((row, index) =>
+          dataIndex === index ? { ...row, valueType: detail } : row
+        ),
       }
     })),
 
-  handleFormFileName: (dataId, detail) =>
+  handleFormFileName: (dataIndex, detail) =>
     set((state) => ({
       tableData: {
         ...state.tableData,
-        [REQUEST.FORM_DATA]: state.tableData["Form Data"].map((row) => dataId === row.id ? { ...row, fileName: detail } : row),
+        [REQUEST.FORM_DATA]: state.tableData["Form Data"].map((row, index) =>
+          dataIndex === index ? { ...row, fileName: detail } : row
+        ),
       }
     })),
 
-  handleFormContentType: (dataId, detail) =>
+  handleFormContentType: (dataIndex, detail) =>
     set((state) => ({
       tableData: {
         ...state.tableData,
-        [REQUEST.FORM_DATA]: state.tableData["Form Data"].map((row) => dataId === row.id ? { ...row, contentType: detail } : row),
+        [REQUEST.FORM_DATA]: state.tableData["Form Data"].map((row, index) =>
+          dataIndex === index ? { ...row, contentType: detail } : row
+        ),
       }
     })),
 
@@ -146,11 +140,10 @@ const keyValueTableDataSlice: StateCreator<
         ...state.tableData,
         [COMMON.HEADERS]: [
           {
-            id: generateId(),
             isChecked: true,
             key: REQUEST.CONTENT_TYPE,
             value: headerValue,
-            rowReadOnly: true,
+            readOnly: true,
           },
           ...state.tableData["Headers"],
         ]
@@ -172,11 +165,10 @@ const keyValueTableDataSlice: StateCreator<
         ...state.tableData,
         [optionType]: [
           {
-            id: generateId(),
             isChecked: true,
             key: data?.key || "",
             value: data?.value || "",
-            rowReadOnly: true,
+            readOnly: true,
             authType,
             prefix: data?.prefix,
           },
@@ -199,24 +191,15 @@ const keyValueTableDataSlice: StateCreator<
     set((state) => ({
       tableData: {
         ...state.tableData,
-        [type]: [
-          ...state.tableData[type],
-          {
-            id: generateId(),
-            isChecked: false,
-            key: "",
-            value: "",
-            rowReadOnly: false,
-          },
-        ],
+        [type]: [...state.tableData[type], { isChecked: false, key: "", value: "" }],
       }
     })),
 
-  deleteTableRow: (type, dataId) => {
+  deleteTableRow: (type, dataIndex) => {
     set((state) => ({
       tableData: {
         ...state.tableData,
-        [type]: state.tableData[type].filter(row => row.id !== dataId),
+        [type]: state.tableData[type].filter((_, index) => index !== dataIndex),
       },
     }));
   },

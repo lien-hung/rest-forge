@@ -1,6 +1,6 @@
 import { StateCreator } from "zustand";
 import { REQUEST } from "../../constants";
-import { IOAuth2Data, IRequestDataSlice, ITreeViewResponse } from "./type";
+import { ApiKeyData, IOAuth2Data, IRequestDataSlice, ITreeViewResponse } from "./type";
 
 const requestDataSlice: StateCreator<
   IRequestDataSlice,
@@ -22,6 +22,7 @@ const requestDataSlice: StateCreator<
     editorLanguage: "c",
   },
   authData: { username: "", password: "", token: "", tokenPrefix: "Bearer" },
+  apiKeyData: { key: "", value: "", addTo: REQUEST.ADD_TO_HEADERS },
   oauth2Data: {
     token: "",
     tokenType: REQUEST.ACCESS_TOKEN,
@@ -48,6 +49,8 @@ const requestDataSlice: StateCreator<
         [authType]: data,
       },
     })),
+
+  setApiKeyData: (data: ApiKeyData) => set(() => ({ apiKeyData: data })),
 
   setOAuth2Data: (data: IOAuth2Data) => set(() => ({ oauth2Data: data })),
 

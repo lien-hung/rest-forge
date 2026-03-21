@@ -5,17 +5,22 @@ export interface AuthData {
   tokenPrefix: string;
 }
 
+export interface ApiKeyData {
+  key: string;
+  value: string;
+  addTo: string;
+}
+
 export interface GraphqlData {
   query: string;
   variables: string;
 }
 
 export interface ITableRow {
-  id: string;
   isChecked: boolean;
   key: string;
   value: string | ArrayBuffer;
-  rowReadOnly: boolean;
+  readOnly?: boolean;
   authType?: string;
   prefix?: string;
   valueType?: string;
@@ -71,6 +76,7 @@ export interface IRequestDataSlice extends ITreeViewResponse {
   handleRequestMethodChange: (method: string) => void;
   handleRequestAuthType: (authOption: string) => void;
   handleRequestAuthData: (authType: string, data: string) => void;
+  setApiKeyData: (data: ApiKeyData) => void;
   setOAuth2Data: (data: IOAuth2Data) => void;
   handleRequestOptionChange: (option: string) => void;
   handleRequestAuthType: (type: string) => void;
@@ -93,6 +99,7 @@ export interface IRequestDataSlice extends ITreeViewResponse {
 export interface ITreeViewResponse {
   authData: AuthData;
   authOption: string;
+  apiKeyData: ApiKeyData;
   oauth2Data: IOAuth2Data;
   requestUrl: string;
   requestMethod: string;
@@ -120,18 +127,18 @@ export interface RowDataParam {
 export interface IKeyValueTableDataSlice {
   tableData: ITableData;
   addNewTableRow: (type: OptionType) => void;
-  deleteTableRow: (type: OptionType, id: string) => void;
+  deleteTableRow: (type: OptionType, index: number) => void;
   addRequestBodyHeaders: (value: string) => void;
   removeRequestBodyHeaders: () => void;
   addAuthTableRow: (authType: string, optionType: OptionType, data?: RowDataParam) => void;
   removeAuthTableRow: (type: OptionType) => void;
-  handleRequestCheckbox: (type: OptionType, id: string) => void;
-  handleRequestKey: (type: OptionType, id: string, detail: string) => void;
-  handleRequestValue: (type: OptionType, id: string, detail: string | ArrayBuffer) => void;
-  handleHeaderPrefix: (id: string, detail: string) => void;
-  handleFormValueType: (id: string, detail: string) => void;
-  handleFormFileName: (id: string, detail: string) => void;
-  handleFormContentType: (id: string, detail: string) => void;
+  handleRequestCheckbox: (type: OptionType, index: number) => void;
+  handleRequestKey: (type: OptionType, index: number, detail: string) => void;
+  handleRequestValue: (type: OptionType, index: number, detail: string | ArrayBuffer) => void;
+  handleHeaderPrefix: (index: number, detail: string) => void;
+  handleFormValueType: (index: number, detail: string) => void;
+  handleFormFileName: (index: number, detail: string) => void;
+  handleFormContentType: (index: number, detail: string) => void;
   handleParamsTableData: (params: ITableRow[]) => void;
   handleTreeViewTableData: (tableData: ITableData) => void;
 }

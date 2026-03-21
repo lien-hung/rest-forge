@@ -3,13 +3,11 @@ import parser from "yargs-parser";
 
 import { ITableRow, IRequestObject } from "./type";
 import { TYPE } from "../constants";
-import generateId from "./generateId";
 
-const emptyTableRow = () =>
-  ({ id: generateId(), isChecked: false, key: "", value: "", rowReadOnly: false });
+const emptyTableRow = () => ({ isChecked: false, key: "", value: "" });
 
-const newTableRow = ({ key, value, rowReadOnly = false }: { key: string, value: string, rowReadOnly?: boolean }) =>
-  ({ id: generateId(), isChecked: true, key, value, rowReadOnly });
+const newTableRow = ({ key, value, readOnly = false }: { key: string, value: string, readOnly?: boolean }) =>
+  ({ isChecked: true, key, value, readOnly });
 
 function parseCurl(command: string) {
   if (!command.trim()) {
@@ -114,7 +112,7 @@ function parseCurl(command: string) {
       request.tableData["Headers"].push(newTableRow({
         key: "Content-Type",
         value: "application/x-www-form-urlencoded",
-        rowReadOnly: true
+        readOnly: true
       }));
     }
 
