@@ -10,8 +10,8 @@ export class RequestHistoryTreeItem extends TreeItem {
   constructor(public request: IRequestTreeItemState) {
     super(request.name || request.url, TreeItemCollapsibleState.None);
     this.id = request.id;
-    this.description = getElapsedTime(request.requestedTime);
-    this.tooltip = `${request.method} ${request.url}\nCreated at ${new Date(request.requestedTime).toLocaleString()}`;
+    this.description = getElapsedTime(request.timestamp);
+    this.tooltip = `${request.method} ${request.url}\nCreated at ${new Date(request.timestamp).toLocaleString()}`;
     this.command = {
       title: "Open Request",
       command: COMMAND.OPEN_REQUEST,

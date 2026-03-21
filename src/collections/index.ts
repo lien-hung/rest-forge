@@ -39,10 +39,11 @@ export default class CollectionsProvider implements TreeDataProvider<Collections
   }
 
   public addFolderLike(name: string, parent?: RequestFolderLike) {
+    const treeRequests = this.tree.filter(item => item instanceof RequestItem);
     if (!parent) {
-      this.tree.push(new RequestCollection(name));
+      this.tree.splice(-treeRequests.length, 0, new RequestCollection(name)); 
     } else {
-      this.tree.push(new RequestFolder(name, parent));
+      this.tree.splice(-treeRequests.length, 0, new RequestFolder(name, parent));
     }
     this.refresh();
     this.save();
@@ -51,6 +52,7 @@ export default class CollectionsProvider implements TreeDataProvider<Collections
   public addRequest(request: IRequestTreeItemState, parentId: string) {
     const existingRequest = this.tree.find(item => item.id === request.id && item.parent?.id === parentId) as RequestItem;
     if (existingRequest) {
+      existingRequest.tooltip = `${request.method} ${request.url}\nCreated at ${new Date(request.timestamp).toLocaleString()}`;
       Object.assign(existingRequest.request, request);
     } else {
       const parent = this.tree.find(item => item.id === parentId) as RequestFolderLike;

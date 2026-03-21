@@ -19,7 +19,7 @@ export interface IRequestTreeItemState {
   method: string;
   headers: Headers;
   body: string | FormData | URLSearchParams;
-  requestedTime: number;
+  timestamp: number;
   requestObject: IRequestObject;
 }
 

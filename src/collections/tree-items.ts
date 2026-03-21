@@ -11,8 +11,8 @@ export class RequestItem extends TreeItem {
     super(request.name, TreeItemCollapsibleState.None);
     this.id = request.id;
     this.parent = parent;
-    this.description = getElapsedTime(request.requestedTime);
-    this.tooltip = `${request.method} ${request.url}\nCreated at ${new Date(request.requestedTime).toLocaleString()}`;
+    this.description = getElapsedTime(request.timestamp);
+    this.tooltip = `${request.method} ${request.url}\nCreated at ${new Date(request.timestamp).toLocaleString()}`;
     this.command = {
       title: "Open Request",
       command: COMMAND.OPEN_REQUEST,

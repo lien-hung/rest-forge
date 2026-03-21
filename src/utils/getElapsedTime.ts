@@ -1,5 +1,5 @@
-const getElapsedTime = (requestedTime: number) => {
-  const timeDiff = new Date().getTime() - requestedTime;
+const getElapsedTime = (timestamp: number) => {
+  const timeDiff = new Date().getTime() - timestamp;
 
   const seconds = Math.floor((timeDiff / 1000) % 60);
   const minutes = Math.floor((timeDiff / (1000 * 60)) % 60);

@@ -221,7 +221,7 @@ class MainWebviewPanel {
     };
 
     const responseObject = await generateResponseObject(requestData);
-    const requestedTime = new Date().getTime();
+    const timestamp = new Date().getTime();
 
     if (responseObject && responseObject.type !== MESSAGE.ERROR) {
       if (this.mainPanel) {
@@ -238,7 +238,7 @@ class MainWebviewPanel {
             id: this.id || generateId(),
             name: this.requestName,
             ...requestData,
-            requestedTime,
+            timestamp,
             requestObject,
           };
           this.collectionsProvider.addRequest(newRequest, this.parentId);
@@ -248,7 +248,7 @@ class MainWebviewPanel {
             id: generateId(),
             name: "",
             ...requestData,
-            requestedTime,
+            timestamp,
             requestObject,
           });
         }

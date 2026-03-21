@@ -29,9 +29,10 @@ export async function activate(context: vscode.ExtensionContext) {
 		return input;
 	};
 
-	const handleInputName = async () => {
+	const handleInputName = async (defaultValue?: string) => {
 		const inputName = await vscode.window.showInputBox({
 			placeHolder: "New name",
+			value: defaultValue,
 			validateInput: (value) => !value.trim() ? MESSAGE.NAME_EMPTY : null,
 		});
 		return inputName;
@@ -104,7 +105,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	const disp_renameRequestCmd = vscode.commands.registerCommand(
 		COMMAND.RENAME_REQUEST,
 		async (item: RequestHistoryTreeItem) => {
-			const requestName = await handleInputName();
+			const requestName = await handleInputName(item.request.name);
 			if (!requestName) {
 				return;
 			}
@@ -180,7 +181,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	const disp_renameCollectionCmd = vscode.commands.registerCommand(
 		COMMAND.RENAME_COLLECTION,
 		async (collection: RequestCollection) => {
-			const newName = await handleInputName();
+			const newName = await handleInputName(collection.name);
 			if (!newName) {
 				return;
 			}
@@ -226,7 +227,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	const disp_renameFolderCmd = vscode.commands.registerCommand(
 		COMMAND.RENAME_FOLDER,
 		async (folder: RequestFolder) => {
-			const newName = await handleInputName();
+			const newName = await handleInputName(folder.name);
 			if (!newName) {
 				return;
 			}
@@ -275,7 +276,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	const disp_renameCollectionRequestCmd = vscode.commands.registerCommand(
 		COMMAND.RENAME_COLLECTION_REQUEST,
 		async (requestItem: RequestItem) => {
-			const newRequestName = await handleInputName();
+			const newRequestName = await handleInputName(requestItem.request.name);
 			if (!newRequestName) {
 				return;
 			}
