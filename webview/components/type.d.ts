@@ -30,7 +30,6 @@ export interface IMenuOptionProps {
   currentOption: string | null;
   menuOption: string;
   isSeparate?: boolean;
-  isLast?: boolean;
 }
 
 export interface IMessageProps {

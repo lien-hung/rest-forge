@@ -81,31 +81,8 @@ const ResponsePanel = () => {
       handleResponseData(event.data);
       handleRequestProcessStatus(RESPONSE.ERROR);
     } else if (event.data.type === RESPONSE.TREEVIEW_DATA) {
-      const {
-        tableData,
-        authData,
-        authOption,
-        oauth2Data,
-        requestUrl,
-        requestMethod,
-        bodyOption,
-        bodyRawOption,
-        bodyRawData,
-        graphqlData,
-      } = event.data;
-
-      handleTreeViewClick({
-        authData,
-        authOption,
-        oauth2Data,
-        requestUrl,
-        requestMethod,
-        bodyOption,
-        bodyRawOption,
-        bodyRawData,
-        graphqlData,
-      });
-
+      const { tableData, ...treeViewData } = event.data;
+      handleTreeViewClick(treeViewData);
       handleTreeViewTableData(tableData);
     }
   };

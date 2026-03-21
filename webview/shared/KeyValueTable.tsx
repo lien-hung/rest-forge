@@ -263,6 +263,7 @@ const Table = styled.table<{ readOnlyMode: boolean }>`
   td {
     text-align: left;
     padding: 0.6rem;
+    word-wrap: ${(props) => props.readOnlyMode && "break-word"};
     border: ${(props) => props.readOnlyMode && "0.1rem solid rgb(55 55 55)"};
   }
 

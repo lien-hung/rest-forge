@@ -34,15 +34,14 @@ const RequestMenu = () => {
               currentOption={requestOption}
               menuOption={requestMenuOption}
               isSeparate={index === OPTION.REQUEST_MENU_OPTIONS.length - 1}
-              isLast={index === OPTION.REQUEST_MENU_OPTIONS.length - 1}
             >
               <h3 onClick={handleOptionChange}>{requestMenuOption}</h3>
+              {requestMenuOption === COMMON.HEADERS && (
+                <p className={`${themeKind === 1 ? "light" : ""}`}>
+                  ({headersCount})
+                </p>
+              )}
             </MenuOption>
-            {requestMenuOption === COMMON.HEADERS && (
-              <p className={`${themeKind === 1 ? "light" : ""}`}>
-                ({headersCount})
-              </p>
-            )}
           </Fragment>
         ))}
       </DetailOption>

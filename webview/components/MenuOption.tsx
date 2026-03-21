@@ -7,13 +7,11 @@ const MenuOption = ({
   currentOption,
   menuOption,
   isSeparate,
-  isLast,
 }: IMenuOptionProps) => {
   return (
     <MenuOptionWrapper
       primary={currentOption === menuOption}
       isSeparate={isSeparate}
-      isLast={isLast}
     >
       {children}
     </MenuOptionWrapper>
@@ -22,9 +20,8 @@ const MenuOption = ({
 
 const MenuOptionWrapper = styled.div<{ primary: boolean, isSeparate?: boolean, isLast?: boolean }>`
   display: flex;
-  align-items: center;
+  gap: 0.4rem;
   margin-left: ${(props) => (props.isSeparate && "auto")};
-  margin-right: ${(props) => (props.isLast ? "0" : "2rem")};
   padding: 0 0.2rem 0.4rem 0.2rem;
   border-bottom: ${(props) =>
     props.primary ? "0.2rem solid var(--vscode-button-background)" : "0.2rem solid transparent"};
@@ -35,6 +32,15 @@ const MenuOptionWrapper = styled.div<{ primary: boolean, isSeparate?: boolean, i
     font-size: 1.15rem;
     font-weight: 400;
     cursor: pointer;
+  }
+
+  p {
+    color: rgb(66 245 66);
+    user-select: none;
+  }
+
+  p.light {
+    color: rgb(47 177 47);
   }
 `;
 

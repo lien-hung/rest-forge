@@ -38,12 +38,12 @@ const ResponseMenu = () => {
               menuOption={responseMenuOption}
             >
               <h3 onClick={handleHeadingTextClick}>{responseMenuOption}</h3>
+              {responseMenuOption === COMMON.HEADERS && (
+                <p className={`${themeKind === 1 ? "light" : ""}`}>
+                  ({responseData?.headersLength})
+                </p>
+              )}
             </MenuOption>
-            {responseMenuOption === COMMON.HEADERS && (
-              <p className={`${themeKind === 1 ? "light" : ""}`}>
-                ({responseData?.headersLength})
-              </p>
-            )}
           </Fragment>
         ))}
       </DetailOption>
