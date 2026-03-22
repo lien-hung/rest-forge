@@ -4,7 +4,7 @@ import { EventEmitter, ExtensionContext, TreeDataProvider, TreeItem, Uri } from 
 
 import { RequestCollection, RequestFolder, RequestItem } from "./tree-items";
 import { IRequestTreeItemState } from "../utils/type";
-import { generateId, getHomePath, getMethodIcons } from "../utils";
+import { generateId, getElapsedTime, getHomePath, getMethodIcons } from "../utils";
 
 type CollectionsProviderItem = RequestCollection | RequestFolder | RequestItem;
 type RequestFolderLike = RequestCollection | RequestFolder;
@@ -51,6 +51,7 @@ export default class CollectionsProvider implements TreeDataProvider<Collections
   public addRequest(request: IRequestTreeItemState, parentId: string) {
     const existingRequest = this.tree.find(item => item.id === request.id && item.parent?.id === parentId) as RequestItem;
     if (existingRequest) {
+      existingRequest.description = getElapsedTime(request.timestamp);
       existingRequest.tooltip = `${request.method} ${request.url}\nCreated at ${new Date(request.timestamp).toLocaleString()}`;
       Object.assign(existingRequest.request, request);
     } else {
