@@ -473,13 +473,13 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.48.1",
     "url": "^0.11.4",
-    "webpack": "^5.103.0",
+    "webpack": "^5.105.4",
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
     "crypto-random-string": "^5.0.0",
-    "fast-xml-parser": "^5.3.6",
+    "fast-xml-parser": "^5.5.8",
     "file-saver": "^2.0.5",
     "postman-code-generators": "2.1.0",
     "postman-collection": "^5.2.0",
