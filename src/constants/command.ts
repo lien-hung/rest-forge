@@ -10,8 +10,11 @@ const COMMAND = {
   CLEAR_HISTORY: "api-tester.clearHistory",
   
   NEW_COLLECTION: "api-tester.newCollection",
+  COPY_COLLECTION: "api-tester.copyCollection",
+  DUPLICATE_COLLECTION: "api-tester.duplicateCollection",
   RENAME_COLLECTION: "api-tester.renameCollection",
   DELETE_COLLECTION: "api-tester.deleteCollection",
+  EXPORT_COLLECTION: "api-tester.exportCollection",
 
   NEW_FOLDER: "api-tester.newFolder",
   RENAME_FOLDER: "api-tester.renameFolder",

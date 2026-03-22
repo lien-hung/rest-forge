@@ -178,6 +178,34 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	);
 
+	const disp_copyCollectionCmd = vscode.commands.registerCommand(
+		COMMAND.COPY_COLLECTION,
+		async (collection: RequestCollection) => {
+			const collectionNames = collectionsProvider.collectionNames.filter(name => name !== collection.name);
+			if (collectionNames.length === 0) {
+				await vscode.window.showInformationMessage(MESSAGE.NO_COPYABLE_COLLECTION);
+				return;
+			}
+
+			const destinationName = await vscode.window.showQuickPick(
+				collectionNames,
+				{
+					placeHolder: "Select a collection",
+					canPickMany: false,
+				}
+			);
+			const destination = collectionsProvider.getCollectionByName(destinationName);
+			if (destination) {
+				collectionsProvider.copy(collection, destination);
+			}
+		}
+	);
+
+	const disp_duplicateCollectionCmd = vscode.commands.registerCommand(
+		COMMAND.DUPLICATE_COLLECTION,
+		(collection: RequestCollection) => collectionsProvider.duplicate(collection)
+	);
+
 	const disp_renameCollectionCmd = vscode.commands.registerCommand(
 		COMMAND.RENAME_COLLECTION,
 		async (collection: RequestCollection) => {
@@ -204,6 +232,21 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (action === MESSAGE.YES) {
 				collectionsProvider.delete(collection);
 			}
+		}
+	);
+
+	const disp_exportCollectionCmd = vscode.commands.registerCommand(
+		COMMAND.EXPORT_COLLECTION,
+		(collection: RequestCollection) => {
+			vscode.window.showSaveDialog({
+				defaultUri: vscode.Uri.file(`collection_${collection.name.replace(/[/\\?%*:|"<>]/g, '-')}.json`)
+			}).then((uri) => {
+				if (uri) {
+					const exportPath = uri.fsPath;
+					collectionsProvider.export(collection, exportPath);
+					vscode.window.showInformationMessage(MESSAGE.EXPORT_SUCCESSFUL);
+				}
+			});
 		}
 	);
 
@@ -377,8 +420,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disp_clearHistoryCmd);
 
 	context.subscriptions.push(disp_newCollectionCmd);
+	context.subscriptions.push(disp_copyCollectionCmd);
+	context.subscriptions.push(disp_duplicateCollectionCmd);
 	context.subscriptions.push(disp_renameCollectionCmd);
 	context.subscriptions.push(disp_deleteCollectionCmd);
+	context.subscriptions.push(disp_exportCollectionCmd);
 
 	context.subscriptions.push(disp_newFolderCmd);
 	context.subscriptions.push(disp_renameFolderCmd);

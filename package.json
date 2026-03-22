@@ -80,12 +80,24 @@
         }
       },
       {
+        "title": "Copy To",
+        "command": "api-tester.copyCollection"
+      },
+      {
+        "title": "Duplicate",
+        "command": "api-tester.duplicateCollection"
+      },
+      {
         "title": "Rename",
         "command": "api-tester.renameCollection"
       },
       {
         "title": "Delete",
         "command": "api-tester.deleteCollection"
+      },
+      {
+        "title": "Export",
+        "command": "api-tester.exportCollection"
       },
       {
         "title": "New Folder",
@@ -183,11 +195,23 @@
           "when": "false"
         },
         {
+          "command": "api-tester.copyCollection",
+          "when": "false"
+        },
+        {
+          "command": "api-tester.duplicateCollection",
+          "when": "false"
+        },
+        {
           "command": "api-tester.renameCollection",
           "when": "false"
         },
         {
           "command": "api-tester.deleteCollection",
+          "when": "false"
+        },
+        {
+          "command": "api-tester.exportCollection",
           "when": "false"
         },
         {
@@ -278,19 +302,34 @@
           "group": "a@2"
         },
         {
-          "command": "api-tester.renameCollection",
+          "command": "api-tester.copyCollection",
           "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
           "group": "b@1"
         },
         {
-          "command": "api-tester.deleteCollection",
+          "command": "api-tester.duplicateCollection",
           "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
           "group": "b@2"
         },
         {
+          "command": "api-tester.renameCollection",
+          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
+          "group": "c@1"
+        },
+        {
+          "command": "api-tester.deleteCollection",
+          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
+          "group": "c@2"
+        },
+        {
           "command": "api-tester.clearItemsInCollection",
           "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
-          "group": "b@3"
+          "group": "c@3"
+        },
+        {
+          "command": "api-tester.exportCollection",
+          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
+          "group": "d@1"
         },
         {
           "command": "api-tester.newFolder",

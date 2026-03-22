@@ -15,6 +15,7 @@ const RequestPanel = () => {
     useShallow((state) => ({
       authData: state.authData,
       authOption: state.authOption,
+      apiKeyData: state.apiKeyData,
       oauth2Data: state.oauth2Data,
       requestUrl: state.requestUrl,
       requestMethod: state.requestMethod,

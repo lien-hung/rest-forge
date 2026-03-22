@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useShallow } from "zustand/shallow";
 
-import { RESPONSE } from "../../../constants";
 import { ITableRow } from "../../../store/slices/type";
 import useStore from "../../../store/useStore";
 import {
@@ -26,48 +25,27 @@ const RequestUrl = () => {
     }))
   );
 
-  const removeFirstParam = (url: string) => {
-    const searchIndex = url.indexOf("?");
-    if (searchIndex === -1) {
-      return url;
-    }
-    
-    const baseUrl = url.slice(0, searchIndex);
-    const paramStr = url.slice(searchIndex + 1);
-
-    const firstDelimiterIndex = paramStr.indexOf("&");
-    const newParamStr = paramStr.slice(firstDelimiterIndex + 1);
-    return `${baseUrl}?${newParamStr}`;
-  }
-
-  const initDisplayUrl = () => tableParams.some(d => d.authType) ? removeFirstParam(requestUrl) : requestUrl;
-
-  const [displayUrl, setDisplayUrl] = useState(initDisplayUrl);
+  const [displayUrl, setDisplayUrl] = useState("");
   const [inputKey, setInputKey] = useState("");
 
   const toUrl = (tableData: ITableRow[]) => {
     const parameterString = generateParameterString(tableData);
-    const baseUrl = removeUrlParameter(displayUrl || requestUrl);
+    const baseUrl = removeUrlParameter(requestUrl);
     return baseUrl + parameterString;
   };
 
-  const handleExtensionMessage = (event: MessageEvent) => {
-    if (event.data.type === RESPONSE.TREEVIEW_DATA) {
-      const newDisplayUrl = initDisplayUrl();
-      setDisplayUrl(newDisplayUrl);
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("message", handleExtensionMessage);
-  }, []);
-
   useEffect(() => {
     const rows = tableParams.filter(d => d.isChecked);
-    handleRequestUrlChange(toUrl(rows));
+    const newRequestUrl = toUrl(rows);
+    if (newRequestUrl !== requestUrl) {
+      handleRequestUrlChange(newRequestUrl);
+    }
 
     const nonAuthRows = rows.filter(d => !d.authType);
-    setDisplayUrl(toUrl(nonAuthRows));
+    const newDisplayUrl = toUrl(nonAuthRows);
+    if (newDisplayUrl !== displayUrl) {
+      setDisplayUrl(newDisplayUrl);
+    }
   }, [tableParams]);
 
   useEffect(() => {

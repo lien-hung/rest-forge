@@ -9,10 +9,15 @@ const MESSAGE = {
   CLEAR_HISTORY_REMINDER: "Are you sure you want to clear your request history?",
   HISTORY_DELETION_COMPLETE: "Request history cleared",
   DELETE_COLLECTION_REMINDER: "Are you sure you want to delete this collection?",
+  DELETE_FOLDER_REMINDER: "Are you sure you want to delete this folder?",
 
   NAME_EMPTY: "Name cannot be empty",
   COLLECTION_EXISTS: "A collection with this name already exists",
   FOLDER_EXISTS: "A folder with this name already exists",
+
+  NO_COPYABLE_COLLECTION: "There are no collections to copy to",
+
+  EXPORT_SUCCESSFUL: "Export successful",
 };
 
 export default MESSAGE;
