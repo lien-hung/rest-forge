@@ -41,6 +41,11 @@ const RequestUrl = () => {
       handleRequestUrlChange(newRequestUrl);
     }
 
+    const urlLen = displayUrl.length;
+    if (urlLen > 0 && (displayUrl.indexOf("?") === urlLen - 1 || displayUrl.endsWith("="))) {
+      return;
+    }
+
     const nonAuthRows = rows.filter(d => !d.authType);
     const newDisplayUrl = toUrl(nonAuthRows);
     if (newDisplayUrl !== displayUrl) {
