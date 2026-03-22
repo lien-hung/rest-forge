@@ -1,8 +1,9 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import styled from "styled-components";
 import { IResponseDataHeader, OptionType, ITableRow } from "../store/slices/type";
 
 import deleteIcon from "../assets/svg/delete-icon.svg";
+import { COMMON } from "../constants";
 
 interface IKeyValueTableProps {
   type?: OptionType;
@@ -15,8 +16,7 @@ interface IKeyValueTableProps {
   handleRequestValue?: (type: OptionType, index: number, value: string | ArrayBuffer) => void;
   handleRequestCheckbox?: (type: OptionType, index: number) => void;
   handleFormValueType?: (index: number, valueType: string) => void;
-  handleFormFileName?: (index: number, fileName: string) => void;
-  handleFormContentType?: (index: number, contentType: string) => void;
+  handleFormFilePath?: (index: number, filePath: string) => void;
 }
 
 const KeyValueTable = ({
@@ -30,13 +30,24 @@ const KeyValueTable = ({
   handleRequestValue,
   handleRequestCheckbox,
   handleFormValueType,
-  handleFormFileName,
-  handleFormContentType,
+  handleFormFilePath,
 }: IKeyValueTableProps) => {
   const addRow = (id: any, type?: OptionType) => {
     type && addNewTableRow && addNewTableRow(type);
     type && handleRequestCheckbox && handleRequestCheckbox(type, id);
   };
+
+  const handleExtensionMessage = (event: MessageEvent) => {
+    if (event.data.type === COMMON.FILE_SELECTED) {
+      const { fileRowIndex: index, path, data } = event.data;
+      handleRequestValue && handleRequestValue("Form Data", index, data);
+      handleFormFilePath && handleFormFilePath(index, path);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("message", handleExtensionMessage);
+  }, []);
 
   return (
     <TableContainerWrapper>
@@ -54,7 +65,7 @@ const KeyValueTable = ({
           <tbody>
             {tableData.map(
               (
-                { isChecked, key, value, readOnly, authType, valueType, contentType, fileName }: any,
+                { isChecked, key, value, readOnly, authType, valueType, filePath }: any,
                 index: number,
               ) => (
                 <React.Fragment key={index}>
@@ -100,21 +111,18 @@ const KeyValueTable = ({
                     <td>
                       {tableReadOnly ? value : (type === "Form Data" && valueType === "File") ? (
                         <FileInputWrapper>
-                          <input
-                            id={`file-${index}`}
-                            type="file"
-                            onChange={(event) => {
-                              const curFiles = event.target.files;
-                              if (curFiles && curFiles.length) {
-                                curFiles[0].arrayBuffer().then(res => {
-                                  handleRequestValue && handleRequestValue(type, index, res);
-                                  handleFormFileName && handleFormFileName(index, curFiles[0].name);
-                                });
-                              }
-                            }}
-                          />
-                          <FileNameDisplay>{fileName || "No file selected"}</FileNameDisplay>
-                          <FileSelectButton htmlFor={`file-${index}`}>Select</FileSelectButton>
+                          <FileNameDisplay>
+                            {filePath
+                              ? (filePath.includes("/")
+                                ? filePath.split("/").at(-1)
+                                : filePath.split("\\").at(-1))
+                              : "No file selected"}
+                          </FileNameDisplay>
+                          <FileSelectButton
+                            onClick={() => vscode.postMessage({ command: COMMON.SELECT_FILE, fileRowIndex: index })}
+                          >
+                            Select
+                          </FileSelectButton>
                         </FileInputWrapper>
                       ) : (
                         <input
@@ -130,19 +138,6 @@ const KeyValueTable = ({
                         />
                       )}
                     </td>
-                    {type === "Form Data" && (
-                      <td>
-                        <input
-                          type="text"
-                          placeholder="Content type"
-                          value={contentType}
-                          onChange={(event) => {
-                            if (index === tableData.length - 1) addRow(index, type);
-                            handleFormContentType && handleFormContentType(index, event.target.value);
-                          }}
-                        />
-                      </td>
-                    )}
                     {!tableReadOnly && (
                       <th className="delete-cell">
                         {!readOnly && index !== tableData.length - 1 && (
@@ -195,8 +190,9 @@ const FileNameDisplay = styled.div`
   font-size: 0.95rem;
 `;
 
-const FileSelectButton = styled.label`
+const FileSelectButton = styled.button`
   cursor: pointer;
+  width: auto;
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   border: 1px solid rgba(255 255 255 / 0.06);

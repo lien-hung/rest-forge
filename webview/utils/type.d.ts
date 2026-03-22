@@ -3,7 +3,7 @@ export interface ITableRow {
   key: string;
   value: string | ArrayBuffer;
   valueType?: string;
-  fileName?: string;
+  filePath?: string;
 }
 
 export type OptionType = keyof ITableData;

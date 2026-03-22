@@ -24,6 +24,9 @@ const COMMON = {
   OAUTH2_TOKEN_ADDED: "OAuth2 Token Added",
 
   OPEN_MANAGE_TOKENS: "Open Manage Tokens",
+
+  SELECT_FILE: "Select File",
+  FILE_SELECTED: "File Selected",
 };
 
 export default COMMON;

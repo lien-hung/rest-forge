@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { writeFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 
 import { COMMAND, MESSAGE, NAME, TYPE } from "../constants";
 import {
@@ -92,7 +92,7 @@ class MainWebviewPanel {
     }
 
     this.mainPanel.webview.onDidReceiveMessage(
-      ({ tokenRequest, codeChallenge, newTokenList, errorMsg, requestData, command }) => {
+      ({ tokenRequest, codeChallenge, newTokenList, errorMsg, fileRowIndex, requestData, command }) => {
         if (command === COMMAND.ALERT_COPY) {
           vscode.window.showInformationMessage(MESSAGE.COPY_SUCCESFUL_MESSAGE);
           return;
@@ -169,6 +169,24 @@ class MainWebviewPanel {
           return;
         }
 
+        if (command === COMMAND.SELECT_FILE) {
+          vscode.window.showOpenDialog().then((uri) => {
+            if (uri && uri.length > 0) {
+              const selectedPath = uri[0].fsPath;
+              const data = readFileSync(selectedPath);
+
+              if (this.mainPanel) {
+                this.mainPanel.webview.postMessage({
+                  type: COMMAND.FILE_SELECTED,
+                  fileRowIndex,
+                  path: selectedPath,
+                  data: data.buffer,
+                });
+              }
+            }
+          });
+        }
+
         if (requestData.requestUrl.length === 0) {
           vscode.window.showWarningMessage(MESSAGE.WARNING_MESSAGE);
           return;
@@ -192,8 +210,9 @@ class MainWebviewPanel {
         // Convert array buffer to blob for form data
         flatTableData.forEach((row) => {
           if (row.optionType === TYPE.BODY_FORM_DATA && row.isChecked && row.valueType === "File") {
-            const file = new File([row.value], row.fileName);
-            row.value = file;
+            const filePath = row.filePath;
+            const fileName = filePath.includes("/") ? filePath.split("/").at(-1) : filePath.split("\\").at(-1);
+            row.value = new File([row.value], fileName);
           }
         });
 
@@ -229,7 +248,7 @@ class MainWebviewPanel {
         requestObject.tableData["Form Data"].forEach((row) => {
           if (row.valueType === "File") {
             row.value = "";
-            delete row.fileName;
+            delete row.filePath;
           }
         });
 

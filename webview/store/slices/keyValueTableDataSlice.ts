@@ -114,22 +114,12 @@ const keyValueTableDataSlice: StateCreator<
       }
     })),
 
-  handleFormFileName: (dataIndex, detail) =>
+  handleFormFilePath: (dataIndex, detail) =>
     set((state) => ({
       tableData: {
         ...state.tableData,
         [REQUEST.FORM_DATA]: state.tableData["Form Data"].map((row, index) =>
-          dataIndex === index ? { ...row, fileName: detail } : row
-        ),
-      }
-    })),
-
-  handleFormContentType: (dataIndex, detail) =>
-    set((state) => ({
-      tableData: {
-        ...state.tableData,
-        [REQUEST.FORM_DATA]: state.tableData["Form Data"].map((row, index) =>
-          dataIndex === index ? { ...row, contentType: detail } : row
+          dataIndex === index ? { ...row, filePath: detail } : row
         ),
       }
     })),

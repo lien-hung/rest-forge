@@ -71,8 +71,7 @@ export interface ITableRow {
   authType?: string;
   prefix?: string;
   valueType?: string;
-  fileName?: string;
-  contentType?: string;
+  filePath?: string;
 }
 
 export interface ITableData {

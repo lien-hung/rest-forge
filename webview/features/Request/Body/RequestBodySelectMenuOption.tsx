@@ -39,8 +39,7 @@ const RequestBodySelectMenuOption = () => {
       handleRequestValue: state.handleRequestValue,
       handleRequestCheckbox: state.handleRequestCheckbox,
       handleFormValueType: state.handleFormValueType,
-      handleFormFileName: state.handleFormFileName,
-      handleFormContentType: state.handleFormContentType,
+      handleFormFilePath: state.handleFormFilePath,
     }))
   );
 
