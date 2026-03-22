@@ -61,7 +61,7 @@ export default class CollectionsProvider implements TreeDataProvider<Collections
     this.save();
   }
 
-  public copy(source: RequestCollection, destination: RequestCollection) {
+  public copy(source: RequestFolderLike, destination: RequestFolderLike) {
     const children = this.tree.filter(item => item.parent?.id === source.id);
     for (const child of children) {
       this.copyItem(child, destination);
@@ -83,13 +83,14 @@ export default class CollectionsProvider implements TreeDataProvider<Collections
     }
   }
 
-  public duplicate(collection: RequestCollection) {
-    const newCollection = this.addFolderLike(`${collection.name} - Copy`) as RequestCollection;
-    this.copy(collection, newCollection);
+  public duplicate(folderLike: RequestFolderLike) {
+    const parent = folderLike instanceof RequestFolder ? folderLike.parent : undefined;
+    const newFolderLike = this.addFolderLike(`${folderLike.name} - Copy`, parent);
+    this.copy(folderLike, newFolderLike);
   }
 
-  public export(collection: RequestCollection, path: string) {
-    const exportArray = [collection, ...this.getDescendants(collection)];
+  public export(folderLike: RequestFolderLike, path: string) {
+    const exportArray = [folderLike, ...this.getDescendants(folderLike)];
     const exportData = exportArray.map(item => item?.toFileData());
     fs.writeFileSync(path, JSON.stringify(exportData, null, 2));
   }

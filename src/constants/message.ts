@@ -16,6 +16,7 @@ const MESSAGE = {
   FOLDER_EXISTS: "A folder with this name already exists",
 
   NO_COPYABLE_COLLECTION: "There are no collections to copy to",
+  NO_PASTABLE_REQUST: "No requests in clipboard",
 
   EXPORT_SUCCESSFUL: "Export successful",
 };

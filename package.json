@@ -105,6 +105,10 @@
         "category": "API Tester"
       },
       {
+        "title": "Duplicate",
+        "command": "api-tester.duplicateFolder"
+      },
+      {
         "title": "Rename",
         "command": "api-tester.renameFolder"
       },
@@ -119,6 +123,18 @@
           "light": "icons/svg/add-light.svg",
           "dark": "icons/svg/add-dark.svg"
         }
+      },
+      {
+        "title": "Copy",
+        "command": "api-tester.copyRequestInCollection"
+      },
+      {
+        "title": "Paste",
+        "command": "api-tester.pasteRequestInCollection"
+      },
+      {
+        "title": "Duplicate",
+        "command": "api-tester.duplicateRequestInCollection"
       },
       {
         "title": "Clear Items",
@@ -219,6 +235,10 @@
           "when": "false"
         },
         {
+          "command": "api-tester.duplicateFolder",
+          "when": "false"
+        },
+        {
           "command": "api-tester.renameFolder",
           "when": "false"
         },
@@ -228,6 +248,18 @@
         },
         {
           "command": "api-tester.newRequestInCollection",
+          "when": "false"
+        },
+        {
+          "command": "api-tester.copyRequestInCollection",
+          "when": "false"
+        },
+        {
+          "command": "api-tester.pasteRequestInCollection",
+          "when": "false"
+        },
+        {
+          "command": "api-tester.duplicateRequestInCollection",
           "when": "false"
         },
         {
@@ -302,27 +334,32 @@
           "group": "a@2"
         },
         {
-          "command": "api-tester.copyCollection",
+          "command": "api-tester.renameCollection",
           "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
           "group": "b@1"
         },
         {
-          "command": "api-tester.duplicateCollection",
+          "command": "api-tester.deleteCollection",
           "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
           "group": "b@2"
         },
         {
-          "command": "api-tester.renameCollection",
+          "command": "api-tester.clearItemsInCollection",
+          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
+          "group": "b@3"
+        },
+        {
+          "command": "api-tester.copyCollection",
           "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
           "group": "c@1"
         },
         {
-          "command": "api-tester.deleteCollection",
+          "command": "api-tester.pasteRequestInCollection",
           "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
           "group": "c@2"
         },
         {
-          "command": "api-tester.clearItemsInCollection",
+          "command": "api-tester.duplicateCollection",
           "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
           "group": "c@3"
         },
@@ -357,14 +394,34 @@
           "group": "b@3"
         },
         {
+          "command": "api-tester.pasteRequestInCollection",
+          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.folder",
+          "group": "b@4"
+        },
+        {
+          "command": "api-tester.duplicateFolder",
+          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.folder",
+          "group": "b@5"
+        },
+        {
           "command": "api-tester.renameRequestInCollection",
           "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.item",
           "group": "a@1"
         },
         {
-          "command": "api-tester.deleteRequestInCollection",
+          "command": "api-tester.copyRequestInCollection",
           "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.item",
           "group": "a@2"
+        },
+        {
+          "command": "api-tester.deleteRequestInCollection",
+          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.item",
+          "group": "a@3"
+        },
+        {
+          "command": "api-tester.duplicateRequestInCollection",
+          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.item",
+          "group": "a@4"
         }
       ]
     },

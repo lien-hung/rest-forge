@@ -17,10 +17,14 @@ const COMMAND = {
   EXPORT_COLLECTION: "api-tester.exportCollection",
 
   NEW_FOLDER: "api-tester.newFolder",
+  DUPLICATE_FOLDER: "api-tester.duplicateFolder",
   RENAME_FOLDER: "api-tester.renameFolder",
   DELETE_FOLDER: "api-tester.deleteFolder",
 
   NEW_COLLECTION_REQUEST: "api-tester.newRequestInCollection",
+  COPY_COLLECTION_REQUEST: "api-tester.copyRequestInCollection",
+  PASTE_COLLECTION_REQUEST: "api-tester.pasteRequestInCollection",
+  DUPLICATE_COLLECTION_REQUEST: "api-tester.duplicateRequestInCollection",
   CLEAR_COLLECTION_ITEMS: "api-tester.clearItemsInCollection",
   RENAME_COLLECTION_REQUEST: "api-tester.renameRequestInCollection",
   DELETE_COLLECTION_REQUEST: "api-tester.deleteRequestInCollection",

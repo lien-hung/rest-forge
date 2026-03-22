@@ -7,7 +7,7 @@ import MainWebviewPanel from './panels/main';
 import ManageTokenWebviewPanel from './panels/manage-tokens';
 import RequestHistoryProvider from './request-history';
 import { RequestHistoryTreeItem } from './request-history/tree-items';
-import { parseCurl } from './utils';
+import { generateId, parseCurl } from './utils';
 import getTokenColors from './utils/getTokenColors';
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -23,6 +23,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	let currentMainPanel: vscode.WebviewPanel | null = null;
 	let currentManageTokenPanel: vscode.WebviewPanel | null = null;
+
+	let requestInClipboard: RequestItem | null = null;
 
 	const handleInput = async (placeHolder: string) => {
 		const input = await vscode.window.showInputBox({ placeHolder });
@@ -267,6 +269,11 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	);
 
+	const disp_duplicateFolderCmd = vscode.commands.registerCommand(
+		COMMAND.DUPLICATE_FOLDER,
+		(folder: RequestFolder) => collectionsProvider.duplicate(folder)
+	);
+
 	const disp_renameFolderCmd = vscode.commands.registerCommand(
 		COMMAND.RENAME_FOLDER,
 		async (folder: RequestFolder) => {
@@ -306,6 +313,44 @@ export async function activate(context: vscode.ExtensionContext) {
 				return;
 			}
 			initializePanel({ parentId: folderLike.id, requestName: requestName.trim() });
+		}
+	);
+
+	const disp_copyCollectionRequestCmd = vscode.commands.registerCommand(
+		COMMAND.COPY_COLLECTION_REQUEST,
+		(requestItem: RequestItem) => {
+			requestInClipboard = requestItem;
+			vscode.window.showInformationMessage(MESSAGE.COPY_SUCCESFUL_MESSAGE);
+		}
+	);
+
+	const disp_pasteCollectionRequestCmd = vscode.commands.registerCommand(
+		COMMAND.PASTE_COLLECTION_REQUEST,
+		(folderLike: RequestCollection | RequestFolder) => {
+			if (!requestInClipboard) {
+				vscode.window.showInformationMessage(MESSAGE.NO_PASTABLE_REQUST);
+				return;
+			}
+
+			const newRequest = {
+				...requestInClipboard.request,
+				id: generateId(),
+				name: `${requestInClipboard.request.name} - Copy`,
+			};
+			collectionsProvider.addRequest(newRequest, folderLike.id!);
+			requestInClipboard = null;
+		}
+	);
+
+	const disp_duplicateCollectionRequestCmd = vscode.commands.registerCommand(
+		COMMAND.DUPLICATE_COLLECTION_REQUEST,
+		(requestItem: RequestItem) => {
+			const newRequest = {
+				...requestItem.request,
+				id: generateId(),
+				name: `${requestItem.request.name} - Copy`
+			};
+			collectionsProvider.addRequest(newRequest, requestItem.parent.id!);
 		}
 	);
 
@@ -427,10 +472,14 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disp_exportCollectionCmd);
 
 	context.subscriptions.push(disp_newFolderCmd);
+	context.subscriptions.push(disp_duplicateFolderCmd);
 	context.subscriptions.push(disp_renameFolderCmd);
 	context.subscriptions.push(disp_deleteFolderCmd);
 
 	context.subscriptions.push(disp_newCollectionRequestCmd);
+	context.subscriptions.push(disp_copyCollectionRequestCmd);
+	context.subscriptions.push(disp_pasteCollectionRequestCmd);
+	context.subscriptions.push(disp_duplicateCollectionRequestCmd);
 	context.subscriptions.push(disp_clearCollectionItemsCmd);
 	context.subscriptions.push(disp_renameCollectionRequestCmd);
 	context.subscriptions.push(disp_deleteCollectionRequestCmd);
