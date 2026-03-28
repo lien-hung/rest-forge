@@ -1,6 +1,6 @@
 // @ts-ignore
 import codegen from "postman-code-generators";
-import React, { useEffect, useMemo, ChangeEvent } from "react";
+import React, { ChangeEvent, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import { useDebounce } from "use-debounce";
 import { useShallow } from "zustand/shallow";
@@ -11,7 +11,7 @@ import { COMMON, OPTION } from "../../../constants/index";
 import CodeEditor from "../../../shared/CodeEditor";
 import useStore from "../../../store/useStore";
 import { generateSdkRequestObject } from "../../../utils/index";
-import { OptionType } from "../../../store/slices/type";
+import { BodyOptionType } from "../../../utils/type";
 
 const RequestCodeSnippet = () => {
   const {
@@ -34,7 +34,7 @@ const RequestCodeSnippet = () => {
       authOption: state.authOption,
       requestMethod: state.requestMethod,
       requestUrl: state.requestUrl,
-      bodyOption: state.bodyOption as OptionType,
+      bodyOption: state.bodyOption as BodyOptionType,
       bodyRawData: state.bodyRawData,
       graphqlData: state.graphqlData,
       codeSnippetValue: state.codeSnippetValue,
@@ -129,14 +129,12 @@ const RequestCodeSnippet = () => {
               value={label}
               variant-type={variants[0]}
             >
-              {label === "csharp" ? "C#" : (label === "NodeJs" ? "Node.js" : label)}
+              {label === "csharp" ? "C#" : (label === "NodeJs" ? "Node" : label)}
             </option>
           ))}
         </SelectOptionWrapper>
         <SelectOptionWrapper
-          onChange={(event) =>
-            handleCodeSnippetVariantChange(event.target.value)
-          }
+          onChange={(event) => handleCodeSnippetVariantChange(event.target.value)}
           value={codeSnippetOption.variant}
         >
           {OPTION.CODE_SNIPPET_OPTIONS.map(

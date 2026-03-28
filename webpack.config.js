@@ -4,6 +4,7 @@
 
 const path = require('path');
 const webpack = require("webpack");
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
 const babelCommonRules = {
   loader: "babel-loader",
@@ -74,7 +75,8 @@ const mainWebViewConfig = {
     new webpack.ProvidePlugin({
       Buffer: ["buffer", "Buffer"],
       process: "process/browser",
-    })
+    }),
+    new NodePolyfillPlugin()
   ],
   resolve: {
     mainFields: ["browser", "module", "main"],

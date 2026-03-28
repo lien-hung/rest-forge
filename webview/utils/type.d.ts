@@ -6,7 +6,11 @@ export interface ITableRow {
   filePath?: string;
 }
 
-export type OptionType = keyof ITableData;
+export type TableOptionType = keyof ITableData;
+
+export type BodyOptionType = "Form Data" | "Form Encoded" | "GraphQL" | "Raw";
+
+export type OptionType = TableOptionType & BodyOptionType;
 
 export interface ITableData {
   "Params": ITableRow[];

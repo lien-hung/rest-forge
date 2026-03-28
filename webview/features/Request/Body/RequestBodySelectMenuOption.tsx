@@ -5,11 +5,11 @@ import { useShallow } from "zustand/shallow";
 import { OPTION, REQUEST } from "../../../constants/index";
 import CodeEditor from "../../../shared/CodeEditor";
 import KeyValueTable from "../../../shared/KeyValueTable";
-import { OptionType } from "../../../store/slices/type";
 import useStore from "../../../store/useStore";
-import RequestNoBody from "./RequestNoBody";
+import { BodyOptionType, OptionType } from "../../../utils/type";
 import RequestGraphqlQuery from "./RequestGraphqlQuery";
 import RequestGraphqlVariables from "./RequestGraphqlVariables";
+import RequestNoBody from "./RequestNoBody";
 
 const RequestBodySelectMenuOption = () => {
   const {
@@ -21,7 +21,7 @@ const RequestBodySelectMenuOption = () => {
     handleBeautifyButton,
   } = useStore(
     useShallow((state) => ({
-      bodyOption: state.bodyOption as OptionType,
+      bodyOption: state.bodyOption as BodyOptionType,
       bodyRawData: state.bodyRawData,
       bodyRawOption: state.bodyRawOption,
       handleBodyRawOptionData: state.handleBodyRawOptionData,
@@ -32,7 +32,7 @@ const RequestBodySelectMenuOption = () => {
 
   const keyValueProps = useStore(
     useShallow((state) => ({
-      tableData: state.tableData[bodyOption],
+      tableData: state.tableData[bodyOption as OptionType],
       addNewTableRow: state.addNewTableRow,
       deleteTableRow: state.deleteTableRow,
       handleRequestKey: state.handleRequestKey,
@@ -57,7 +57,7 @@ const RequestBodySelectMenuOption = () => {
       return (
         <KeyValueTable
           tableReadOnly={false}
-          type={bodyOption}
+          type={bodyOption as OptionType}
           title={bodyOption}
           {...keyValueProps}
         />

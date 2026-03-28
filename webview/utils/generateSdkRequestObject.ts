@@ -2,7 +2,7 @@ import { Buffer } from "buffer";
 import { Request } from "postman-collection";
 
 import { REQUEST } from "../constants";
-import { IAuthData, IGraphqlData, ITableData, ITableRow, OptionType } from "./type";
+import { BodyOptionType, IAuthData, IGraphqlData, ITableData, ITableRow, OptionType } from "./type";
 
 const generateSdkRequestObject = (
   url: string,
@@ -10,18 +10,18 @@ const generateSdkRequestObject = (
   tableData: ITableData,
   authOption: string,
   authData: IAuthData,
-  bodyOption: OptionType,
+  bodyOption: BodyOptionType,
   bodyRawData: string,
   graphqlData: IGraphqlData
 ) => {
   const requestHeaders = tableData["Headers"].filter((data) => data.key.length > 0);
-  const bodyData = tableData[bodyOption]
-    ? tableData[bodyOption]
+  const bodyData = bodyOption in tableData
+    ? tableData[bodyOption as OptionType]
         .filter((data) => data.key.length > 0)
         .map((data) => data.value instanceof ArrayBuffer
-          ? { ...data, src: data.filePath, type: data.valueType?.toLowerCase() }
-          : data)
+          ? { ...data, src: data.filePath, type: data.valueType?.toLowerCase() } : data)
     : new Array<ITableRow>();
+  
   const graphqlObject = {
     query: graphqlData.query,
     variables: (() => { try { return JSON.parse(graphqlData.variables); } catch { return {}; } })(),
