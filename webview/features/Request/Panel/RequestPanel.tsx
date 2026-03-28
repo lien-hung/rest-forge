@@ -36,7 +36,7 @@ const RequestPanel = () => {
   const handleFormSubmit = (event: FormEvent) => {
     event.preventDefault();
 
-    if (requestData.requestUrl.length !== 0) {
+    if (requestData.requestUrl) {
       handleRequestProcessStatus(COMMON.LOADING);
     }
 

@@ -140,6 +140,7 @@ class MainWebviewPanel {
           } catch (error) {
             console.error("Error loading tokens: ", error);
           }
+          return;
         }
 
         if (command === COMMAND.OAUTH2_TOKEN_REQUEST) {
@@ -186,7 +187,7 @@ class MainWebviewPanel {
           });
         }
 
-        if (requestData.requestUrl.length === 0) {
+        if (!requestData?.requestUrl) {
           vscode.window.showWarningMessage(MESSAGE.WARNING_MESSAGE);
           return;
         }
