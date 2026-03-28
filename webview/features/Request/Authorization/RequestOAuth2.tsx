@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { SyncLoader } from "react-spinners";
 import styled from "styled-components";
 import { useShallow } from "zustand/shallow";
 
@@ -228,12 +227,7 @@ const RequestOAuth2 = () => {
           />
           {selectedToken && (isRefreshPending ? (
             <div>
-              <SyncLoader
-                color="var(--vscode-foreground)"
-                speedMultiplier={0.5}
-                size="0.5rem"
-                cssOverride={OPTION.LOADER_CSS_OPTIONS}
-              />
+              <span className="loader"></span>
               <TokenMessage role="message">Refreshing token...</TokenMessage>
             </div>
           ) : (
@@ -320,6 +314,26 @@ const SelectTokenWrapper = styled.div`
 
   span[role="alert"] {
     color: var(--vscode-editorError-foreground, #ff4d4d);
+  }
+
+  .loader {
+    width: 1rem;
+    height: 1rem;
+    border: 0.2rem solid var(--vscode-foreground);
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 `;
 

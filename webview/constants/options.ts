@@ -32,7 +32,6 @@ const OPTION = {
   RESPONSE_BODY_OPTIONS: ["Pretty", "Raw", "Preview"],
   RESPONSE_RESULT_INFORMATION: ["Status", "Time", "Size"],
   RESPONSE_BODY_VIEW_FORMAT_OPTIONS: ["JSON", "HTML", "XML", "Text"],
-  LOADER_CSS_OPTIONS: { opacity: "0.85" },
   EDITOR_OPTIONS: {
     tabSize: 2,
     renderWhitespace: false,
