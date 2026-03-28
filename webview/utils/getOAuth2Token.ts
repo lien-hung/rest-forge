@@ -1,12 +1,9 @@
+import cryptoRandomString from "crypto-random-string";
 import showError from "./showError";
 import { IOAuth2RefreshRequest, IOAuth2Request } from "./type";
 
 export function getCodeVerifier() {
-  const cryptoRandomString = (charLength: number) => {
-    return Array.from(window.crypto.getRandomValues(new Uint8Array(Math.ceil(charLength / 2))))
-      .map(dec => dec.toString(16).padStart(2, "0")).join("").substring(0, charLength);
-  };
-  return cryptoRandomString(44);
+  return cryptoRandomString({ length: 44, type: "url-safe" });
 }
 
 export async function getCodeChallenge(codeVerifier: string): Promise<string> {

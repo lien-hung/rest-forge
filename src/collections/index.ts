@@ -4,7 +4,8 @@ import { EventEmitter, ExtensionContext, TreeDataProvider, TreeItem, Uri } from 
 
 import { RequestCollection, RequestFolder, RequestItem } from "./tree-items";
 import { IRequestTreeItemState } from "../utils/type";
-import { generateId, getElapsedTime, getHomePath, getMethodIcons } from "../utils";
+import { getElapsedTime, getHomePath, getMethodIcons } from "../utils";
+import { CollectionDataEntry } from "./type";
 
 type CollectionsProviderItem = RequestCollection | RequestFolder | RequestItem;
 type RequestFolderLike = RequestCollection | RequestFolder;
@@ -39,9 +40,15 @@ export default class CollectionsProvider implements TreeDataProvider<Collections
   }
 
   public addFolderLike(name: string, parent?: RequestFolderLike) {
+    const collections = this.tree.filter(item => item instanceof RequestCollection);
     const treeRequests = this.tree.filter(item => item instanceof RequestItem);
+
     const newFolderLike = parent ? new RequestFolder(name, parent) : new RequestCollection(name);
-    this.tree.splice(-treeRequests.length, 0, newFolderLike);
+    if (parent) {
+      this.tree.splice(collections.length, 0, newFolderLike);
+    } else {
+      this.tree.splice(-treeRequests.length, 0, newFolderLike);
+    }
 
     this.refresh();
     this.save();
@@ -71,7 +78,7 @@ export default class CollectionsProvider implements TreeDataProvider<Collections
     this.save();
   }
 
-  private copyItem(item: CollectionsProviderItem, newParent: RequestFolderLike): void {
+  private copyItem(item: CollectionsProviderItem, newParent: RequestFolderLike) {
     if (item instanceof RequestFolder) {
       const newFolder = this.addFolderLike(item.name, newParent);
       const children = this.tree.filter(i => i.parent?.id === item.id);
@@ -79,7 +86,7 @@ export default class CollectionsProvider implements TreeDataProvider<Collections
         this.copyItem(child, newFolder);
       }
     } else if (item instanceof RequestItem) {
-      const newRequest = { ...item.request, id: generateId() };
+      const newRequest = { ...item.request, id: crypto.randomUUID() };
       this.addRequest(newRequest, newParent.id!);
     }
   }
@@ -88,12 +95,6 @@ export default class CollectionsProvider implements TreeDataProvider<Collections
     const parent = folderLike instanceof RequestFolder ? folderLike.parent : undefined;
     const newFolderLike = this.addFolderLike(`${folderLike.name} - Copy`, parent);
     this.copy(folderLike, newFolderLike);
-  }
-
-  public export(folderLike: RequestFolderLike, path: string) {
-    const exportArray = [folderLike, ...this.getDescendants(folderLike)];
-    const exportData = exportArray.map(item => item?.toFileData());
-    fs.writeFileSync(path, JSON.stringify(exportData, null, 2));
   }
 
   public delete(toDelete: CollectionsProviderItem, skipSave?: boolean) {
@@ -136,16 +137,22 @@ export default class CollectionsProvider implements TreeDataProvider<Collections
     return parentArray.findIndex(item => !(item instanceof RequestItem) && item.name === name) !== -1;
   }
 
-  public getCollectionByName(name?: string): RequestCollection {
-    return this.tree.find(item => item instanceof RequestCollection && item.name === name) as RequestCollection;
+  public getCollectionByName(name?: string) {
+    return this.tree
+      .filter(item => item instanceof RequestCollection)
+      .find(item => item.name === name);
   }
 
-  public getCollectionFolders(id: string): RequestFolder[] {
-    return this.tree.filter(item => item instanceof RequestFolder && item.parent.id === id) as RequestFolder[];
+  public getSubfolders(id: string) {
+    return this.tree
+      .filter(item => item instanceof RequestFolder)
+      .filter(item => item.parent.id === id);
   }
 
-  public getCollectionRequests(id: string): RequestItem[] {
-    return this.tree.filter(item => item instanceof RequestItem && item.parent.id === id) as RequestItem[];
+  public getCollectionRequests(id: string) {
+    return this.tree
+      .filter(item => item instanceof RequestItem)
+      .filter(item => item.parent.id === id);
   }
 
   private get filePath() {
@@ -198,6 +205,20 @@ export default class CollectionsProvider implements TreeDataProvider<Collections
   private save() {
     const data = this.tree.map(item => item.toFileData());
     fs.writeFileSync(this.filePath, JSON.stringify(data, null, 2));
+  }
+
+  private buildTree(item: CollectionsProviderItem) {
+    const entry = item.toExport();
+    const children = this.tree.filter(i => i.parent?.id === item.id);
+    if (children.length > 0 && "data" in entry) {
+      entry.data = children.map(child => this.buildTree(child)) as CollectionDataEntry[];
+    }
+    return entry;
+  }
+
+  public export(collection: RequestCollection, path: string) {
+    const exportData = this.buildTree(collection);
+    fs.writeFileSync(path, JSON.stringify(exportData, null, 2));
   }
 
   constructor(context: ExtensionContext) {

@@ -4,7 +4,6 @@ import { readFileSync, writeFileSync } from "fs";
 import { COMMAND, MESSAGE, NAME, TYPE } from "../constants";
 import {
   authorizeInBrowser,
-  generateId,
   generateResponseObject,
   getBody,
   getExtensionConfig,
@@ -254,7 +253,7 @@ class MainWebviewPanel {
 
         if (this.parentId && this.requestName) {
           const newRequest = {
-            id: this.id || generateId(),
+            id: this.id || crypto.randomUUID(),
             name: this.requestName,
             ...requestData,
             timestamp,
@@ -264,7 +263,7 @@ class MainWebviewPanel {
           this.id = newRequest.id;
         } else {
           this.requestHistoryProvider.add({
-            id: generateId(),
+            id: crypto.randomUUID(),
             name: "",
             ...requestData,
             timestamp,

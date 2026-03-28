@@ -7,7 +7,7 @@ import MainWebviewPanel from './panels/main';
 import ManageTokenWebviewPanel from './panels/manage-tokens';
 import RequestHistoryProvider from './request-history';
 import { RequestHistoryTreeItem } from './request-history/tree-items';
-import { generateId, parseCurl } from './utils';
+import { parseCurl } from './utils';
 import getTokenColors from './utils/getTokenColors';
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -260,7 +260,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				return;
 			}
 
-			const existingNames = collectionsProvider.getCollectionFolders(folderLike.id!).map(folder => folder.name);
+			const existingNames = collectionsProvider.getSubfolders(folderLike.id!).map(folder => folder.name);
 			if (existingNames.includes(folderName.trim())) {
 				await vscode.window.showInformationMessage(MESSAGE.FOLDER_EXISTS);
 				return;
@@ -282,7 +282,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				return;
 			}
 
-			const existingNames = collectionsProvider.getCollectionFolders(folder.parent.id!).map(folder => folder.name);
+			const existingNames = collectionsProvider.getSubfolders(folder.parent.id!).map(folder => folder.name);
 			if (existingNames.includes(newName.trim())) {
 				await vscode.window.showInformationMessage(MESSAGE.FOLDER_EXISTS);
 				return;
@@ -334,7 +334,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 			const newRequest = {
 				...requestInClipboard.request,
-				id: generateId(),
+				id: crypto.randomUUID(),
 				name: `${requestInClipboard.request.name} - Copy`,
 			};
 			collectionsProvider.addRequest(newRequest, folderLike.id!);
@@ -347,7 +347,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		(requestItem: RequestItem) => {
 			const newRequest = {
 				...requestItem.request,
-				id: generateId(),
+				id: crypto.randomUUID(),
 				name: `${requestItem.request.name} - Copy`
 			};
 			collectionsProvider.addRequest(newRequest, requestItem.parent.id!);

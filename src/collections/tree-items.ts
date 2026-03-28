@@ -2,7 +2,8 @@ import { TreeItem, TreeItemCollapsibleState } from "vscode";
 
 import { COLLECTION, COMMAND } from "../constants";
 import { IRequestTreeItemState } from "../utils/type";
-import { generateId, getElapsedTime } from "../utils";
+import { getElapsedTime } from "../utils";
+import { RequestCollectionEntry, RequestFolderEntry, RequestItemEntry } from "./type";
 
 export class RequestItem extends TreeItem {
   public contextValue = `${COLLECTION.REQUEST_COLLECTION}.item`;
@@ -26,6 +27,16 @@ export class RequestItem extends TreeItem {
       request: this.request,
     };
   }
+
+  public toExport(): RequestItemEntry {
+    return {
+      request: {
+        ...this.request,
+        id: undefined,
+        requestObject: undefined,
+      }
+    };
+  }
 }
 
 export class RequestFolder extends TreeItem {
@@ -34,7 +45,7 @@ export class RequestFolder extends TreeItem {
   constructor(public name: string, public parent: RequestCollection | RequestFolder, id?: string) {
     super(name, TreeItemCollapsibleState.Collapsed);
     this.parent = parent;
-    this.id = id || generateId();
+    this.id = id || crypto.randomUUID();
   }
 
   public toFileData() {
@@ -45,6 +56,13 @@ export class RequestFolder extends TreeItem {
       parentId: this.parent.id,
     };
   }
+
+  public toExport(): RequestFolderEntry {
+    return {
+      folder: this.name,
+      data: [],
+    };
+  }
 }
 
 export class RequestCollection extends TreeItem {
@@ -53,7 +71,7 @@ export class RequestCollection extends TreeItem {
 
   constructor(public name: string, id?: string) {
     super(name, TreeItemCollapsibleState.Expanded);
-    this.id = id || generateId();
+    this.id = id || crypto.randomUUID();
   }
 
   public toFileData() {
@@ -61,6 +79,13 @@ export class RequestCollection extends TreeItem {
       id: this.id,
       name: this.name,
       isCollection: true,
+    };
+  }
+
+  public toExport(): RequestCollectionEntry {
+    return {
+      collection: this.name,
+      data: [],
     };
   }
 }
