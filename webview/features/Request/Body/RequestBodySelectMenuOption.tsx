@@ -6,6 +6,7 @@ import { OPTION, REQUEST } from "../../../constants/index";
 import CodeEditor from "../../../shared/CodeEditor";
 import KeyValueTable from "../../../shared/KeyValueTable";
 import useStore from "../../../store/useStore";
+import { camelize } from "../../../utils";
 import { BodyOptionType, OptionType } from "../../../utils/type";
 import RequestGraphqlQuery from "./RequestGraphqlQuery";
 import RequestGraphqlVariables from "./RequestGraphqlVariables";
@@ -30,9 +31,12 @@ const RequestBodySelectMenuOption = () => {
     }))
   );
 
+  const bodyRawOptionLower = bodyRawOption.toLowerCase();
+  const bodyOptionCamelCase = camelize(bodyOption) as OptionType;
+
   const keyValueProps = useStore(
     useShallow((state) => ({
-      tableData: state.tableData[bodyOption as OptionType],
+      tableData: state.tableData[bodyOptionCamelCase],
       addNewTableRow: state.addNewTableRow,
       deleteTableRow: state.deleteTableRow,
       handleRequestKey: state.handleRequestKey,
@@ -42,8 +46,6 @@ const RequestBodySelectMenuOption = () => {
       handleFormFilePath: state.handleFormFilePath,
     }))
   );
-
-  const bodyRawOptionLower = bodyRawOption.toLowerCase();
 
   function handleRequestBodyEditorChange(bodyValue: string | undefined) {
     if (bodyValue) {
@@ -57,7 +59,7 @@ const RequestBodySelectMenuOption = () => {
       return (
         <KeyValueTable
           tableReadOnly={false}
-          type={bodyOption as OptionType}
+          type={bodyOptionCamelCase}
           title={bodyOption}
           {...keyValueProps}
         />

@@ -6,17 +6,15 @@ export interface ITableRow {
   filePath?: string;
 }
 
-export type TableOptionType = keyof ITableData;
-
 export type BodyOptionType = "Form Data" | "Form Encoded" | "GraphQL" | "Raw";
 
-export type OptionType = TableOptionType & BodyOptionType;
+export type OptionType = "formData" | "formEncoded";
 
 export interface ITableData {
-  "Params": ITableRow[];
-  "Headers": ITableRow[];
-  "Form Data": ITableRow[];
-  "Form Encoded": ITableRow[];
+  params: ITableRow[];
+  headers: ITableRow[];
+  formData: ITableRow[];
+  formEncoded: ITableRow[];
 }
 
 export interface IGraphqlData {

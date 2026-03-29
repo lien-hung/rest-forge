@@ -34,7 +34,7 @@ function parseCurl(command: string) {
     bodyOption: "None",
     bodyRawOption: "Text",
     bodyRawData: "",
-    tableData: { "Params": [], "Headers": [], "Form Data": [], "Form Encoded": [] },
+    tableData: { params: [], headers: [], formData: [], formEncoded: [] },
     graphqlData: { query: "", variables: "" },
   };
 
@@ -64,7 +64,7 @@ function parseCurl(command: string) {
   const addHeader = (item: string) => {
     const field = parseField(item);
     if (!isAuthHeader(field)) {
-      request.tableData["Headers"].push(newTableRow({ key: field[0], value: field[1] }));
+      request.tableData.headers.push(newTableRow({ key: field[0], value: field[1] }));
     }
   };
 
@@ -82,14 +82,14 @@ function parseCurl(command: string) {
   };
 
   const parseData = (data: any) => {
-    const contentTypeHeader = request.tableData["Headers"].find(d => d.key.toLowerCase() === "content-type")?.value;
+    const contentTypeHeader = request.tableData.headers.find(d => d.key.toLowerCase() === "content-type")?.value;
     if (typeof contentTypeHeader !== "string") {
       return;
     }
     
     if (contentTypeHeader?.includes("application/x-www-form-urlencoded")) {
       request.bodyOption = TYPE.BODY_FORM_URLENCODED;
-      request.tableData["Form Encoded"].push(...parseDataUrlEncode(data));
+      request.tableData.formEncoded.push(...parseDataUrlEncode(data));
     } else {
       request.bodyOption = TYPE.BODY_RAW;
       request.bodyRawData = data;
@@ -106,10 +106,10 @@ function parseCurl(command: string) {
   };
 
   const parseDataUrlEncode = (data: string | string[]) => {
-    const contentTypeHeader = request.tableData["Headers"].find(d => d.key.toLowerCase() === "content-type")?.value;
+    const contentTypeHeader = request.tableData.headers.find(d => d.key.toLowerCase() === "content-type")?.value;
 
     if (!contentTypeHeader) {
-      request.tableData["Headers"].push(newTableRow({
+      request.tableData.headers.push(newTableRow({
         key: "Content-Type",
         value: "application/x-www-form-urlencoded",
         readOnly: true
@@ -176,7 +176,7 @@ function parseCurl(command: string) {
 
       case "A":
       case "user-agent":
-        request.tableData["Headers"].push(newTableRow({ key: "user-agent", value: argvs[argv] }));
+        request.tableData.headers.push(newTableRow({ key: "user-agent", value: argvs[argv] }));
         break;
 
       case "I":
@@ -186,7 +186,7 @@ function parseCurl(command: string) {
 
       case "b":
       case "cookie":
-        request.tableData["Headers"].push(newTableRow({ key: "Set-Cookie", value: argvs[argv] }));
+        request.tableData.headers.push(newTableRow({ key: "Set-Cookie", value: argvs[argv] }));
         break;
 
       case "d":
@@ -199,14 +199,14 @@ function parseCurl(command: string) {
 
       case "data-urlencode":
         request.bodyOption = TYPE.BODY_FORM_URLENCODED;
-        request.tableData["Form Encoded"].push(...parseDataUrlEncode(argvs[argv]));
+        request.tableData.formEncoded.push(...parseDataUrlEncode(argvs[argv]));
         setRequestMethod();
         break;
 
       case "compressed":
-        const index = request.tableData["Headers"].findIndex(d => d.key.toLowerCase() === "accept-encoding");
+        const index = request.tableData.headers.findIndex(d => d.key.toLowerCase() === "accept-encoding");
         if (index === -1) {
-          request.tableData["Headers"].push(newTableRow({
+          request.tableData.headers.push(newTableRow({
             key: "Accept-Encoding",
             value: (!argvs[argv] || typeof argvs[argv] === "boolean") ? "gzip, deflate" : argvs[argv],
           }));

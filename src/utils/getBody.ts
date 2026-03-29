@@ -27,7 +27,7 @@ function getBody(
     const formData = new FormData();
 
     const formDataArray = keyValueData.filter(
-      (data) => data.optionType === TYPE.BODY_FORM_DATA && data.isChecked,
+      (data) => data.optionType === "formData" && data.isChecked,
     );
 
     for (const { key, value } of formDataArray) {
@@ -39,7 +39,7 @@ function getBody(
     const urlEncodedFormData = new URLSearchParams();
 
     const formDataArray = keyValueData.filter(
-      (data) => data.optionType === TYPE.BODY_FORM_URLENCODED && data.isChecked,
+      (data) => data.optionType === "formEncoded" && data.isChecked,
     );
 
     for (const { key, value } of formDataArray) {

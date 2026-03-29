@@ -10,10 +10,10 @@ import RequestBodySelectMenu from "../Body/RequestBodySelectMenu";
 import RequestCodeSnippet from "../CodeSnippet/RequestCodeSnippet";
 
 const RequestMenuOption = () => {
-  const requestOption = useStore((state) => state.requestOption as OptionType);
+  const requestOption = useStore((state) => state.requestOption);
   const keyValueProps = useStore(
     useShallow((state) => ({
-      tableData: state.tableData[requestOption],
+      tableData: state.tableData[requestOption.toLowerCase() as OptionType],
       addNewTableRow: state.addNewTableRow,
       deleteTableRow: state.deleteTableRow,
       handleRequestKey: state.handleRequestKey,
@@ -29,7 +29,7 @@ const RequestMenuOption = () => {
     case COMMON.HEADERS:
       return (
         <KeyValueTable
-          type={requestOption}
+          type={requestOption.toLowerCase() as OptionType}
           {...keyValueProps}
           tableReadOnly={false}
           title={requestOption}

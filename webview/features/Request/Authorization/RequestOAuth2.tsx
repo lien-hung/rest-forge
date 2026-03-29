@@ -41,8 +41,8 @@ const RequestOAuth2 = () => {
 
   const isToken = (row: ITableRow) => row.authType === REQUEST.ACCESS_TOKEN || row.authType === REQUEST.ID_TOKEN
 
-  const headerIndex = tableData["Headers"].findIndex(isToken);
-  const paramIndex = tableData["Params"].findIndex(isToken);
+  const headerIndex = tableData.headers.findIndex(isToken);
+  const paramIndex = tableData.params.findIndex(isToken);
   const hasRow = headerIndex !== -1 || paramIndex !== -1;
 
   const [selectedIndex, setSelectedIndex] = useState(
@@ -63,14 +63,14 @@ const RequestOAuth2 = () => {
   };
 
   const setAuthTableRow = () => {
-    removeAuthTableRow("Headers");
-    removeAuthTableRow("Params");
+    removeAuthTableRow("headers");
+    removeAuthTableRow("params");
 
     if (oauth2Data.token) {
       if (oauth2Data.addTo === REQUEST.ADD_TO_HEADERS) {
-        addAuthTableRow(oauth2Data.tokenType, "Headers", { key: REQUEST.AUTH, value: tokenHeader, prefix: oauth2Data.prefix });
+        addAuthTableRow(oauth2Data.tokenType, "headers", { key: REQUEST.AUTH, value: tokenHeader, prefix: oauth2Data.prefix });
       } else {
-        addAuthTableRow(oauth2Data.tokenType, "Params", { key: "access_token", value: oauth2Data.token });
+        addAuthTableRow(oauth2Data.tokenType, "params", { key: "access_token", value: oauth2Data.token });
       }
     }
   };
@@ -127,8 +127,8 @@ const RequestOAuth2 = () => {
 
   useEffect(() => {
     if (!oauth2Data.token) {
-      removeAuthTableRow("Headers");
-      removeAuthTableRow("Params");
+      removeAuthTableRow("headers");
+      removeAuthTableRow("params");
       return;
     }
 
@@ -136,9 +136,9 @@ const RequestOAuth2 = () => {
       setAuthTableRow();
     } else {
       if (oauth2Data.addTo === REQUEST.ADD_TO_HEADERS) {
-        handleRequestValue("Headers", headerIndex, tokenHeader);
+        handleRequestValue("headers", headerIndex, tokenHeader);
       } else {
-        handleRequestValue("Params", paramIndex, oauth2Data.token);
+        handleRequestValue("params", paramIndex, oauth2Data.token);
       }
     }
   }, [oauth2Data.token]);
@@ -146,7 +146,7 @@ const RequestOAuth2 = () => {
   useEffect(() => {
     if (hasRow && oauth2Data.addTo === REQUEST.ADD_TO_HEADERS) {
       handleHeaderPrefix(headerIndex, oauth2Data.prefix);
-      handleRequestValue("Headers", headerIndex, tokenHeader);
+      handleRequestValue("headers", headerIndex, tokenHeader);
     }
   }, [oauth2Data.prefix]);
 

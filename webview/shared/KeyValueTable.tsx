@@ -40,7 +40,7 @@ const KeyValueTable = ({
   const handleExtensionMessage = (event: MessageEvent) => {
     if (event.data.type === COMMON.FILE_SELECTED) {
       const { fileRowIndex: index, path, data } = event.data;
-      handleRequestValue && handleRequestValue("Form Data", index, data);
+      handleRequestValue && handleRequestValue("formData", index, data);
       handleFormFilePath && handleFormFilePath(index, path);
     }
   };
@@ -94,7 +94,7 @@ const KeyValueTable = ({
                           readOnly={readOnly}
                         />
                       )}
-                      {type === "Form Data" && (
+                      {type === "formData" && (
                         <TypeOptionWrapper
                           value={valueType}
                           onChange={(event) => {
@@ -109,7 +109,7 @@ const KeyValueTable = ({
                       )}
                     </td>
                     <td>
-                      {tableReadOnly ? value : (type === "Form Data" && valueType === "File") ? (
+                      {tableReadOnly ? value : (type === "formData" && valueType === "File") ? (
                         <FileInputWrapper>
                           <FileNameDisplay>
                             {filePath

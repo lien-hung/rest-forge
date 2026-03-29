@@ -111,10 +111,10 @@ export interface ITreeViewResponse {
 export type OptionType = keyof ITableData;
 
 export interface ITableData {
-  "Params": ITableRow[];
-  "Headers": ITableRow[];
-  "Form Data": ITableRow[];
-  "Form Encoded": ITableRow[];
+  params: ITableRow[];
+  headers: ITableRow[];
+  formData: ITableRow[];
+  formEncoded: ITableRow[];
 }
 
 export interface RowDataParam {

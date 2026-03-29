@@ -75,10 +75,10 @@ export interface ITableRow {
 }
 
 export interface ITableData {
-  "Params": ITableRow[];
-  "Headers": ITableRow[];
-  "Form Data": ITableRow[];
-  "Form Encoded": ITableRow[];
+  params: ITableRow[];
+  headers: ITableRow[];
+  formData: ITableRow[];
+  formEncoded: ITableRow[];
 }
 
 export interface IOAuth2Data {

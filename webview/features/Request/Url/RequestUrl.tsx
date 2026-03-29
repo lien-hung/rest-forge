@@ -19,7 +19,7 @@ const RequestUrl = () => {
   } = useStore(
     useShallow((state) => ({
       requestUrl: state.requestUrl,
-      tableParams: state.tableData["Params"],
+      tableParams: state.tableData.params,
       handleRequestUrlChange: state.handleRequestUrlChange,
       handleParamsTableData: state.handleParamsTableData,
     }))

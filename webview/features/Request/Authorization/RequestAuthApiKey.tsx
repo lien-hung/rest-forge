@@ -23,13 +23,13 @@ const RequestAuthApiKey = () => {
   );
 
   const setApiKeyTableRow = () => {
-    removeAuthTableRow("Headers");
-    removeAuthTableRow("Params");
+    removeAuthTableRow("headers");
+    removeAuthTableRow("params");
 
     if (apiKeyData.addTo === REQUEST.ADD_TO_HEADERS) {
-      addAuthTableRow(REQUEST.API_KEY, "Headers", { key: apiKeyData.key, value: apiKeyData.value });
+      addAuthTableRow(REQUEST.API_KEY, "headers", { key: apiKeyData.key, value: apiKeyData.value });
     } else {
-      addAuthTableRow(REQUEST.API_KEY, "Params", { key: apiKeyData.key, value: apiKeyData.value });
+      addAuthTableRow(REQUEST.API_KEY, "params", { key: apiKeyData.key, value: apiKeyData.value });
     }
   };
   

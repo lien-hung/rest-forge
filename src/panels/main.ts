@@ -185,6 +185,8 @@ class MainWebviewPanel {
               }
             }
           });
+
+          return;
         }
 
         if (!requestData?.requestUrl) {
@@ -209,7 +211,7 @@ class MainWebviewPanel {
 
         // Convert array buffer to blob for form data
         flatTableData.forEach((row) => {
-          if (row.optionType === TYPE.BODY_FORM_DATA && row.isChecked && row.valueType === "File") {
+          if (row.optionType === "formData" && row.isChecked && row.valueType === "File") {
             const filePath = row.filePath;
             const fileName = filePath.includes("/") ? filePath.split("/").at(-1) : filePath.split("\\").at(-1);
             row.value = new File([row.value], fileName);
@@ -245,7 +247,7 @@ class MainWebviewPanel {
     if (responseObject && responseObject.type !== MESSAGE.ERROR) {
       if (this.mainPanel) {
         this.mainPanel.webview.postMessage(responseObject);
-        requestObject.tableData["Form Data"].forEach((row) => {
+        requestObject.tableData.formData.forEach((row) => {
           if (row.valueType === "File") {
             row.value = "";
             delete row.filePath;

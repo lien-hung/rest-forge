@@ -17,7 +17,7 @@ const RequestMenu = () => {
     }))
   );
 
-  const headersCount = tableData["Headers"].filter(row => row.isChecked).length;
+  const headersCount = tableData.headers.filter(row => row.isChecked).length;
 
   const handleOptionChange = (event: MouseEvent<HTMLHeadElement>) => {
     const clickedTarget = event.target as HTMLHeadElement;

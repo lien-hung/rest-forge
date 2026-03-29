@@ -1,6 +1,6 @@
 import { StateCreator } from "zustand";
 
-import { COMMON, REQUEST } from "../../constants";
+import { REQUEST } from "../../constants";
 import { IKeyValueTableDataSlice } from "./type";
 
 const keyValueTableDataSlice: StateCreator<
@@ -10,14 +10,14 @@ const keyValueTableDataSlice: StateCreator<
   IKeyValueTableDataSlice
 > = (set) => ({
   tableData: {
-    "Params": [
+    params: [
       {
         isChecked: false,
         key: "",
         value: "",
       }
     ],
-    "Headers": [
+    headers: [
       {
         isChecked: true,
         key: REQUEST.CACHE_CONTROL,
@@ -48,14 +48,14 @@ const keyValueTableDataSlice: StateCreator<
         value: "",
       },
     ],
-    "Form Data": [
+    formData: [
       {
         isChecked: false,
         key: "",
         value: "",
       },
     ],
-    "Form Encoded": [
+    formEncoded: [
       {
         isChecked: false,
         key: "",
@@ -98,7 +98,7 @@ const keyValueTableDataSlice: StateCreator<
     set((state) => ({
       tableData: {
         ...state.tableData,
-        [COMMON.HEADERS]: state.tableData["Headers"].map((row, index) =>
+        headers: state.tableData.headers.map((row, index) =>
           dataIndex === index ? { ...row, prefix: detail } : row
         ),
       },
@@ -108,7 +108,7 @@ const keyValueTableDataSlice: StateCreator<
     set((state) => ({
       tableData: {
         ...state.tableData,
-        [REQUEST.FORM_DATA]: state.tableData["Form Data"].map((row, index) =>
+        formData: state.tableData.formData.map((row, index) =>
           dataIndex === index ? { ...row, valueType: detail } : row
         ),
       }
@@ -118,7 +118,7 @@ const keyValueTableDataSlice: StateCreator<
     set((state) => ({
       tableData: {
         ...state.tableData,
-        [REQUEST.FORM_DATA]: state.tableData["Form Data"].map((row, index) =>
+        formData: state.tableData.formData.map((row, index) =>
           dataIndex === index ? { ...row, filePath: detail } : row
         ),
       }
@@ -128,14 +128,14 @@ const keyValueTableDataSlice: StateCreator<
     set((state) => ({
       tableData: {
         ...state.tableData,
-        [COMMON.HEADERS]: [
+        headers: [
           {
             isChecked: true,
             key: REQUEST.CONTENT_TYPE,
             value: headerValue,
             readOnly: true,
           },
-          ...state.tableData["Headers"],
+          ...state.tableData.headers,
         ]
       }
     })),
@@ -144,7 +144,7 @@ const keyValueTableDataSlice: StateCreator<
     set((state) => ({
       tableData: {
         ...state.tableData,
-        [COMMON.HEADERS]: state.tableData["Headers"].filter(row => row.key !== REQUEST.CONTENT_TYPE),
+        headers: state.tableData.headers.filter(row => row.key !== REQUEST.CONTENT_TYPE),
       },
     }));
   },
@@ -198,7 +198,7 @@ const keyValueTableDataSlice: StateCreator<
     set((state) => ({
       tableData: {
         ...state.tableData,
-        [REQUEST.PARAMS]: [...params],
+        params: [...params],
       },
     }));
   },

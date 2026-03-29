@@ -15,7 +15,7 @@ function getHeaders(
   const headersObject: IRequestHeaderInformation = {};
 
   const headersData = keyValueData.filter(
-    (data) => data.optionType === TYPE.HEADERS && data.isChecked,
+    (data) => data.optionType === TYPE.HEADERS.toLowerCase() && data.isChecked,
   );
 
   if (!headersData.length) {

@@ -2,6 +2,7 @@ import { Buffer } from "buffer";
 import { Request } from "postman-collection";
 
 import { REQUEST } from "../constants";
+import camelize from "./camelize";
 import { BodyOptionType, IAuthData, IGraphqlData, ITableData, ITableRow, OptionType } from "./type";
 
 const generateSdkRequestObject = (
@@ -14,19 +15,21 @@ const generateSdkRequestObject = (
   bodyRawData: string,
   graphqlData: IGraphqlData
 ) => {
-  const requestHeaders = tableData["Headers"].filter((data) => data.key.length > 0);
-  const bodyData = bodyOption in tableData
-    ? tableData[bodyOption as OptionType]
-        .filter((data) => data.key.length > 0)
-        .map((data) => data.value instanceof ArrayBuffer
-          ? { ...data, src: data.filePath, type: data.valueType?.toLowerCase() } : data)
+  const bodyOptionCamelCase = camelize(bodyOption) as OptionType;
+
+  const requestHeaders = tableData.headers.filter((data) => data.isChecked && data.key.length > 0);
+  const bodyData = bodyOptionCamelCase in tableData
+    ? tableData[bodyOptionCamelCase]
+      .filter((data) => data.isChecked && data.key.length > 0)
+      .map((data) => data.value instanceof ArrayBuffer
+        ? { ...data, src: data.filePath, type: data.valueType?.toLowerCase() } : data)
     : new Array<ITableRow>();
-  
+
   const graphqlObject = {
     query: graphqlData.query,
     variables: (() => { try { return JSON.parse(graphqlData.variables); } catch { return {}; } })(),
   };
-  
+
   const { username, password, token, tokenPrefix } = authData;
   let authHeaderObject: any = undefined;
   let authMode: "noauth" | "bearer" | "basic" = "noauth";

@@ -25,11 +25,11 @@ const RequestAuthSelectMenu = () => {
   const handleAuthOptionChange = (event: ChangeEvent<HTMLSelectElement>) => {
     handleRequestAuthType(event.target.value);
 
-    removeAuthTableRow("Headers");
-    removeAuthTableRow("Params");
+    removeAuthTableRow("headers");
+    removeAuthTableRow("params");
 
     if (event.target.value === REQUEST.API_KEY) {
-      addAuthTableRow(REQUEST.API_KEY, "Headers");
+      addAuthTableRow(REQUEST.API_KEY, "headers");
     }
   };
 
