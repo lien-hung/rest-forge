@@ -2,6 +2,18 @@
 
 All notable changes to the "api-tester" extension will be documented in this file.
 
+## [v4.0.0]
+- GraphQL support
+- New collection storage format with subfolders
+- New collection features: copy, duplicate and JSON export
+- Enhancements and optimizations:
+  - Typing request URL and pasting data into raw editor
+  - Pretty JSON data structure and storage
+  - Lighter tree view icons
+  - Removal of unnecessary Node packages and included extension files
+- Border boxes for raw data editors
+- Other tweaks on UI styles
+
 ## [v3.1.0]
 - Support for all media responses (image/video/audio)
 - Added folder icon for collections in the collection tree view
