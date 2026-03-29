@@ -28,7 +28,8 @@ API Tester acts as a UI-based HTTP client to send requests to your desired endpo
     - GraphQL
 - Code snippets for your current request
 - Preview response data and save to computer
-- Organize requests into collections and export to JSON (good for Git collab)
+- Organize requests into collections and export to JSON
+  - While it is mainly for individual use, you can save the exported JSON file to your local repository for Git collaboration.
 - Search from collections (`Ctrl+Alt+F` on tree view)
 
 ## Tech Stacks
