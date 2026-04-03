@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useShallow } from "zustand/shallow";
 
@@ -25,8 +25,8 @@ const RequestUrl = () => {
     }))
   );
 
+  const requestUrlRef = useRef<HTMLInputElement>(null);
   const [displayUrl, setDisplayUrl] = useState("");
-  const [inputKey, setInputKey] = useState("");
 
   const toUrl = (tableData: ITableRow[]) => {
     const parameterString = generateParameterString(tableData);
@@ -42,7 +42,8 @@ const RequestUrl = () => {
     }
 
     const urlLen = displayUrl.length;
-    if (urlLen > 0 && (displayUrl.indexOf("?") === urlLen - 1 || displayUrl.endsWith("="))) {
+    if (urlLen > 0 && document.activeElement === requestUrlRef.current
+      && (displayUrl.indexOf("?") === urlLen - 1 || displayUrl.endsWith("="))) {
       return;
     }
 
@@ -54,10 +55,6 @@ const RequestUrl = () => {
   }, [tableParams]);
 
   useEffect(() => {
-    if (inputKey === "?" || inputKey === "=") {
-      return;
-    }
-
     const urlParams = getUrlParameters(displayUrl);
     if (!urlParams.length || !tableParams.find(p => p.authType)) {
       handleRequestUrlChange(displayUrl);
@@ -82,9 +79,9 @@ const RequestUrl = () => {
   return (
     <InputContainer
       placeholder="Enter request URL"
+      ref={requestUrlRef}
       value={displayUrl}
       onChange={(event) => setDisplayUrl(event.target.value)}
-      onBeforeInput={(event) => setInputKey(event.data)}
     />
   );
 };

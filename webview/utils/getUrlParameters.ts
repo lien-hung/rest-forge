@@ -17,7 +17,9 @@ function getUrlParameters(url: string) {
     if (!param.includes("=")) {
       key = param;
     } else {
-      [key, value] = param.split("=");
+      const splitIndex = param.indexOf("=");
+      key = param.slice(0, splitIndex);
+      value = param.slice(splitIndex + 1);
     }
 
     return { key, value };
