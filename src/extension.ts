@@ -427,7 +427,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const disp_uriHandler = vscode.window.registerUriHandler({
 		handleUri(uri) {
-			// URI format: vscode://undefined_publisher.api-tester?...
 			const queryParams = new URLSearchParams(uri.query);
 
 			const paramError = queryParams.get("error");
