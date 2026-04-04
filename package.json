@@ -1,9 +1,11 @@
 {
   "name": "api-tester",
+  "publisher": "lien-hung",
   "displayName": "API Tester",
   "icon": "icons/images/apitester-icon.png",
   "description": "A lightweight HTTP client for sending requests and testing APIs",
   "repository": {
+    "type": "git",
     "url": "https://github.com/lien-hung/api-tester"
   },
   "author": {
@@ -12,6 +14,10 @@
     "email": "lienhungtrinh@gmail.com"
   },
   "version": "4.0.0",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lien-hung/api-tester/issues"
+  },
   "engines": {
     "vscode": "^1.107.0"
   },
