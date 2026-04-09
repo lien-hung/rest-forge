@@ -2,6 +2,9 @@
 
 All notable changes to the "api-tester" extension will be documented in this file.
 
+## [v4.0.1]
+- Fix JSON variable object parsing error for GraphQL
+
 ## [v4.0.0]
 - GraphQL support
 - New collection storage format with subfolders
