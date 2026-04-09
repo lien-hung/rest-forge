@@ -18,7 +18,7 @@ function getBody(
   if (bodyOption === TYPE.BODY_GRAPHQL) {
     const graphqlBody = {
       query: graphqlData.query,
-      variables: JSON.parse(graphqlData.variables),
+      variables: (() => { try { return JSON.parse(graphqlData.variables); } catch { return {}; } })(),
     };
     return JSON.stringify(graphqlBody);
   }
