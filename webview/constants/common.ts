@@ -23,6 +23,10 @@ const COMMON = {
   SET_OAUTH2_TOKENS: "Set OAuth2 Tokens",
   OAUTH2_TOKEN_ADDED: "OAuth2 Token Added",
 
+  HAS_VARIABLES: "Has Variables",
+  INIT_VARIABLES: "Init Variables",
+  SET_VARIABLES: "Set Variables",
+
   OPEN_MANAGE_TOKENS: "Open Manage Tokens",
 
   SELECT_FILE: "Select File",

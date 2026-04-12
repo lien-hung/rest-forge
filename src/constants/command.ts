@@ -29,6 +29,11 @@ const COMMAND = {
   RENAME_COLLECTION_REQUEST: "api-tester.renameRequestInCollection",
   DELETE_COLLECTION_REQUEST: "api-tester.deleteRequestInCollection",
 
+  NEW_ENVIRONMENT: "api-tester.newEnvironment",
+  OPEN_ENVIRONMENT: "api-tester.openEnvironment",
+  RENAME_ENVIRONMENT: "api-tester.renameEnvironment",
+  DELETE_ENVIRONMENT: "api-tester.deleteEnvironment",
+
   MANAGE_TOKENS: "api-tester.manageTokens",
   IMPORT_CURL: "api-tester.importCurl",
 
@@ -49,6 +54,10 @@ const COMMAND = {
   OAUTH2_TOKEN_ADDED: "OAuth2 Token Added",
 
   OPEN_MANAGE_TOKENS: "Open Manage Tokens",
+
+  HAS_VARIABLES: "Has Variables",
+  INIT_VARIABLES: "Init Variables",
+  SET_VARIABLES: "Set Variables",
 
   SELECT_FILE: "Select File",
   FILE_SELECTED: "File Selected",

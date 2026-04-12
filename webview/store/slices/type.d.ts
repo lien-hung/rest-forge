@@ -177,3 +177,26 @@ export interface IOAuth2TokenSlice {
   oauth2Tokens: IOAuth2Token[];  
   setOAuth2Tokens: (tokens: IOAuth2Token[]) => void;
 }
+
+export interface IEnvironmentVariable {
+  isChecked: boolean;
+  key: string;
+  value: string;
+  isHidden: boolean;
+}
+
+export interface IEnvironmentData {
+  name: string;
+  variables: IEnvironmentVariable[];
+}
+
+export interface IEnvironmentDataSlice {
+  variables: IEnvironmentVariable[];
+  setVariables: (data: { key: string, value: string }[]) => void;
+  addVariable: () => void;
+  deleteVariable: (index: number) => void;
+  handleVariableCheckbox: (index: number) => void;
+  handleVariableKey: (index: number, value: string) => void;
+  handleVariableValue: (index: number, value: string) => void;
+  toggleShowVariable: (index: number) => void;
+}

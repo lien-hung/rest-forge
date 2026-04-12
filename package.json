@@ -155,6 +155,28 @@
         "command": "api-tester.deleteRequestInCollection"
       },
       {
+        "title": "New Environment",
+        "command": "api-tester.newEnvironment",
+        "category": "API Tester",
+        "icon": {
+          "light": "icons/svg/add-light.svg",
+          "dark": "icons/svg/add-dark.svg"
+        }
+      },
+      {
+        "title": "Open Environment",
+        "shortTitle": "Open",
+        "command": "api-tester.openEnvironment"
+      },
+      {
+        "title": "Rename",
+        "command": "api-tester.renameEnvironment"
+      },
+      {
+        "title": "Delete",
+        "command": "api-tester.deleteEnvironment"
+      },
+      {
         "title": "Manage OAuth 2.0 Tokens",
         "command": "api-tester.manageTokens",
         "category": "API Tester"
@@ -176,6 +198,11 @@
           "id": "apiTesterCollectionsTreeView",
           "name": "Collections",
           "icon": "icons/svg/collections-view.svg"
+        },
+        {
+          "id": "apiTesterEnvironmentsTreeView",
+          "name": "Environments",
+          "icon": "icons/svg/environments-view.svg"
         }
       ]
     },
@@ -196,6 +223,10 @@
       {
         "view": "apiTesterCollectionsTreeView",
         "contents": "No collections available yet.\n[New Collection](command:api-tester.newCollection)"
+      },
+      {
+        "view": "apiTesterEnvironmentsTreeView",
+        "contents": "No environments created yet.\n[New Environment](command:api-tester.newEnvironment)"
       }
     ],
     "menus": {
@@ -279,12 +310,24 @@
         {
           "command": "api-tester.deleteRequestInCollection",
           "when": "false"
+        },
+        {
+          "command": "api-tester.openEnvironment",
+          "when": "false"
+        },
+        {
+          "command": "api-tester.renameEnvironment",
+          "when": "false"
+        },
+        {
+          "command": "api-tester.deleteEnvironment",
+          "when": "false"
         }
       ],
       "view/title": [
         {
           "command": "api-tester.refresh",
-          "when": "view == apiTesterRequestHistoryTreeView || view == apiTesterCollectionsTreeView",
+          "when": "view == apiTesterRequestHistoryTreeView || view == apiTesterCollectionsTreeView || view == apiTesterEnvironmentsTreeView",
           "group": "navigation"
         },
         {
@@ -300,6 +343,11 @@
         {
           "command": "api-tester.newCollection",
           "when": "view == apiTesterCollectionsTreeView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "api-tester.newEnvironment",
+          "when": "view == apiTesterEnvironmentsTreeView",
           "group": "navigation@1"
         }
       ],
@@ -428,6 +476,16 @@
           "command": "api-tester.duplicateRequestInCollection",
           "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.item",
           "group": "a@4"
+        },
+        {
+          "command": "api-tester.renameEnvironment",
+          "when": "view == apiTesterEnvironmentsTreeView && viewItem == userEnvironment.item",
+          "group": "a@1"
+        },
+        {
+          "command": "api-tester.deleteEnvironment",
+          "when": "view == apiTesterEnvironmentsTreeView && viewItem == userEnvironment.item",
+          "group": "a@2"
         }
       ]
     },

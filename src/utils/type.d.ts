@@ -12,6 +12,17 @@ export interface IOAuth2Token {
   timestamp: number;
 }
 
+export interface IEnvironmentVariable {
+  key: string;
+  value: string;
+}
+
+export interface IEnvironmentTreeItemState {
+  name: string;
+  isActive: boolean;
+  variables: IEnvironmentVariable[];
+}
+
 export interface IRequestTreeItemState {
   id: string;
   name: string;

@@ -1,13 +1,12 @@
 import React, { useMemo } from "react";
 import styled from "styled-components";
-import { useShallow } from "zustand/shallow";
 
 import connectionIcon from "../../assets/svg/connection.svg";
 import Message from "../../components/Message";
 import useStore from "../../store/useStore";
 
 const TokenDetails = ({ selectedTimestamp }: { selectedTimestamp: number }) => {
-  const { tokens } = useStore(useShallow((state) => ({ tokens: state.oauth2Tokens })));
+  const tokens = useStore((state) => state.oauth2Tokens);
 
   const token = useMemo(() => {
     if (!selectedTimestamp) return undefined;

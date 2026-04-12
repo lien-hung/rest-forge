@@ -32,9 +32,9 @@ const KeyValueTable = ({
   handleFormValueType,
   handleFormFilePath,
 }: IKeyValueTableProps) => {
-  const addRow = (id: any, type?: OptionType) => {
+  const addRow = (index: number, type?: OptionType) => {
     type && addNewTableRow && addNewTableRow(type);
-    type && handleRequestCheckbox && handleRequestCheckbox(type, id);
+    type && handleRequestCheckbox && handleRequestCheckbox(type, index);
   };
 
   const handleExtensionMessage = (event: MessageEvent) => {
@@ -88,7 +88,7 @@ const KeyValueTable = ({
                           placeholder="Key"
                           value={key}
                           onChange={(event) => {
-                            if (index === tableData.length - 1) addRow(index, type);
+                            index === tableData.length - 1 && addRow(index, type);
                             type && handleRequestKey && handleRequestKey(type, index, event.target.value);
                           }}
                           readOnly={readOnly}
@@ -98,7 +98,7 @@ const KeyValueTable = ({
                         <TypeOptionWrapper
                           value={valueType}
                           onChange={(event) => {
-                            if (index === tableData.length - 1) addRow(index, type);
+                            index === tableData.length - 1 && addRow(index, type);
                             handleFormValueType && handleFormValueType(index, event.target.value);
                           }}
                         >
@@ -292,7 +292,7 @@ const Table = styled.table<{ readOnlyMode: boolean }>`
   }
 
   .readonly-row {
-    background-color: color-mix(in srgb, var(--vscode-editor-background) 90%, var(--vscode-foreground));
+    background-color: color-mix(in srgb, transparent 90%, var(--vscode-foreground));
 
     input {
       font-style: italic;
