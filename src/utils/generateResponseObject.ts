@@ -38,12 +38,12 @@ async function generateResponseObject(
     const contentTypeHeader = headersArray.find((header) => header.key.toLowerCase() === "content-type");
     let responseBody: string | ArrayBuffer;
     if (contentTypeHeader) {
-      const mediaTypes = ["image", "video", "audio"];
-      const isMediaFile = mediaTypes.reduce((cur, val) => cur || contentTypeHeader.value.includes(val), false);
-      if (isMediaFile) {
-        responseBody = await response.blob().then(blob => blob.arrayBuffer());
-      } else {
+      const textTypes = ["text", "json", "html", "xml"];
+      const isTextResponse = textTypes.some((type) => contentTypeHeader.value.includes(type));
+      if (isTextResponse) {
         responseBody = await response.text();
+      } else {
+        responseBody = await response.blob().then(blob => blob.arrayBuffer());
       }
     } else {
       responseBody = await response.text();

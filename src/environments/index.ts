@@ -74,7 +74,7 @@ export default class EnvironmentsProvider implements TreeDataProvider<Environmen
       const data = JSON.parse(dataStr) as IEnvironmentTreeItemState[];
       this.tree = data.map((state) => new EnvironmentTreeItem(state));
     } catch (error) {
-      console.error("Error loading request history: ", error);
+      console.error("Error loading environments: ", error);
     }
   }
 

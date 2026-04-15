@@ -66,7 +66,7 @@ class ManageEnvironmentPanel {
 
       if (command === COMMAND.SET_VARIABLES) {
         const variables = envData.map((v: any) => ({ key: v.key, value: v.value }));
-        const envState: IEnvironmentTreeItemState = { name: envName, variables };
+        const envState: IEnvironmentTreeItemState = { name: envName, isActive: false, variables };
         this.environmentsProvider.add(envState);
         vscode.window.showInformationMessage(MESSAGE.SAVE_ENV_SUCCESSFUL);
         return;
