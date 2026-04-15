@@ -25,7 +25,7 @@ const LoaderWrapper = styled.div`
     position: relative;
     border: 0.85rem solid #0000;
     border-radius: 50%;
-    animation: piefill 2s linear infinite;
+    animation: piefill 1s linear infinite;
   }
 
   @keyframes piefill {
