@@ -185,6 +185,11 @@
         "title": "Import from cURL",
         "command": "api-tester.importCurl",
         "category": "API Tester"
+      },
+      {
+        "title": "Set Active Environment",
+        "command": "api-tester.setActiveEnvironment",
+        "category": "API Tester"
       }
     ],
     "views": {

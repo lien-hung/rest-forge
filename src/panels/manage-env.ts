@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { COMMAND, MESSAGE, NAME, TYPE } from "../constants";
 import { getNonce } from "../utils";
 import EnvironmentsProvider from "../environments";
-import { IEnvironmentTreeItemState } from "../utils/type";
+import { IEnvironmentTreeItemState, IEnvironmentVariable } from "../utils/type";
 
 class ManageEnvironmentPanel {
   public manageEnvPanel: vscode.WebviewPanel | null = null;
@@ -65,7 +65,10 @@ class ManageEnvironmentPanel {
       }
 
       if (command === COMMAND.SET_VARIABLES) {
-        const variables = envData.map((v: any) => ({ key: v.key, value: v.value }));
+        const variables = envData.map((v: any) => {
+          const { isChecked, key, value }: IEnvironmentVariable = v;
+          return { isChecked, key, value };
+        });
         const envState: IEnvironmentTreeItemState = { name: envName, isActive: false, variables };
         this.environmentsProvider.add(envState);
         vscode.window.showInformationMessage(MESSAGE.SAVE_ENV_SUCCESSFUL);

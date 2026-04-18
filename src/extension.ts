@@ -488,6 +488,24 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	);
 
+	const disp_setActiveEnvCmd = vscode.commands.registerCommand(
+		COMMAND.SET_ACTIVE_ENV,
+		async () => {
+			const envName = await vscode.window.showQuickPick(
+				["(no environment)", ...environmentsProvider.envNames],
+				{
+					placeHolder: "Select an environment",
+					canPickMany: false
+				}
+			);
+			if (envName === "(no environment)") {
+				environmentsProvider.setNoActiveEnv();
+			} else if (envName) {
+				environmentsProvider.setActiveEnv(envName);
+			}
+		}
+	);
+
 	const disp_onThemeChangeHandler = vscode.window.onDidChangeActiveColorTheme((e) => {
 		if (currentMainPanel) {
 			const workbenchConfig = vscode.workspace.getConfiguration("workbench");
@@ -567,6 +585,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(disp_manageTokensCmd);
 	context.subscriptions.push(disp_importCurlCmd);
+	context.subscriptions.push(disp_setActiveEnvCmd);
 
 	// Subscribe handlers
 	context.subscriptions.push(disp_onThemeChangeHandler);

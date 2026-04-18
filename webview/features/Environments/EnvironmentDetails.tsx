@@ -24,7 +24,7 @@ const EnvironmentDetails = ({ envName }: { envName: string }) => {
     vscode.postMessage({
       command: COMMAND.SET_VARIABLES,
       envName,
-      envData: variables.filter(v => v.isChecked),
+      envData: variables,
     });
   }
 

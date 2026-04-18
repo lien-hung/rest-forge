@@ -13,6 +13,7 @@ export interface IOAuth2Token {
 }
 
 export interface IEnvironmentVariable {
+  isChecked: boolean;
   key: string;
   value: string;
 }

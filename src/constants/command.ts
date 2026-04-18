@@ -36,6 +36,7 @@ const COMMAND = {
 
   MANAGE_TOKENS: "api-tester.manageTokens",
   IMPORT_CURL: "api-tester.importCurl",
+  SET_ACTIVE_ENV: "api-tester.setActiveEnvironment",
 
   ADD: "Add",
   DELETE: "Delete",

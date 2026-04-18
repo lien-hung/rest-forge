@@ -5,12 +5,16 @@ import path from "path";
 import { getHomePath } from "../utils";
 import { IEnvironmentTreeItemState } from "../utils/type";
 import { EnvironmentTreeItem } from "./tree-items";
+import { EnvironmentStatusEntry } from "./status-entry";
 
 export default class EnvironmentsProvider implements TreeDataProvider<EnvironmentTreeItem> {
   private extensionContext: ExtensionContext;
   private _onDidChangeTreeData: EventEmitter<EnvironmentTreeItem | undefined> = new EventEmitter();
   public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
+  private static readonly _onDidChangeEnvironment = new EventEmitter<string>();
+  public static readonly onDidChangeEnvironment = this._onDidChangeEnvironment.event;
   private tree: EnvironmentTreeItem[] = [];
+  private statusItem: EnvironmentStatusEntry;
 
   public getTreeItem(element: EnvironmentTreeItem): TreeItem | Thenable<TreeItem> {
     element.iconPath = {
@@ -41,6 +45,9 @@ export default class EnvironmentsProvider implements TreeDataProvider<Environmen
   }
 
   public delete(item: EnvironmentTreeItem) {
+    if (item.data.isActive) {
+      this.statusItem.update();
+    }
     this.tree = this.tree.filter(i => i.data.name !== item.data.name);
     this.refresh();
     this.save();
@@ -49,6 +56,9 @@ export default class EnvironmentsProvider implements TreeDataProvider<Environmen
   public renameEnv(envItem: EnvironmentTreeItem, newName: string) {
     envItem.label = newName;
     envItem.data.name = newName;
+    if (envItem.data.isActive) {
+      this.statusItem.update(newName);
+    }
     this.refresh();
     this.save();
   }
@@ -57,12 +67,40 @@ export default class EnvironmentsProvider implements TreeDataProvider<Environmen
     return this.tree.find(item => item.data.name === name);
   }
 
+  public setActiveEnv(name: string) {
+    const envItem = this.tree.find(item => item.data.name === name);
+    if (envItem) {
+      this.tree.forEach(item => {
+        item.data.isActive = item.data.name === name;
+        item.description = item.data.name === name ? "Active" : "";
+      });
+      this.statusItem.update(name);
+    }
+    this.refresh();
+    this.save();
+  }
+
+  public setNoActiveEnv() {
+    this.tree.forEach(item => {
+      item.data.isActive = false;
+      item.description = "";
+    });
+    this.statusItem.update();
+    this.refresh();
+    this.save();
+  }
+
   private get filePath() {
     return getHomePath("environments.json");
   }
 
   public get envNames() {
     return this.tree.map(item => item.data.name);
+  }
+
+  public get activeEnv() {
+    const activeEnvItem = this.tree.find(item => item.data.isActive);
+    return activeEnvItem?.data.name;
   }
 
   private readFile() {
@@ -86,5 +124,7 @@ export default class EnvironmentsProvider implements TreeDataProvider<Environmen
   constructor(context: ExtensionContext) {
     this.extensionContext = context;
     this.readFile();
+
+    this.statusItem = new EnvironmentStatusEntry(this.activeEnv);
   }
 }
