@@ -192,6 +192,7 @@ export interface IEnvironmentData {
 
 export interface IEnvironmentDataSlice {
   variables: IEnvironmentVariable[];
+  activeVariables: { [key: string]: string };
   setVariables: (data: { key: string, value: string }[]) => void;
   addVariable: () => void;
   deleteVariable: (index: number) => void;
@@ -199,4 +200,5 @@ export interface IEnvironmentDataSlice {
   handleVariableKey: (index: number, value: string) => void;
   handleVariableValue: (index: number, value: string) => void;
   toggleShowVariable: (index: number) => void;
+  setActiveVariables: (data: { [key: string]: string }) => void;
 }

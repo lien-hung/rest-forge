@@ -4,6 +4,7 @@ import CollectionsProvider from './collections';
 import { RequestCollection, RequestFolder, RequestItem } from './collections/tree-items';
 import { COMMAND, MESSAGE, NAME, TYPE } from "./constants";
 import EnvironmentsProvider from './environments';
+import { EnvironmentTreeItem } from './environments/tree-items';
 import MainWebviewPanel from './panels/main';
 import ManageEnvironmentPanel from './panels/manage-env';
 import ManageTokenWebviewPanel from './panels/manage-tokens';
@@ -11,7 +12,7 @@ import RequestHistoryProvider from './request-history';
 import { RequestHistoryTreeItem } from './request-history/tree-items';
 import { parseCurl } from './utils';
 import getTokenColors from './utils/getTokenColors';
-import { EnvironmentTreeItem } from './environments/tree-items';
+import { IRequestObject } from './utils/type';
 
 export async function activate(context: vscode.ExtensionContext) {
 	const requestHistoryProvider = new RequestHistoryProvider(context);
@@ -59,10 +60,10 @@ export async function activate(context: vscode.ExtensionContext) {
 		requestName?: string
 	}) => {
 		currentMainPanel = mainWebviewProvider.initializeWebview(id, parentId, requestName);
-		manageTokenWebviewProvider.mainPanel = currentMainPanel;
+		manageTokenWebviewProvider.requestPanel = currentMainPanel;
 
 		mainWebviewProvider.mainPanel?.onDidDispose(() => {
-			manageTokenWebviewProvider.mainPanel = null;
+			manageTokenWebviewProvider.requestPanel = null;
 			currentMainPanel = null;
 		}, null);
 	};
@@ -82,6 +83,22 @@ export async function activate(context: vscode.ExtensionContext) {
 				});
 			}
 		}
+	};
+
+	const postRequestData = (requestObject: IRequestObject) => {
+		const requestMessage = { type: TYPE.TREEVIEW_DATA, ...requestObject };
+		if (!currentMainPanel) {
+			setTimeout(() => currentMainPanel?.webview.postMessage(requestMessage), 1000);
+		}
+		currentMainPanel?.webview.postMessage(requestMessage);
+	};
+
+	const postEnvironmentData = () => {
+		const envMessage = { type: TYPE.ENV_DATA, variables: environmentsProvider.activeVariables };
+		if (!currentMainPanel) {
+			setTimeout(() => currentMainPanel?.webview.postMessage(envMessage), 1000);
+		}
+		currentMainPanel?.webview.postMessage(envMessage);
 	};
 
 	const disp_requestHistoryTreeView = vscode.window.createTreeView(
@@ -110,32 +127,28 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const disp_newRequestCmd = vscode.commands.registerCommand(
 		COMMAND.NEW_REQUEST,
-		() => initializePanel({})
+		() => {
+			initializePanel({});
+			postEnvironmentData();
+		}
 	);
 
 	const disp_openRequestCmd = vscode.commands.registerCommand(
 		COMMAND.OPEN_REQUEST,
 		(item: RequestHistoryTreeItem | RequestItem) => {
-			const requestMessage = { type: TYPE.TREEVIEW_DATA, ...item.request.requestObject };
-			if (!currentMainPanel) {
-				setTimeout(() => currentMainPanel?.webview.postMessage(requestMessage), 1000);
-			}
-
 			if (item instanceof RequestItem) {
 				initializePanel({ id: item.id, parentId: item.parent.id, requestName: item.request.name });
 			} else {
 				initializePanel({});
 			}
-
-			currentMainPanel?.webview.postMessage(requestMessage);
+			postRequestData(item.request.requestObject);
+			postEnvironmentData();
 		}
 	);
 
 	const disp_deleteRequestCmd = vscode.commands.registerCommand(
 		COMMAND.DELETE_REQUEST,
-		(item: RequestHistoryTreeItem) => {
-			requestHistoryProvider.delete(item);
-		}
+		(item: RequestHistoryTreeItem) => requestHistoryProvider.delete(item)
 	);
 
 	const disp_renameRequestCmd = vscode.commands.registerCommand(
@@ -348,6 +361,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				return;
 			}
 			initializePanel({ parentId: folderLike.id, requestName: requestName.trim() });
+			postEnvironmentData();
 		}
 	);
 
@@ -452,7 +466,12 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const disp_deleteEnvironmentCmd = vscode.commands.registerCommand(
 		COMMAND.DELETE_ENVIRONMENT,
-		(envItem: EnvironmentTreeItem) => environmentsProvider.delete(envItem)
+		(envItem: EnvironmentTreeItem) => {
+			environmentsProvider.delete(envItem);
+			if (currentMainPanel) {
+				postEnvironmentData();
+			}
+		}
 	);
 
 	const disp_manageTokensCmd = vscode.commands.registerCommand(
@@ -484,7 +503,9 @@ export async function activate(context: vscode.ExtensionContext) {
 			const request = parseCurl(inputCurl);
 
 			initializePanel({});
-			currentMainPanel?.webview.postMessage({ type: TYPE.TREEVIEW_DATA, ...request });
+			if (request) {
+				postRequestData(request);
+			}
 		}
 	);
 
@@ -498,10 +519,14 @@ export async function activate(context: vscode.ExtensionContext) {
 					canPickMany: false
 				}
 			);
+
 			if (envName === "(no environment)") {
 				environmentsProvider.setNoActiveEnv();
 			} else if (envName) {
 				environmentsProvider.setActiveEnv(envName);
+				if (currentMainPanel) {
+					postEnvironmentData();
+				}
 			}
 		}
 	);

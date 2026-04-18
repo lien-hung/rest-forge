@@ -3,7 +3,7 @@ import { EventEmitter, ExtensionContext, TreeDataProvider, TreeItem, Uri } from 
 import path from "path";
 
 import { getHomePath } from "../utils";
-import { IEnvironmentTreeItemState } from "../utils/type";
+import { IEnvironmentTreeItemState, IEnvironmentVariable } from "../utils/type";
 import { EnvironmentTreeItem } from "./tree-items";
 import { EnvironmentStatusEntry } from "./status-entry";
 
@@ -34,12 +34,13 @@ export default class EnvironmentsProvider implements TreeDataProvider<Environmen
 
   public add(state: IEnvironmentTreeItemState) {
     const newItem = new EnvironmentTreeItem(state);
-    const existingIndex = this.tree.findIndex(item => item.data.name === state.name);
-    if (existingIndex !== -1) {
-      this.tree.splice(existingIndex, 1, newItem);
-    } else {
-      this.tree.push(newItem);
-    }
+    this.tree.push(newItem);
+    this.refresh();
+    this.save();
+  }
+
+  public update(item: EnvironmentTreeItem, newVariables: IEnvironmentVariable[]) {
+    item.data.variables = newVariables;
     this.refresh();
     this.save();
   }
@@ -53,10 +54,10 @@ export default class EnvironmentsProvider implements TreeDataProvider<Environmen
     this.save();
   }
 
-  public renameEnv(envItem: EnvironmentTreeItem, newName: string) {
-    envItem.label = newName;
-    envItem.data.name = newName;
-    if (envItem.data.isActive) {
+  public renameEnv(item: EnvironmentTreeItem, newName: string) {
+    item.label = newName;
+    item.data.name = newName;
+    if (item.data.isActive) {
       this.statusItem.update(newName);
     }
     this.refresh();
@@ -101,6 +102,17 @@ export default class EnvironmentsProvider implements TreeDataProvider<Environmen
   public get activeEnv() {
     const activeEnvItem = this.tree.find(item => item.data.isActive);
     return activeEnvItem?.data.name;
+  }
+
+  public get activeVariables() {
+    const activeEnvItem = this.tree.find(item => item.data.isActive);
+    if (!activeEnvItem) {
+      return {};
+    }
+    const variableObject = activeEnvItem.data.variables.reduce(
+      (prev, variable) => variable.isChecked ? { ...prev, [variable.key]: variable.value } : prev, {}
+    );
+    return variableObject;
   }
 
   private readFile() {

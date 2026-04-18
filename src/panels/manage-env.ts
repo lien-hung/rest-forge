@@ -9,6 +9,7 @@ class ManageEnvironmentPanel {
   private extensionUri;
   private environmentsProvider;
   private envName: string | undefined;
+  public requestPanel: vscode.WebviewPanel | null = null;
 
   constructor(
     extensionUri: vscode.Uri,
@@ -65,14 +66,28 @@ class ManageEnvironmentPanel {
       }
 
       if (command === COMMAND.SET_VARIABLES) {
+        const existingEnv = this.environmentsProvider.getByName(envName);
         const variables = envData.map((v: any) => {
           const { isChecked, key, value }: IEnvironmentVariable = v;
           return { isChecked, key, value };
         });
-        const envState: IEnvironmentTreeItemState = { name: envName, isActive: false, variables };
-        this.environmentsProvider.add(envState);
+        
+        if (existingEnv) {
+          this.environmentsProvider.update(existingEnv, variables);
+          if (existingEnv.data.isActive && this.requestPanel) {
+            const variableObject = existingEnv.data.variables.reduce(
+              (prev, variable) => variable.isChecked ? { ...prev, [variable.key]: variable.value } : prev, {}
+            );
+            this.requestPanel.webview.postMessage({
+              type: TYPE.ENV_DATA,
+              variables: variableObject
+            });
+          }
+        } else {
+          const envState: IEnvironmentTreeItemState = { name: envName, isActive: false, variables };
+          this.environmentsProvider.add(envState);
+        }
         vscode.window.showInformationMessage(MESSAGE.SAVE_ENV_SUCCESSFUL);
-        return;
       }
     });
   }

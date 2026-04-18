@@ -11,7 +11,7 @@ import {
 class ManageTokenWebviewPanel {
   public manageTokenPanel: vscode.WebviewPanel | null = null;
   private extensionUri;
-  public mainPanel: vscode.WebviewPanel | null = null;
+  public requestPanel: vscode.WebviewPanel | null = null;
 
   constructor(extensionUri: vscode.Uri) {
     this.extensionUri = extensionUri;
@@ -58,8 +58,8 @@ class ManageTokenWebviewPanel {
     this.manageTokenPanel.webview.onDidReceiveMessage(({ command, newTokenList }) => {
       if (command === COMMAND.SET_OAUTH2_TOKENS) {
         writeFileSync(this.tokenPath, JSON.stringify(newTokenList));
-        if (this.mainPanel) {
-          this.mainPanel.webview.postMessage({
+        if (this.requestPanel) {
+          this.requestPanel.webview.postMessage({
             tokenList: newTokenList,
             type: COMMAND.HAS_OAUTH2_TOKENS
           });

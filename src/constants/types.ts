@@ -6,6 +6,7 @@ const TYPE = {
   WEBVIEW_TYPE: "ApiTester",
   THEME_CHANGED: "Theme Changed",
   TREEVIEW_DATA: "Selected Collection Data",
+  ENV_DATA: "Environment Data",
   
   BODY_RAW: "Raw",
   BODY_GRAPHQL: "GraphQL",

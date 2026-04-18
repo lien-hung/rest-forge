@@ -15,6 +15,7 @@ const environmentSlice: StateCreator<
       isHidden: true,
     }
   ],
+  activeVariables: {},
 
   setVariables(data) {
     set(() => ({
@@ -67,6 +68,10 @@ const environmentSlice: StateCreator<
         i === index ? { ...variable, isHidden: !variable.isHidden } : variable
       )
     }));
+  },
+
+  setActiveVariables(data) {
+    set(() => ({ activeVariables: data }));
   },
 });
 
