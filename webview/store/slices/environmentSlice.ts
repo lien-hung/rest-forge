@@ -18,12 +18,7 @@ const environmentSlice: StateCreator<
   activeVariables: {},
 
   setVariables(data) {
-    set(() => ({
-      variables: [
-        ...data.map(v => ({ isChecked: true, key: v.key, value: v.value, isHidden: true })),
-        { isChecked: false, key: "", value: "", isHidden: true }
-      ]
-    }));
+    set(() => ({ variables: data.map(v => ({ ...v, isHidden: true })) }));
   },
 
   addVariable() {

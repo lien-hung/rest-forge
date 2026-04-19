@@ -41,7 +41,7 @@ const RequestMethod = () => {
 };
 
 const MethodSelectOptionWrapper = styled.select`
-  width: 9rem;
+  width: 7rem;
   height: 3rem;
   padding: 0.7rem;
   font-size: 1.15rem;

@@ -6,15 +6,21 @@ import RequestPanel from "../features/Request/Panel/RequestPanel";
 import ResizeBar from "../features/ResizeBar/ResizeBar";
 import ResponsePanel from "../features/Response/Panel/ResponsePanel";
 
-import { COMMON } from "../constants";
+import { COMMON, REQUEST } from "../constants";
 import useStore from "../store/useStore";
 
 function MainPage() {
-  const { setThemeKind, setConfig, setOAuth2Tokens } = useStore(
+  const {
+    setThemeKind,
+    setConfig,
+    setOAuth2Tokens,
+    setActiveVariables,
+  } = useStore(
     useShallow((state) => ({
       setThemeKind: state.setThemeKind,
       setConfig: state.setConfig,
       setOAuth2Tokens: state.setOAuth2Tokens,
+      setActiveVariables: state.setActiveVariables,
     }))
   );
   
@@ -23,8 +29,10 @@ function MainPage() {
       setConfig(event.data.config);
       setThemeKind(event.data.themeKind);
     } else if (event.data.type === COMMON.HAS_OAUTH2_TOKENS) {
-      const tokens = event.data.tokenList;
-      setOAuth2Tokens(tokens);
+      setOAuth2Tokens(event.data.tokenList);
+    } else if (event.data.type === REQUEST.ENV_DATA) {
+      console.log("Variables:", event.data.variables);
+      setActiveVariables(event.data.variables);
     } else if (event.data.type === COMMON.THEME_CHANGED) {
       setThemeKind(event.data.themeKind);
     }

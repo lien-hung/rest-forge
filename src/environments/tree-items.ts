@@ -8,6 +8,7 @@ export class EnvironmentTreeItem extends TreeItem {
   
   constructor(public data: IEnvironmentTreeItemState) {
     super(data.name, TreeItemCollapsibleState.None);
+    this.description = data.isActive ? "Active" : "";
     this.command = {
       title: "Open Environment",
       command: COMMAND.OPEN_ENVIRONMENT,

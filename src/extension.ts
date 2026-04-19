@@ -61,9 +61,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	}) => {
 		currentMainPanel = mainWebviewProvider.initializeWebview(id, parentId, requestName);
 		manageTokenWebviewProvider.requestPanel = currentMainPanel;
+		manageEnvWebviewProvider.requestPanel = currentMainPanel;
 
 		mainWebviewProvider.mainPanel?.onDidDispose(() => {
 			manageTokenWebviewProvider.requestPanel = null;
+			manageEnvWebviewProvider.requestPanel = null;
 			currentMainPanel = null;
 		}, null);
 	};

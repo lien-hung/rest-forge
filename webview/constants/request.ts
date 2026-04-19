@@ -3,6 +3,7 @@ const REQUEST = {
   METHOD: "Method",
   REQUEST: "Request",
   URL_REQUEST: "Url Request",
+  ENV_DATA: "Environment Data",
 
   // Add to...
   ADD_TO_QUERY_PARAMS: "Query Params",

@@ -14,19 +14,57 @@ const RequestUrl = () => {
   const {
     requestUrl,
     tableParams,
+    activeVariables,
     handleRequestUrlChange,
     handleParamsTableData,
   } = useStore(
     useShallow((state) => ({
       requestUrl: state.requestUrl,
       tableParams: state.tableData.params,
+      activeVariables: state.activeVariables,
       handleRequestUrlChange: state.handleRequestUrlChange,
       handleParamsTableData: state.handleParamsTableData,
     }))
   );
 
   const requestUrlRef = useRef<HTMLInputElement>(null);
+  const previewRef = useRef<HTMLParagraphElement>(null);
   const [displayUrl, setDisplayUrl] = useState("");
+  const [caretChar, setCaretChar] = useState("");
+
+  const setVariableHighlight = () => {
+    const matches = [...displayUrl.matchAll(/\{\{([^}]+)\}\}/gi)];
+    const stripBracket = (s: string) => s.replace("{{", "").replace("}}", "");
+
+    const validMatches = matches.filter(match => activeVariables[stripBracket(match[0])]);
+    const invalidMatches = matches.filter(match => !activeVariables[stripBracket(match[0])]);
+    const rangeCallback = (match: RegExpExecArray) => {
+      const range = new Range();
+      if (previewRef.current) {
+        const textNode = previewRef.current.firstChild;
+        range.setStart(textNode!, match.index);
+        range.setEnd(textNode!, match.index + match[0].length);
+      }
+      return range;
+    }
+
+    const variableRanges = validMatches.map(rangeCallback);
+    const variableHighlight = new Highlight(...variableRanges);
+    CSS.highlights.set("variable-highlight", variableHighlight);
+
+    const nonVariableRanges = invalidMatches.map(rangeCallback);
+    const nonVariableHighlight = new Highlight(...nonVariableRanges);
+    CSS.highlights.set("non-variable-highlight", nonVariableHighlight);
+  }
+
+  const handleCaretChar = () => {
+    const selectionStart = requestUrlRef.current?.selectionStart ?? 0;
+    if (selectionStart >= 1) {
+      setCaretChar(displayUrl.substring(selectionStart - 1, selectionStart));
+    } else {
+      setCaretChar("");
+    }
+  };
 
   const toUrl = (tableData: ITableRow[]) => {
     const parameterString = generateParameterString(tableData);
@@ -34,63 +72,102 @@ const RequestUrl = () => {
     return baseUrl + parameterString;
   };
 
+  const mirrorScroll = () => {
+    const inputElement = requestUrlRef.current;
+    if (!inputElement) return;
+
+    const previewElement = previewRef.current;
+    previewElement?.scrollTo(inputElement?.scrollLeft, inputElement?.scrollTop);
+  };
+
   useEffect(() => {
     const rows = tableParams.filter(d => d.isChecked);
     const newRequestUrl = toUrl(rows);
-    if (newRequestUrl !== requestUrl) {
-      handleRequestUrlChange(newRequestUrl);
-    }
+    if (newRequestUrl !== requestUrl) handleRequestUrlChange(newRequestUrl);
 
-    const urlLen = displayUrl.length;
-    if (urlLen > 0 && document.activeElement === requestUrlRef.current
-      && (displayUrl.indexOf("?") === urlLen - 1 || displayUrl.endsWith("="))) {
+    if (displayUrl.length > 0 && document.activeElement === requestUrlRef.current
+      && (displayUrl.indexOf("?") === displayUrl.length - 1)) {
       return;
     }
 
     const nonAuthRows = rows.filter(d => !d.authType);
     const newDisplayUrl = toUrl(nonAuthRows);
-    if (newDisplayUrl !== displayUrl) {
-      setDisplayUrl(newDisplayUrl);
-    }
+    if (newDisplayUrl !== displayUrl && caretChar !== "=") setDisplayUrl(newDisplayUrl);
   }, [tableParams]);
 
   useEffect(() => {
+    setVariableHighlight();
+    handleCaretChar();
+
     const urlParams = getUrlParameters(displayUrl);
     if (!urlParams.length || !tableParams.find(p => p.authType)) {
       handleRequestUrlChange(displayUrl);
     }
 
     const newTableParams = tableParams.map(row => {
-      if (row.authType || !row.isChecked) {
-        return row;
-      }
+      if (row.authType || !row.isChecked) return row;
       const urlParam = urlParams.shift();
-      if (urlParam) {
-        return { ...row, key: urlParam.key, value: urlParam.value };
-      }
+      if (urlParam) return { ...row, ...urlParam };
     }).filter(Boolean) as ITableRow[];
 
     if (urlParams.length) {
-      newTableParams.splice(-1, 0, ...urlParams.map(p => ({ isChecked: true, key: p.key, value: p.value })));
+      newTableParams.splice(-1, 0, ...urlParams.map(p => ({ isChecked: true, ...p })));
     }
     handleParamsTableData([...newTableParams]);
   }, [displayUrl]);
 
   return (
-    <InputContainer
-      placeholder="Enter request URL"
-      ref={requestUrlRef}
-      value={displayUrl}
-      onChange={(event) => setDisplayUrl(event.target.value)}
-    />
+    <RequestUrlWrapper>
+      <p className="preview" ref={previewRef}>{displayUrl}</p>
+      <input
+        placeholder="Enter request URL"
+        ref={requestUrlRef}
+        value={displayUrl}
+        onScroll={mirrorScroll}
+        onInput={mirrorScroll}
+        onChange={(event) => setDisplayUrl(event.target.value)}
+      />
+    </RequestUrlWrapper>
   );
 };
 
-const InputContainer = styled.input`
-  padding-left: 0.85rem !important;
-  font-size: 1.15rem;
-  border: 1px solid color-mix(in srgb, var(--vscode-focusBorder), transparent 30%) !important;
-  color: var(--vscode-foreground);
+const RequestUrlWrapper = styled.div`
+  flex: 1;
+  position: relative;
+  
+  .preview {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 1px solid color-mix(in srgb, var(--vscode-focusBorder), transparent 30%);
+    background-color: var(--vscode-input-background);
+    display: flex;
+    align-items: center;
+    font-size: 1.15rem;
+    padding: 0 0.5rem 0 0.8rem;
+    white-space: nowrap;
+    overflow: scroll hidden;
+    scrollbar-width: none;
+    pointer-events: none;
+  }
+
+  input {
+    position: relative;
+    height: 100%;
+    font-size: 1.15rem;
+    padding-left: 0.85rem !important;
+    background: transparent;
+    color: transparent;
+    caret-color: var(--vscode-foreground);
+  }
+
+  ::highlight(variable-highlight) {
+    color: var(--vscode-button-hoverBackground);
+  }
+
+  ::highlight(non-variable-highlight) {
+    color: var(--vscode-editorError-foreground);
+  }
 `;
 
 export default RequestUrl;

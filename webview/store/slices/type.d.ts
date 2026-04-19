@@ -193,7 +193,7 @@ export interface IEnvironmentData {
 export interface IEnvironmentDataSlice {
   variables: IEnvironmentVariable[];
   activeVariables: { [key: string]: string };
-  setVariables: (data: { key: string, value: string }[]) => void;
+  setVariables: (data: { isChecked: boolean, key: string, value: string }[]) => void;
   addVariable: () => void;
   deleteVariable: (index: number) => void;
   handleVariableCheckbox: (index: number) => void;

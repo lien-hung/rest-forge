@@ -401,8 +401,7 @@ const Preview = styled.div`
   border: 1px solid transparent;
   padding: 0.5rem 0.7rem;
   user-select: none;
-  overflow: scroll;
-  overflow-y: hidden;
+  overflow: scroll hidden;
   scrollbar-width: none;
   white-space: nowrap;
 `;
