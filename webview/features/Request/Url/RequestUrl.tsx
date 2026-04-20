@@ -9,19 +9,20 @@ import {
   getUrlParameters,
   removeUrlParameter,
 } from "../../../utils";
+import resolveVariable from "../../../utils/resolveVariable";
 
 const RequestUrl = () => {
   const {
     requestUrl,
     tableParams,
-    activeVariables,
+    variables,
     handleRequestUrlChange,
     handleParamsTableData,
   } = useStore(
     useShallow((state) => ({
       requestUrl: state.requestUrl,
       tableParams: state.tableData.params,
-      activeVariables: state.activeVariables,
+      variables: state.activeVariables,
       handleRequestUrlChange: state.handleRequestUrlChange,
       handleParamsTableData: state.handleParamsTableData,
     }))
@@ -36,8 +37,8 @@ const RequestUrl = () => {
     const matches = [...displayUrl.matchAll(/\{\{([^}]+)\}\}/gi)];
     const stripBracket = (s: string) => s.replace("{{", "").replace("}}", "");
 
-    const validMatches = matches.filter(match => activeVariables[stripBracket(match[0])]);
-    const invalidMatches = matches.filter(match => !activeVariables[stripBracket(match[0])]);
+    const validMatches = matches.filter(match => variables[stripBracket(match[0])]);
+    const invalidMatches = matches.filter(match => !variables[stripBracket(match[0])]);
     const rangeCallback = (match: RegExpExecArray) => {
       const range = new Range();
       if (previewRef.current) {
@@ -83,10 +84,11 @@ const RequestUrl = () => {
   useEffect(() => {
     const rows = tableParams.filter(d => d.isChecked);
     const newRequestUrl = toUrl(rows);
-    if (newRequestUrl !== requestUrl) handleRequestUrlChange(newRequestUrl);
+    const resolvedUrl = resolveVariable(newRequestUrl, variables);
+    handleRequestUrlChange(resolvedUrl);
 
     if (displayUrl.length > 0 && document.activeElement === requestUrlRef.current
-      && (displayUrl.indexOf("?") === displayUrl.length - 1)) {
+      && displayUrl.indexOf("?") === displayUrl.length - 1) {
       return;
     }
 
