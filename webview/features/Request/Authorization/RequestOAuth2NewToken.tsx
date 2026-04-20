@@ -185,6 +185,21 @@ const RequestOAuth2NewToken = () => {
     window.addEventListener("message", handleExtensionMessage);
   }, []);
 
+  useEffect(() => {
+    const invalidIndices = Array.from(codeVerifierValue).map((ch, i) => invalidChars.includes(ch) ? i : -1).filter((i) => i !== -1);
+    const invalidRanges = invalidIndices.map((i) => {
+      const range = new Range();
+      if (codeVerifierPreviewRef.current) {
+        const textNode = codeVerifierPreviewRef.current.firstChild;
+        range.setStart(textNode!, i);
+        range.setEnd(textNode!, i + 1);
+      }
+      return range;
+    });
+    const invalidHighlight = new Highlight(...invalidRanges);
+    CSS.highlights.set("invalid-highlight", invalidHighlight);
+  }, [invalidChars]);
+
   return (
     <ConfigMenuWrapper>
       <h2>Configure New Token</h2>
@@ -278,15 +293,7 @@ const RequestOAuth2NewToken = () => {
             <label htmlFor="codeVerifier">Code Verifier</label>
             <CodeVerifierWrapper>
               <Preview ref={codeVerifierPreviewRef}>
-                {Array.from(codeVerifierValue).map((ch, i) => {
-                  const isInvalid = invalidChars.includes(ch);
-                  return (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <Char key={i} $invalid={isInvalid}>
-                      {ch}
-                    </Char>
-                  );
-                })}
+                {codeVerifierValue}
               </Preview>
               <input
                 ref={codeVerifierRef}
@@ -393,9 +400,14 @@ const CodeVerifierWrapper = styled.div`
   input[aria-invalid=true] {
     border: 1px solid var(--vscode-editorError-foreground, #ff4d4d);
   }
+
+  ::highlight(invalid-highlight) {
+    background-color: rgba(255 77 77 / 0.12);
+    color: var(--vscode-editorError-foreground, #ff4d4d);
+  }
 `;
 
-const Preview = styled.div`
+const Preview = styled.p`
   position: absolute;
   top: 0; right: 0; bottom: 0; left: 0;
   border: 1px solid transparent;
@@ -404,17 +416,7 @@ const Preview = styled.div`
   overflow: scroll hidden;
   scrollbar-width: none;
   white-space: nowrap;
-`;
-
-const Char = styled.span<{ $invalid?: boolean }>`
-  padding-right: 0.01rem;
-  ${'' /* subtle highlight for invalid chars */}
-  ${({ $invalid }) =>
-    $invalid
-      ? `background: rgba(255 77 77 / 0.12);
-        color: var(--vscode-editorError-foreground, #ff4d4d);
-        border-radius: 2px;`
-      : `color: inherit;`}
+  letter-spacing: 0.01rem;
 `;
 
 const ConfigMenuWrapper = styled.div`
