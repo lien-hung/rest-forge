@@ -4,6 +4,7 @@ import { IResponseDataHeader, OptionType, ITableRow } from "../store/slices/type
 
 import deleteIcon from "../assets/svg/delete-icon.svg";
 import { COMMON } from "../constants";
+import HighlightInput from "../components/HighlightInput";
 
 interface IKeyValueTableProps {
   type?: OptionType;
@@ -82,7 +83,7 @@ const KeyValueTable = ({
                     )}
                     <td>
                       {tableReadOnly ? key : (
-                        <input
+                        <HighlightInput
                           type="text"
                           name="Key"
                           placeholder="Key"
@@ -125,7 +126,7 @@ const KeyValueTable = ({
                           </FileSelectButton>
                         </FileInputWrapper>
                       ) : (
-                        <input
+                        <HighlightInput
                           type="text"
                           name="Value"
                           placeholder="Value"
@@ -253,6 +254,11 @@ const Table = styled.table<{ readOnlyMode: boolean }>`
     font-style: ${(props) => props.readOnlyMode && "italic"};
     font-weight: ${(props) => props.readOnlyMode && "300"};
     opacity: ${(props) => props.readOnlyMode && "0.75"};
+
+    p {
+      padding: 4px 0;
+      border-bottom: 1px solid transparent;
+    }
   }
 
   th,
@@ -275,9 +281,7 @@ const Table = styled.table<{ readOnlyMode: boolean }>`
     margin-bottom: 2rem;
   }
 
-  input {
-    background-color: transparent;
-    color: var(--default-text);
+  input[type="text"] {
     font-style: ${(props) => props.readOnlyMode && "italic"};
     font-weight: ${(props) => props.readOnlyMode && "300"};
     opacity: ${(props) => props.readOnlyMode && "0.75"};
@@ -294,7 +298,7 @@ const Table = styled.table<{ readOnlyMode: boolean }>`
   .readonly-row {
     background-color: color-mix(in srgb, transparent 90%, var(--vscode-foreground));
 
-    input {
+    input, p {
       font-style: italic;
     }
   }

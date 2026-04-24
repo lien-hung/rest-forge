@@ -34,6 +34,9 @@ const RequestUrl = () => {
   const [caretChar, setCaretChar] = useState("");
 
   const setVariableHighlight = () => {
+    let variableHighlight = CSS.highlights.get("variable-highlight");
+    let nonVariableHighlight = CSS.highlights.get("non-variable-highlight");
+
     const matches = [...displayUrl.matchAll(/\{\{([^}]+)\}\}/gi)];
     const stripBracket = (s: string) => s.replace("{{", "").replace("}}", "");
 
@@ -48,13 +51,28 @@ const RequestUrl = () => {
       }
       return range;
     }
-
     const variableRanges = validMatches.map(rangeCallback);
-    const variableHighlight = new Highlight(...variableRanges);
+    if (variableHighlight) {
+      for (const range of variableRanges) {
+        if (!variableHighlight.has(range)) {
+          variableHighlight.add(range);
+        }
+      }
+    } else {
+      variableHighlight = new Highlight(...variableRanges);
+    }
     CSS.highlights.set("variable-highlight", variableHighlight);
 
     const nonVariableRanges = invalidMatches.map(rangeCallback);
-    const nonVariableHighlight = new Highlight(...nonVariableRanges);
+    if (nonVariableHighlight) {
+      for (const range of nonVariableRanges) {
+        if (!nonVariableHighlight.has(range)) {
+          nonVariableHighlight.add(range);
+        }
+      }
+    } else {
+      nonVariableHighlight = new Highlight(...nonVariableRanges);
+    }
     CSS.highlights.set("non-variable-highlight", nonVariableHighlight);
   }
 
@@ -69,7 +87,7 @@ const RequestUrl = () => {
 
   const toUrl = (tableData: ITableRow[]) => {
     const parameterString = generateParameterString(tableData);
-    const baseUrl = removeUrlParameter(requestUrl);
+    const baseUrl = removeUrlParameter(displayUrl);
     return baseUrl + parameterString;
   };
 
@@ -85,7 +103,7 @@ const RequestUrl = () => {
     const rows = tableParams.filter(d => d.isChecked);
     const newRequestUrl = toUrl(rows);
     const resolvedUrl = resolveVariable(newRequestUrl, variables);
-    handleRequestUrlChange(resolvedUrl);
+    if (resolvedUrl !== requestUrl) handleRequestUrlChange(resolvedUrl);
 
     if (displayUrl.length > 0 && document.activeElement === requestUrlRef.current
       && displayUrl.indexOf("?") === displayUrl.length - 1) {
@@ -161,14 +179,6 @@ const RequestUrlWrapper = styled.div`
     background: transparent;
     color: transparent;
     caret-color: var(--vscode-foreground);
-  }
-
-  ::highlight(variable-highlight) {
-    color: var(--vscode-button-hoverBackground);
-  }
-
-  ::highlight(non-variable-highlight) {
-    color: var(--vscode-editorError-foreground);
   }
 `;
 

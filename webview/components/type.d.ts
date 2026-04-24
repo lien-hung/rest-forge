@@ -20,8 +20,8 @@ export interface ICopyIconProps {
   value: string | undefined;
 }
 
-export interface ISaveIconProps {
-  handleClick: (value: string | undefined) => void;
+export interface IHighlightInputProps {
+  handleChange: (event: InputEvent) => void;
   value: string | undefined;
 }
 
@@ -39,6 +39,11 @@ export interface IMessageProps {
 
 export interface IMessageStyledProps {
   primary?: boolean;
+}
+
+export interface ISaveIconProps {
+  handleClick: (value: string | undefined) => void;
+  value: string | undefined;
 }
 
 export interface ISelectWrapperProps {

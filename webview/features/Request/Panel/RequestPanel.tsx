@@ -70,6 +70,14 @@ const RequestPanelWrapper = styled.div`
   height: auto;
   max-height: 100vh;
   box-sizing: border-box;
+
+  ::highlight(variable-highlight) {
+    color: var(--vscode-button-hoverBackground);
+  }
+
+  ::highlight(non-variable-highlight) {
+    color: var(--vscode-editorError-foreground);
+  }
 `;
 
 const RequestMainForm = styled.form`

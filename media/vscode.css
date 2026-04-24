@@ -128,11 +128,12 @@ table {
 }
 
 table input:not([type="checkbox"]) {
+  background-color: transparent;
   padding: 4px 0;
   outline: none;
   border-bottom: 1px solid var(--vscode-tab-inactiveForeground);
 }
 
 table input:not([type="checkbox"]):focus {
-  border-bottom-color: 1px solid var(--vscode-tab-activeForeground);
+  border-bottom-color: var(--vscode-tab-activeForeground);
 }
