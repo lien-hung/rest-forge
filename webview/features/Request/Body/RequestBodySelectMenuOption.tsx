@@ -48,7 +48,7 @@ const RequestBodySelectMenuOption = () => {
   );
 
   function handleRequestBodyEditorChange(bodyValue: string | undefined) {
-    if (bodyValue) {
+    if (bodyValue !== undefined) {
       handleBodyRawOptionData(bodyValue);
     }
   }
