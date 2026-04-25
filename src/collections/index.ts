@@ -155,6 +155,12 @@ export default class CollectionsProvider implements TreeDataProvider<Collections
       .filter(item => item.parent.id === id);
   }
 
+  public getRequest(id: string) {
+    return this.tree
+      .filter(item => item instanceof RequestItem)
+      .find(item => item.request.id === id);
+  }
+
   private get filePath() {
     return getHomePath("collections.json");
   }

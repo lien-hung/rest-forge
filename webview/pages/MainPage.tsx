@@ -23,6 +23,8 @@ function MainPage() {
       setActiveVariables: state.setActiveVariables,
     }))
   );
+
+  const requestId = document.getElementById("request-id")?.innerText;
   
   const handleExtensionMessage = (event: MessageEvent) => {
     if (event.data.type === COMMON.HAS_CONFIG) {
@@ -31,7 +33,6 @@ function MainPage() {
     } else if (event.data.type === COMMON.HAS_OAUTH2_TOKENS) {
       setOAuth2Tokens(event.data.tokenList);
     } else if (event.data.type === REQUEST.ENV_DATA) {
-      console.log("Variables:", event.data.variables);
       setActiveVariables(event.data.variables);
     } else if (event.data.type === COMMON.THEME_CHANGED) {
       setThemeKind(event.data.themeKind);
@@ -42,6 +43,8 @@ function MainPage() {
     window.addEventListener("message", handleExtensionMessage);
     vscode.postMessage({ command: COMMON.INIT_CONFIG });
     vscode.postMessage({ command: COMMON.INIT_OAUTH2_TOKENS });
+    if (requestId) vscode.postMessage({ command: COMMON.INIT_REQUEST, requestId });
+    vscode.postMessage({ command: COMMON.INIT_ACTIVE_ENV });
   }, []);
 
   return (

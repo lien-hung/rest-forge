@@ -1,4 +1,4 @@
-import { ITableData, OptionType } from "./type";
+import { ITableData } from "./type";
 
 export function resolveVariable(str: string, variables: { [key: string]: string }) {
   const matches = [...str.matchAll(/\{\{([^}]+)\}\}/gi)];
@@ -17,7 +17,7 @@ export function resolveVariable(str: string, variables: { [key: string]: string 
 
 export function resolveTableData(tableData: ITableData, variables: { [key: string]: string }) {
   return Object.keys(tableData)
-    .map((key) => ({ key, rows: tableData[key as OptionType] }))
+    .map((key) => ({ key, rows: tableData[key as keyof ITableData] }))
     .reduce((prev, { key, rows }) => ({
       ...prev,
       [key]: rows.map((row) => ({

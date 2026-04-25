@@ -22,7 +22,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	const mainWebviewProvider = new MainWebviewPanel(
 		context.extensionUri,
 		requestHistoryProvider,
-		collectionsProvider
+		collectionsProvider,
+		environmentsProvider
 	);
 	const manageTokenWebviewProvider = new ManageTokenWebviewPanel(context.extensionUri);
 	const manageEnvWebviewProvider = new ManageEnvironmentPanel(
@@ -53,11 +54,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	const initializePanel = ({
 		id,
 		parentId,
-		requestName
+		requestName,
 	}: {
 		id?: string,
 		parentId?: string,
-		requestName?: string
+		requestName?: string,
 	}) => {
 		currentMainPanel = mainWebviewProvider.initializeWebview(id, parentId, requestName);
 		manageTokenWebviewProvider.requestPanel = currentMainPanel;
@@ -89,18 +90,16 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const postRequestData = (requestObject: IRequestObject) => {
 		const requestMessage = { type: TYPE.TREEVIEW_DATA, ...requestObject };
-		if (!currentMainPanel) {
-			setTimeout(() => currentMainPanel?.webview.postMessage(requestMessage), 1000);
+		if (currentMainPanel) {
+			currentMainPanel.webview.postMessage(requestMessage);
 		}
-		currentMainPanel?.webview.postMessage(requestMessage);
 	};
 
 	const postEnvironmentData = () => {
 		const envMessage = { type: TYPE.ENV_DATA, variables: environmentsProvider.activeVariables };
-		if (!currentMainPanel) {
-			setTimeout(() => currentMainPanel?.webview.postMessage(envMessage), 1000);
+		if (currentMainPanel) {
+			currentMainPanel.webview.postMessage(envMessage);
 		}
-		currentMainPanel?.webview.postMessage(envMessage);
 	};
 
 	const disp_requestHistoryTreeView = vscode.window.createTreeView(
@@ -139,9 +138,13 @@ export async function activate(context: vscode.ExtensionContext) {
 		COMMAND.OPEN_REQUEST,
 		(item: RequestHistoryTreeItem | RequestItem) => {
 			if (item instanceof RequestItem) {
-				initializePanel({ id: item.id, parentId: item.parent.id, requestName: item.request.name });
+				initializePanel({
+					id: item.id,
+					parentId: item.parent.id,
+					requestName: item.request.name,
+				});
 			} else {
-				initializePanel({});
+				initializePanel({ id: item.id });
 			}
 			postRequestData(item.request.requestObject);
 			postEnvironmentData();
@@ -362,7 +365,10 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (!requestName) {
 				return;
 			}
-			initializePanel({ parentId: folderLike.id, requestName: requestName.trim() });
+			initializePanel({
+				parentId: folderLike.id,
+				requestName: requestName.trim(),
+			});
 			postEnvironmentData();
 		}
 	);
@@ -470,9 +476,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		COMMAND.DELETE_ENVIRONMENT,
 		(envItem: EnvironmentTreeItem) => {
 			environmentsProvider.delete(envItem);
-			if (currentMainPanel) {
-				postEnvironmentData();
-			}
+			postEnvironmentData();
 		}
 	);
 
@@ -506,7 +510,13 @@ export async function activate(context: vscode.ExtensionContext) {
 
 			initializePanel({});
 			if (request) {
-				postRequestData(request);
+				if (!currentMainPanel) {
+					const requestMessage = { type: TYPE.TREEVIEW_DATA, ...request };
+					setTimeout(() => currentMainPanel?.webview.postMessage(requestMessage), 1000);
+				} else {
+					postRequestData(request);
+				}
+				postEnvironmentData();
 			}
 		}
 	);
@@ -526,9 +536,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				environmentsProvider.setNoActiveEnv();
 			} else if (envName) {
 				environmentsProvider.setActiveEnv(envName);
-				if (currentMainPanel) {
-					postEnvironmentData();
-				}
+				postEnvironmentData();
 			}
 		}
 	);

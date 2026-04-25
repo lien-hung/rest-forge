@@ -1,7 +1,10 @@
-import * as vscode from "vscode";
 import { readFileSync, writeFileSync } from "fs";
+import * as vscode from "vscode";
 
+import CollectionsProvider from "../collections";
 import { COMMAND, MESSAGE, NAME, TYPE } from "../constants";
+import EnvironmentsProvider from "../environments";
+import RequestHistoryProvider from "../request-history";
 import {
   authorizeInBrowser,
   generateResponseObject,
@@ -12,11 +15,11 @@ import {
   getNonce,
   getStoredOAuthTokens,
   getUrl,
+  resolveTableData,
+  resolveVariable,
 } from "../utils";
-import { IParameterKeyValueData, IRequestHeaderInformation, IRequestObject } from "../utils/type";
-import RequestHistoryProvider from "../request-history";
-import CollectionsProvider from "../collections";
 import getTokenColors from "../utils/getTokenColors";
+import { IParameterKeyValueData, IRequestHeaderInformation, IRequestObject, ITableData, ITableRow } from "../utils/type";
 
 class MainWebviewPanel {
   private url: string = "";
@@ -30,6 +33,7 @@ class MainWebviewPanel {
   private extensionUri;
   private requestHistoryProvider;
   private collectionsProvider;
+  private environmentsProvider;
   public manageTokenPanel: vscode.WebviewPanel | null = null;
 
   private get tokenPath() {
@@ -40,10 +44,12 @@ class MainWebviewPanel {
     extensionUri: vscode.Uri,
     requestHistoryProvider: RequestHistoryProvider,
     collectionsProvider: CollectionsProvider,
+    environmentsProvider: EnvironmentsProvider,
   ) {
     this.extensionUri = extensionUri;
     this.requestHistoryProvider = requestHistoryProvider;
     this.collectionsProvider = collectionsProvider;
+    this.environmentsProvider = environmentsProvider;
   }
 
   initializeWebview(id?: string, parentId?: string, requestName?: string) {
@@ -91,7 +97,7 @@ class MainWebviewPanel {
     }
 
     this.mainPanel.webview.onDidReceiveMessage(
-      ({ tokenRequest, codeChallenge, newTokenList, errorMsg, fileRowIndex, requestData, command }) => {
+      ({ requestId, tokenRequest, codeChallenge, newTokenList, errorMsg, fileRowIndex, requestData, command }) => {
         if (command === COMMAND.ALERT_COPY) {
           vscode.window.showInformationMessage(MESSAGE.COPY_SUCCESFUL_MESSAGE);
           return;
@@ -99,6 +105,28 @@ class MainWebviewPanel {
 
         if (command === COMMAND.SHOW_ERROR) {
           vscode.window.showErrorMessage(errorMsg);
+          return;
+        }
+
+        if (command === COMMAND.INIT_REQUEST) {
+          const requestItem = this.parentId
+            ? this.collectionsProvider.getRequest(requestId)
+            : this.requestHistoryProvider.getItemById(requestId);
+          
+          if (this.mainPanel && requestItem) {
+            this.mainPanel.webview.postMessage({
+              type: TYPE.TREEVIEW_DATA,
+              ...requestItem.request.requestObject
+            });
+          }
+          return;
+        }
+
+        if (command === COMMAND.INIT_ACTIVE_ENV) {
+          this.mainPanel?.webview.postMessage({
+            type: TYPE.ENV_DATA,
+            variables: this.environmentsProvider.activeVariables
+          });
           return;
         }
 
@@ -204,21 +232,24 @@ class MainWebviewPanel {
           tableData,
           graphqlData,
         } = requestData;
+
+        const variables = this.environmentsProvider.activeVariables;
+        const resolvedUrl = resolveVariable(requestUrl, variables);
+        const resolvedTableData = resolveTableData(tableData, variables);
         const flatTableData = Object.keys(tableData).reduce(
-          (data, key) => [...data, ...tableData[key].map((row: any) => ({ ...row, optionType: key }))],
-          new Array<IParameterKeyValueData>
+          (data, key) =>
+            [...data, ...resolvedTableData[key as keyof ITableData].map((row) => ({ ...row, optionType: key }))],
+          new Array<ITableRow & IParameterKeyValueData>
         );
-
-        // Convert array buffer to blob for form data
-        flatTableData.forEach((row) => {
+        for (const row of flatTableData) {
           if (row.optionType === "formData" && row.isChecked && row.valueType === "File") {
-            const filePath = row.filePath;
+            const filePath = row.filePath ?? "";
             const fileName = filePath.includes("/") ? filePath.split("/").at(-1) : filePath.split("\\").at(-1);
-            row.value = new File([row.value], fileName);
+            row.value = new File([row.value], fileName ?? "unknown");
           }
-        });
+        }
 
-        this.url = getUrl(requestUrl);
+        this.url = getUrl(resolvedUrl);
         this.method = requestMethod;
         this.headers = getHeaders(flatTableData, authOption, authData);
         this.body = getBody(
@@ -311,6 +342,7 @@ class MainWebviewPanel {
         </head>
         <body>
           <div id="root"></div>
+          <span id="request-id" style="display: none;">${this.id}</span>
           <script nonce="${nonce}">
             const vscode = acquireVsCodeApi();
           </script>

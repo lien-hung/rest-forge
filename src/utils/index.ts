@@ -10,3 +10,7 @@ export { default as getStoredOAuthTokens } from "./getStoredOAuthTokens";
 export { default as getUrl } from "./getUrl";
 export { default as parseCurl } from "./parseCurl";
 export { default as getHomePath } from "./path";
+export {
+  resolveTableData,
+  resolveVariable
+} from "./resolveVariable";

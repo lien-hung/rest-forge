@@ -9,6 +9,8 @@ const COMMON = {
   FINISHED: "Finished",
   
   ALERT_COPY: "Alert Copy",
+  INIT_REQUEST: "Init Request",
+  INIT_ACTIVE_ENV: "Init Active Environment",
   HAS_CONFIG: "Has Config",
   INIT_CONFIG: "Init Config",
   THEME_CHANGED: "Theme Changed",

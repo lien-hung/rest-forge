@@ -47,6 +47,8 @@ const COMMAND = {
   INIT_TOKEN_COLORS: "Init Token Colors",
   SHOW_ERROR: "Show Error",
   
+  INIT_REQUEST: "Init Request",
+  INIT_ACTIVE_ENV: "Init Active Environment",
   HAS_OAUTH2_TOKENS: "Has OAuth2 Tokens",
   INIT_OAUTH2_TOKENS: "Init OAuth2 Tokens",
   OAUTH2_TOKEN_REQUEST: "OAuth2 Token Request",

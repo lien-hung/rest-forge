@@ -10,7 +10,7 @@ import SelectWrapper from "../../../components/SelectWrapper";
 import { COMMON, OPTION } from "../../../constants/index";
 import CodeEditor from "../../../shared/CodeEditor";
 import useStore from "../../../store/useStore";
-import { generateSdkRequestObject } from "../../../utils/index";
+import { generateSdkRequestObject, resolveTableData, resolveVariable } from "../../../utils/index";
 import { BodyOptionType } from "../../../utils/type";
 
 const RequestCodeSnippet = () => {
@@ -25,6 +25,7 @@ const RequestCodeSnippet = () => {
     codeSnippetValue,
     codeSnippetOption,
     tableData,
+    variables,
     setCodeSnippetValue,
     handleCodeSnippetOptionChange,
     handleCodeSnippetVariantChange,
@@ -40,6 +41,7 @@ const RequestCodeSnippet = () => {
       codeSnippetValue: state.codeSnippetValue,
       codeSnippetOption: state.codeSnippetOption,
       tableData: state.tableData,
+      variables: state.activeVariables,
       setCodeSnippetValue: state.setCodeSnippetValue,
       handleCodeSnippetOptionChange: state.handleCodeSnippetOptionChange,
       handleCodeSnippetVariantChange: state.handleCodeSnippetVariantChange,
@@ -48,6 +50,8 @@ const RequestCodeSnippet = () => {
 
   const DEBOUNCE_TIME_VALUE = 800;
   const [debouncedUrlValue] = useDebounce(requestUrl, DEBOUNCE_TIME_VALUE);
+  const resolvedTableData = useMemo(() => resolveTableData(tableData, variables), [tableData, variables]);
+  const resolvedUrl = useMemo(() => resolveVariable(debouncedUrlValue, variables), [debouncedUrlValue, variables]);
 
   const handleCopyIconClick = (value: string | undefined) => {
     vscode.postMessage({ command: COMMON.ALERT_COPY });
@@ -60,9 +64,9 @@ const RequestCodeSnippet = () => {
   const memoizedRequestObject = useMemo(
     () =>
       generateSdkRequestObject(
-        debouncedUrlValue,
+        resolvedUrl,
         requestMethod,
-        tableData,
+        resolvedTableData,
         authOption,
         authData,
         bodyOption,
@@ -70,9 +74,9 @@ const RequestCodeSnippet = () => {
         graphqlData,
       ),
     [
-      debouncedUrlValue,
+      resolvedUrl,
       requestMethod,
-      tableData,
+      resolvedTableData,
       authOption,
       authData,
       bodyOption,

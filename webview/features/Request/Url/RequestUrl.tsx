@@ -9,7 +9,6 @@ import {
   getUrlParameters,
   removeUrlParameter,
 } from "../../../utils";
-import resolveVariable from "../../../utils/resolveVariable";
 
 const RequestUrl = () => {
   const {
@@ -87,7 +86,7 @@ const RequestUrl = () => {
 
   const toUrl = (tableData: ITableRow[]) => {
     const parameterString = generateParameterString(tableData);
-    const baseUrl = removeUrlParameter(displayUrl);
+    const baseUrl = removeUrlParameter(requestUrl);
     return baseUrl + parameterString;
   };
 
@@ -102,8 +101,7 @@ const RequestUrl = () => {
   useEffect(() => {
     const rows = tableParams.filter(d => d.isChecked);
     const newRequestUrl = toUrl(rows);
-    const resolvedUrl = resolveVariable(newRequestUrl, variables);
-    if (resolvedUrl !== requestUrl) handleRequestUrlChange(resolvedUrl);
+    if (newRequestUrl !== requestUrl) handleRequestUrlChange(newRequestUrl);
 
     if (displayUrl.length > 0 && document.activeElement === requestUrlRef.current
       && displayUrl.indexOf("?") === displayUrl.length - 1) {

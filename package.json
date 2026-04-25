@@ -548,7 +548,7 @@
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
     "crypto-random-string": "^5.0.0",
-    "fast-xml-parser": "^5.5.8",
+    "fast-xml-parser": "^5.7.1",
     "file-saver": "^2.0.5",
     "node-polyfill-webpack-plugin": "^4.0.0",
     "postman-code-generators": "^2.1.0",
