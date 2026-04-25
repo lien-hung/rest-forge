@@ -20,10 +20,6 @@ const getCurrentTheme = (): IEditorTheme => {
 
   // Theme colors (partial)
   const themeColors = {
-    // Foreground and background
-    "foreground": editorStyles.getPropertyValue("--vscode-foreground"),
-    "editor.background": editorStyles.getPropertyValue("--vscode-editor-background"),
-
     // Inputs
     "input.background": editorStyles.getPropertyValue("--vscode-input-background"),
 
@@ -33,17 +29,9 @@ const getCurrentTheme = (): IEditorTheme => {
     // Cursor
     "editorCursor.foreground": editorStyles.getPropertyValue("--vscode-editorCursor-foreground"),
 
-    // Line numbers
-    "editorLineNumber.foreground": editorStyles.getPropertyValue("--vscode-editorLineNumber-foreground"),
-    "editorLineNumber.activeForeground": editorStyles.getPropertyValue("--vscode-editorLineNumber-activeForeground"),
-
     // Suggest widget (IntelliSense)
-    "editorSuggestWidget.background": editorStyles.getPropertyValue("--vscode-editorSuggestWidget-background"),
     "editorSuggestWidget.focusHighlightForeground": editorStyles.getPropertyValue("--vscode-editorSuggestWidget-focusHighlightForeground"),
     "editorSuggestWidget.highlightForeground": editorStyles.getPropertyValue("--vscode-editorSuggestWidget-highlightForeground"),
-
-    // Sticky scroll
-    "editorStickyScroll.shadow": "#00000022",
 
     // Editor widgets
     "widget.shadow": "#00000000",

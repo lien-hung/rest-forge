@@ -159,23 +159,68 @@ function CodeEditor({
 };
 
 const EditorWrapper = styled.div`
+  --background: var(--vscode-editor-background);
+  --foreground: var(--vscode-editor-foreground);
+  --lineHighlightBackground: var(--vscode-editor-lineHighlightBackground);
+  --lineHighlightBorder: var(--vscode-editor-lineHighlightBorder);
+  --lineNumber-foreground: var(--vscode-editorLineNumber-foreground);
+  --lineNumber-activeForeground: var(--vscode-editorLineNumber-activeForeground);
+  --suggestWidget-border: var(--vscode-editorSuggestWidget-border);
+  --suggestWidget-background: var(--vscode-editorSuggestWidget-background);
+  --suggestWidget-selectedBackground: var(--vscode-editorSuggestWidget-selectedBackground);
+  --suggestWidget-selectedForeground: var(--vscode-editorSuggestWidget-selectedForeground);
+  --stickyScroll-border: var(--vscode-editorStickyScroll-border);
+  --stickyScroll-shadow: var(--vscode-editorStickyScroll-shadow);
+
+  .monaco-editor,
+  .monaco-editor-background,
+  .margin-view-overlays {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
   .monaco-editor {
+    .line-numbers {
+      color: var(--lineNumber-foreground);
+    }
+
+    .line-numbers.active-line-number {
+      color: var(--lineNumber-activeForeground);
+    }
+
     .view-overlays {
       .current-line {
-        background-color: var(--vscode-editor-lineHighlightBackground);
+        background-color: var(--lineHighlightBackground);
       }
 
       .current-line-exact {
-        border: var(--vscode-editor-lineHighlightBorder);
+        border: var(--lineHighlightBorder);
       }
     }
 
-    .suggest-widget {
-      border: var(--vscode-editorSuggestWidget-border);
+    .suggest-widget,
+    .suggest-details {
+      border: 1px solid var(--suggestWidget-border);
+      background-color: var(--suggestWidget-background);
 
       .monaco-list .monaco-list-row.focused {
-        background-color: color-mix(in srgb, var(--vscode-editor-background) 90%, var(--vscode-foreground));
-        color: var(--vscode-foreground);
+        background-color: var(--suggestWidget-selectedBackground);
+        color: var(--suggestWidget-selectedForeground);
+      }
+    }
+
+    .sticky-widget {
+      border-bottom-color: var(--stickyScroll-border);
+      box-shadow-color: var(--stickyScroll-shadow);
+
+      .sticky-line-number,
+      .sticky-line-content {
+        color: var(--lineNumber-foreground);
+      }
+
+      .sticky-widget-line-numbers,
+      .sticky-widget-lines-scrollable {
+        background-color: var(--background);
       }
     }
   }

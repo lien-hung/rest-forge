@@ -72,11 +72,11 @@ const RequestPanelWrapper = styled.div`
   box-sizing: border-box;
 
   ::highlight(variable-highlight) {
-    color: var(--vscode-button-hoverBackground);
+    color: var(--vscode-editorGutter-addedBackground);
   }
 
   ::highlight(non-variable-highlight) {
-    color: var(--vscode-editorError-foreground);
+    color: var(--vscode-editorGutter-deletedBackground);
   }
 `;
 
