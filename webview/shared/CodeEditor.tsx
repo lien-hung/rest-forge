@@ -211,7 +211,7 @@ const EditorWrapper = styled.div`
 
     .sticky-widget {
       border-bottom-color: var(--stickyScroll-border);
-      box-shadow-color: var(--stickyScroll-shadow);
+      box-shadow: var(--stickyScroll-shadow) 0 4px 2px -2px;
 
       .sticky-line-number,
       .sticky-line-content {

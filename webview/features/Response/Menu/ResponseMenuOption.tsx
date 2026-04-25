@@ -49,7 +49,7 @@ const ResponseMenuOption = () => {
                   : responseBodyViewFormat.toLowerCase()
               }
               viewOption={responseBodyOption}
-              editorOption={OPTION.EDITOR_OPTIONS}
+              editorOption={OPTION.READ_ONLY_EDITOR_OPTIONS}
               previewMode
             />
           </ResponseBodyWrapper>

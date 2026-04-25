@@ -156,7 +156,7 @@ const RequestCodeSnippet = () => {
       <CodeSnippetWrapper>
         <CodeEditor
           codeEditorValue={codeSnippetValue}
-          editorOption={OPTION.CODE_SNIPPET_EDITOR_OPTIONS}
+          editorOption={OPTION.READ_ONLY_EDITOR_OPTIONS}
           language={codeSnippetOption.editorLanguage.toLowerCase()}
           handleEditorChange={() => undefined}
           handleBeautifyButton={() => undefined}

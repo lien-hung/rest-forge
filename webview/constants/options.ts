@@ -38,7 +38,7 @@ const OPTION = {
     minimap: { enabled: false },
     scrollBeyondLastLine: false,
   },
-  CODE_SNIPPET_EDITOR_OPTIONS: {
+  READ_ONLY_EDITOR_OPTIONS: {
     tabSize: 2,
     renderWhitespace: false,
     minimap: { enabled: false },
