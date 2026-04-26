@@ -2,6 +2,14 @@
 
 All notable changes to the "api-tester" extension will be documented in this file.
 
+## [v4.1.0]
+- Environments feature:
+  - Manage environments via tree view
+  - Use variables from active environment in request URL and tables
+- Preview and download all binary response types
+- Optimization of Monaco editor load
+- Fix behavior of posting request message from tree view
+
 ## [v4.0.1]
 - Fix JSON variable object parsing error for GraphQL
 

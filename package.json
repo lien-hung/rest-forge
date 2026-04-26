@@ -1,5 +1,5 @@
 {
-  "name": "api-tester",
+  "name": "api-tester-vscode",
   "publisher": "lien-hung",
   "displayName": "API Tester",
   "icon": "icons/images/apitester-icon.png",
@@ -13,7 +13,7 @@
     "url": "https://github.com/lien-hung",
     "email": "lienhungtrinh@gmail.com"
   },
-  "version": "4.0.1",
+  "version": "4.1.0",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/lien-hung/api-tester/issues"
@@ -546,7 +546,7 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
-    "@monaco-editor/react": "^4.7.0",
+    "@monaco-editor/react": "^4.8.0-rc.3",
     "crypto-random-string": "^5.0.0",
     "fast-xml-parser": "^5.7.1",
     "file-saver": "^2.0.5",
