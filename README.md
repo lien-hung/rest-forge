@@ -6,16 +6,10 @@
 
 ---
 
-## Installation
-The VSIX file can be downloaded from the [Releases](https://github.com/lien-hung/api-tester/releases) page.
-
 ## Features
-API Tester acts as a UI-based HTTP client to send requests to your desired endpoint and is most helpful for testing and verifying that your API is working properly. The extension uses local storage at `%userprofile%/.api-tester` directory and does not collect or share any personal information and request data somewhere else.
+API Tester is a UI-based HTTP client to send requests to your desired endpoint and is most helpful for testing and verifying that your API is working properly. The extension uses local storage at `%userprofile%/.api-tester` directory and does not collect or share any personal information and request data somewhere else.
 
-<img
-    src="https://github.com/user-attachments/assets/62d70a84-30cf-40de-9c7e-734b5151af84"  
-    alt="API Tester Demo"
-/>
+<img width="1440" height="860" alt="API Tester demo" src="https://github.com/user-attachments/assets/47d87376-0304-4df6-8f04-673edad26031" />
 
 - Supports seven main HTTP methods (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS`) and other custom methods (e.g. `PROPFIND`, configurable in settings)
 - Request options:
@@ -29,8 +23,9 @@ API Tester acts as a UI-based HTTP client to send requests to your desired endpo
 - Code snippets for your current request
 - Preview response data and save to computer
 - Organize requests into collections and export to JSON
-  - While it is mainly for individual use, you can save the exported JSON file to your local repository for Git collaboration.
+  - While mainly for individual use, you can save the exported JSON file to your local repository for Git collaboration.
 - Search from collections (`Ctrl+Alt+F` on tree view)
+- Manage environments and use variables from active environment
 
 ## Tech Stacks
 Based on the [REST API Client](https://marketplace.visualstudio.com/items?itemName=unjinjang.rest-api-client) by Unjin Jang, with modifications on the user interface.
