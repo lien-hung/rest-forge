@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the "api-tester" extension will be documented in this file.
+All notable changes to the "rest-forge" extension will be documented in this file.
 
 ## [v4.1.0]
 - Environments feature:
@@ -65,7 +65,7 @@ All notable changes to the "api-tester" extension will be documented in this fil
 
 ## [v2.0.0]
 - Support for request collections
-- This version uses JSON files for local storage at `%userprofile%\.api-tester` instead of extension global state. Older versions are therefore not recommended.
+- This version uses JSON files for local storage at `%userprofile%\.rest-forge` instead of extension global state. Older versions are therefore not recommended.
 - UI modifications
 
 ## [v1.3.0]

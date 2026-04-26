@@ -3,7 +3,7 @@ const TYPE = {
   HEADERS: "Headers",
   RESPONSE: "Response",
   
-  WEBVIEW_TYPE: "ApiTester",
+  WEBVIEW_TYPE: "RestForge",
   THEME_CHANGED: "Theme Changed",
   TREEVIEW_DATA: "Selected Collection Data",
   ENV_DATA: "Environment Data",

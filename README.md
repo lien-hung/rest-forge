@@ -1,13 +1,13 @@
 <div align="center">
-    <img width="128" height="128" alt="apitester-icon" src="https://github.com/user-attachments/assets/896b4c32-52d1-404b-a5e4-074ac9939899" />
-    <h3>API Tester</h3>
+    <img width="128" height="128" alt="restforge-icon" src="https://github.com/user-attachments/assets/896b4c32-52d1-404b-a5e4-074ac9939899" />
+    <h3>REST Forge</h3>
     <h5>A lightweight HTTP client for sending requests and testing APIs in VSCode</h5>
 </div>
 
 ---
 
 ## Features
-API Tester is a UI-based HTTP client to send requests to your desired endpoint and is most helpful for testing and verifying that your API is working properly. The extension uses local storage at `%userprofile%/.api-tester` directory and does not collect or share any personal information and request data somewhere else.
+REST Forge (formerly API Tester) is a UI-based HTTP client to send requests to your desired endpoint and is most helpful for testing and verifying that your API is working properly. The extension uses local storage at `%userprofile%/.rest-forge` directory and does not collect or share any personal information and request data somewhere else.
 
 <img width="1440" height="860" alt="API Tester demo" src="https://github.com/user-attachments/assets/47d87376-0304-4df6-8f04-673edad26031" />
 
@@ -40,4 +40,4 @@ Based on the [REST API Client](https://marketplace.visualstudio.com/items?itemNa
 - **Compiler**: [Babel](https://babeljs.io/)
 
 ## License
-See [license](https://github.com/lien-hung/api-tester/blob/master/LICENSE) for details.
+See [license](https://github.com/lien-hung/rest-forge/blob/master/LICENSE) for details.

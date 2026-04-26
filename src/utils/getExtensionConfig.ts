@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { IExtensionConfig } from "./type";
 
 function getExtensionConfig(): IExtensionConfig {
-  const workspaceConfig = vscode.workspace.getConfiguration("api-tester");
+  const workspaceConfig = vscode.workspace.getConfiguration("rest-forge");
 
   // Custom request methods
   const customMethods = workspaceConfig

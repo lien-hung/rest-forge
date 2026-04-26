@@ -5,10 +5,10 @@ export class EnvironmentStatusEntry {
 
   public constructor(environment?: string) {
     this.statusItem = window.createStatusBarItem('env', StatusBarAlignment.Right, 100);
-    this.statusItem.command = "api-tester.setActiveEnvironment";
+    this.statusItem.command = "rest-forge.setActiveEnvironment";
     this.statusItem.text = environment ? `$(arrow-swap) ${environment}` : "$(arrow-swap) No Environment";
-    this.statusItem.tooltip = "Set Active Environment for API Tester";
-    this.statusItem.name = "API Tester Environment";
+    this.statusItem.tooltip = "Set Active Environment for REST Forge";
+    this.statusItem.name = "REST Forge Environment";
     this.statusItem.show();
   }
 

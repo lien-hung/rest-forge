@@ -2,12 +2,12 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 
-const APITESTER_HOME = path.resolve(os.homedir(), ".api-tester");
+const RESTFORGE_HOME = path.resolve(os.homedir(), ".rest-forge");
 
-if (!fs.existsSync(APITESTER_HOME)) {
-  fs.mkdirSync(APITESTER_HOME);
+if (!fs.existsSync(RESTFORGE_HOME)) {
+  fs.mkdirSync(RESTFORGE_HOME);
 }
 
 export default function getHomePath(...args: string[]) {
-  return path.resolve(APITESTER_HOME, ...args);
+  return path.resolve(RESTFORGE_HOME, ...args);
 }

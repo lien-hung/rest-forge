@@ -1,12 +1,12 @@
 {
-  "name": "api-tester-vscode",
+  "name": "rest-forge",
   "publisher": "lien-hung",
-  "displayName": "API Tester",
-  "icon": "icons/images/apitester-icon.png",
+  "displayName": "REST Forge",
+  "icon": "icons/images/restforge-icon.png",
   "description": "A lightweight HTTP client for sending requests and testing APIs",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lien-hung/api-tester"
+    "url": "https://github.com/lien-hung/rest-forge"
   },
   "author": {
     "name": "Lien Hung Trinh",
@@ -16,7 +16,7 @@
   "version": "4.1.0",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lien-hung/api-tester/issues"
+    "url": "https://github.com/lien-hung/rest-forge/issues"
   },
   "engines": {
     "vscode": "^1.107.0"
@@ -30,8 +30,8 @@
     "commands": [
       {
         "title": "New Request",
-        "command": "api-tester.newRequest",
-        "category": "API Tester",
+        "command": "rest-forge.newRequest",
+        "category": "REST Forge",
         "icon": {
           "light": "icons/svg/add-light.svg",
           "dark": "icons/svg/add-dark.svg"
@@ -40,11 +40,11 @@
       {
         "title": "Open Request",
         "shortTitle": "Open",
-        "command": "api-tester.openRequest"
+        "command": "rest-forge.openRequest"
       },
       {
         "title": "Delete",
-        "command": "api-tester.deleteRequest",
+        "command": "rest-forge.deleteRequest",
         "icon": {
           "light": "icons/svg/delete-light.svg",
           "dark": "icons/svg/delete-dark.svg"
@@ -52,16 +52,16 @@
       },
       {
         "title": "Rename",
-        "command": "api-tester.renameRequest"
+        "command": "rest-forge.renameRequest"
       },
       {
         "title": "Save to Collection",
-        "command": "api-tester.saveToCollection"
+        "command": "rest-forge.saveToCollection"
       },
       {
         "title": "Refresh",
-        "command": "api-tester.refresh",
-        "category": "API Tester",
+        "command": "rest-forge.refresh",
+        "category": "REST Forge",
         "icon": {
           "light": "icons/svg/refresh-light.svg",
           "dark": "icons/svg/refresh-dark.svg"
@@ -69,8 +69,8 @@
       },
       {
         "title": "Clear History",
-        "command": "api-tester.clearHistory",
-        "category": "API Tester",
+        "command": "rest-forge.clearHistory",
+        "category": "REST Forge",
         "icon": {
           "light": "icons/svg/delete-light.svg",
           "dark": "icons/svg/delete-dark.svg"
@@ -78,8 +78,8 @@
       },
       {
         "title": "New Collection",
-        "command": "api-tester.newCollection",
-        "category": "API Tester",
+        "command": "rest-forge.newCollection",
+        "category": "REST Forge",
         "icon": {
           "light": "icons/svg/new-collection-light.svg",
           "dark": "icons/svg/new-collection-dark.svg"
@@ -87,44 +87,44 @@
       },
       {
         "title": "Copy To",
-        "command": "api-tester.copyCollection"
+        "command": "rest-forge.copyCollection"
       },
       {
         "title": "Duplicate",
-        "command": "api-tester.duplicateCollection"
+        "command": "rest-forge.duplicateCollection"
       },
       {
         "title": "Rename",
-        "command": "api-tester.renameCollection"
+        "command": "rest-forge.renameCollection"
       },
       {
         "title": "Delete",
-        "command": "api-tester.deleteCollection"
+        "command": "rest-forge.deleteCollection"
       },
       {
         "title": "Export",
-        "command": "api-tester.exportCollection"
+        "command": "rest-forge.exportCollection"
       },
       {
         "title": "New Folder",
-        "command": "api-tester.newFolder",
-        "category": "API Tester"
+        "command": "rest-forge.newFolder",
+        "category": "REST Forge"
       },
       {
         "title": "Duplicate",
-        "command": "api-tester.duplicateFolder"
+        "command": "rest-forge.duplicateFolder"
       },
       {
         "title": "Rename",
-        "command": "api-tester.renameFolder"
+        "command": "rest-forge.renameFolder"
       },
       {
         "title": "Delete",
-        "command": "api-tester.deleteFolder"
+        "command": "rest-forge.deleteFolder"
       },
       {
         "title": "New Request",
-        "command": "api-tester.newRequestInCollection",
+        "command": "rest-forge.newRequestInCollection",
         "icon": {
           "light": "icons/svg/add-light.svg",
           "dark": "icons/svg/add-dark.svg"
@@ -132,32 +132,32 @@
       },
       {
         "title": "Copy",
-        "command": "api-tester.copyRequestInCollection"
+        "command": "rest-forge.copyRequestInCollection"
       },
       {
         "title": "Paste",
-        "command": "api-tester.pasteRequestInCollection"
+        "command": "rest-forge.pasteRequestInCollection"
       },
       {
         "title": "Duplicate",
-        "command": "api-tester.duplicateRequestInCollection"
+        "command": "rest-forge.duplicateRequestInCollection"
       },
       {
         "title": "Clear Items",
-        "command": "api-tester.clearItemsInCollection"
+        "command": "rest-forge.clearItemsInCollection"
       },
       {
         "title": "Rename",
-        "command": "api-tester.renameRequestInCollection"
+        "command": "rest-forge.renameRequestInCollection"
       },
       {
         "title": "Delete",
-        "command": "api-tester.deleteRequestInCollection"
+        "command": "rest-forge.deleteRequestInCollection"
       },
       {
         "title": "New Environment",
-        "command": "api-tester.newEnvironment",
-        "category": "API Tester",
+        "command": "rest-forge.newEnvironment",
+        "category": "REST Forge",
         "icon": {
           "light": "icons/svg/add-light.svg",
           "dark": "icons/svg/add-dark.svg"
@@ -166,46 +166,46 @@
       {
         "title": "Open Environment",
         "shortTitle": "Open",
-        "command": "api-tester.openEnvironment"
+        "command": "rest-forge.openEnvironment"
       },
       {
         "title": "Rename",
-        "command": "api-tester.renameEnvironment"
+        "command": "rest-forge.renameEnvironment"
       },
       {
         "title": "Delete",
-        "command": "api-tester.deleteEnvironment"
+        "command": "rest-forge.deleteEnvironment"
       },
       {
         "title": "Manage OAuth 2.0 Tokens",
-        "command": "api-tester.manageTokens",
-        "category": "API Tester"
+        "command": "rest-forge.manageTokens",
+        "category": "REST Forge"
       },
       {
         "title": "Import from cURL",
-        "command": "api-tester.importCurl",
-        "category": "API Tester"
+        "command": "rest-forge.importCurl",
+        "category": "REST Forge"
       },
       {
         "title": "Set Active Environment",
-        "command": "api-tester.setActiveEnvironment",
-        "category": "API Tester"
+        "command": "rest-forge.setActiveEnvironment",
+        "category": "REST Forge"
       }
     ],
     "views": {
-      "apiTesterActivityBarContainer": [
+      "restForgeActivityBarContainer": [
         {
-          "id": "apiTesterRequestHistoryTreeView",
+          "id": "restForgeRequestHistoryTreeView",
           "name": "Request History",
           "icon": "icons/svg/request-history-view.svg"
         },
         {
-          "id": "apiTesterCollectionsTreeView",
+          "id": "restForgeCollectionsTreeView",
           "name": "Collections",
           "icon": "icons/svg/collections-view.svg"
         },
         {
-          "id": "apiTesterEnvironmentsTreeView",
+          "id": "restForgeEnvironmentsTreeView",
           "name": "Environments",
           "icon": "icons/svg/environments-view.svg"
         }
@@ -214,290 +214,290 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "apiTesterActivityBarContainer",
-          "icon": "icons/svg/apitester-sidebar.svg",
-          "title": "API Tester"
+          "id": "restForgeActivityBarContainer",
+          "icon": "icons/svg/restforge-sidebar.svg",
+          "title": "REST Forge"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "apiTesterRequestHistoryTreeView",
-        "contents": "Your history collection seems to be empty.\nTo start sending HTTP requests, click the button below.\n[Add Request](command:api-tester.newRequest)"
+        "view": "restForgeRequestHistoryTreeView",
+        "contents": "Your history collection seems to be empty.\nTo start sending HTTP requests, click the button below.\n[Add Request](command:rest-forge.newRequest)"
       },
       {
-        "view": "apiTesterCollectionsTreeView",
-        "contents": "No collections available yet.\n[New Collection](command:api-tester.newCollection)"
+        "view": "restForgeCollectionsTreeView",
+        "contents": "No collections available yet.\n[New Collection](command:rest-forge.newCollection)"
       },
       {
-        "view": "apiTesterEnvironmentsTreeView",
-        "contents": "No environments created yet.\n[New Environment](command:api-tester.newEnvironment)"
+        "view": "restForgeEnvironmentsTreeView",
+        "contents": "No environments created yet.\n[New Environment](command:rest-forge.newEnvironment)"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "api-tester.openRequest",
+          "command": "rest-forge.openRequest",
           "when": "false"
         },
         {
-          "command": "api-tester.deleteRequest",
+          "command": "rest-forge.deleteRequest",
           "when": "false"
         },
         {
-          "command": "api-tester.renameRequest",
+          "command": "rest-forge.renameRequest",
           "when": "false"
         },
         {
-          "command": "api-tester.saveToCollection",
+          "command": "rest-forge.saveToCollection",
           "when": "false"
         },
         {
-          "command": "api-tester.copyCollection",
+          "command": "rest-forge.copyCollection",
           "when": "false"
         },
         {
-          "command": "api-tester.duplicateCollection",
+          "command": "rest-forge.duplicateCollection",
           "when": "false"
         },
         {
-          "command": "api-tester.renameCollection",
+          "command": "rest-forge.renameCollection",
           "when": "false"
         },
         {
-          "command": "api-tester.deleteCollection",
+          "command": "rest-forge.deleteCollection",
           "when": "false"
         },
         {
-          "command": "api-tester.exportCollection",
+          "command": "rest-forge.exportCollection",
           "when": "false"
         },
         {
-          "command": "api-tester.newFolder",
+          "command": "rest-forge.newFolder",
           "when": "false"
         },
         {
-          "command": "api-tester.duplicateFolder",
+          "command": "rest-forge.duplicateFolder",
           "when": "false"
         },
         {
-          "command": "api-tester.renameFolder",
+          "command": "rest-forge.renameFolder",
           "when": "false"
         },
         {
-          "command": "api-tester.deleteFolder",
+          "command": "rest-forge.deleteFolder",
           "when": "false"
         },
         {
-          "command": "api-tester.newRequestInCollection",
+          "command": "rest-forge.newRequestInCollection",
           "when": "false"
         },
         {
-          "command": "api-tester.copyRequestInCollection",
+          "command": "rest-forge.copyRequestInCollection",
           "when": "false"
         },
         {
-          "command": "api-tester.pasteRequestInCollection",
+          "command": "rest-forge.pasteRequestInCollection",
           "when": "false"
         },
         {
-          "command": "api-tester.duplicateRequestInCollection",
+          "command": "rest-forge.duplicateRequestInCollection",
           "when": "false"
         },
         {
-          "command": "api-tester.clearItemsInCollection",
+          "command": "rest-forge.clearItemsInCollection",
           "when": "false"
         },
         {
-          "command": "api-tester.renameRequestInCollection",
+          "command": "rest-forge.renameRequestInCollection",
           "when": "false"
         },
         {
-          "command": "api-tester.deleteRequestInCollection",
+          "command": "rest-forge.deleteRequestInCollection",
           "when": "false"
         },
         {
-          "command": "api-tester.openEnvironment",
+          "command": "rest-forge.openEnvironment",
           "when": "false"
         },
         {
-          "command": "api-tester.renameEnvironment",
+          "command": "rest-forge.renameEnvironment",
           "when": "false"
         },
         {
-          "command": "api-tester.deleteEnvironment",
+          "command": "rest-forge.deleteEnvironment",
           "when": "false"
         }
       ],
       "view/title": [
         {
-          "command": "api-tester.refresh",
-          "when": "view == apiTesterRequestHistoryTreeView || view == apiTesterCollectionsTreeView || view == apiTesterEnvironmentsTreeView",
+          "command": "rest-forge.refresh",
+          "when": "view == restForgeRequestHistoryTreeView || view == restForgeCollectionsTreeView || view == restForgeEnvironmentsTreeView",
           "group": "navigation"
         },
         {
-          "command": "api-tester.newRequest",
-          "when": "view == apiTesterRequestHistoryTreeView",
+          "command": "rest-forge.newRequest",
+          "when": "view == restForgeRequestHistoryTreeView",
           "group": "navigation@1"
         },
         {
-          "command": "api-tester.clearHistory",
-          "when": "view == apiTesterRequestHistoryTreeView",
+          "command": "rest-forge.clearHistory",
+          "when": "view == restForgeRequestHistoryTreeView",
           "group": "navigation@2"
         },
         {
-          "command": "api-tester.newCollection",
-          "when": "view == apiTesterCollectionsTreeView",
+          "command": "rest-forge.newCollection",
+          "when": "view == restForgeCollectionsTreeView",
           "group": "navigation@1"
         },
         {
-          "command": "api-tester.newEnvironment",
-          "when": "view == apiTesterEnvironmentsTreeView",
+          "command": "rest-forge.newEnvironment",
+          "when": "view == restForgeEnvironmentsTreeView",
           "group": "navigation@1"
         }
       ],
       "view/item/context": [
         {
-          "command": "api-tester.deleteRequest",
-          "when": "view == apiTesterRequestHistoryTreeView && viewItem == userRequestHistory.item",
+          "command": "rest-forge.deleteRequest",
+          "when": "view == restForgeRequestHistoryTreeView && viewItem == userRequestHistory.item",
           "group": "inline"
         },
         {
-          "command": "api-tester.saveToCollection",
-          "when": "view == apiTesterRequestHistoryTreeView && viewItem == userRequestHistory.item",
+          "command": "rest-forge.saveToCollection",
+          "when": "view == restForgeRequestHistoryTreeView && viewItem == userRequestHistory.item",
           "group": "a@1"
         },
         {
-          "command": "api-tester.renameRequest",
-          "when": "view == apiTesterRequestHistoryTreeView && viewItem == userRequestHistory.item",
+          "command": "rest-forge.renameRequest",
+          "when": "view == restForgeRequestHistoryTreeView && viewItem == userRequestHistory.item",
           "group": "a@2"
         },
         {
-          "command": "api-tester.deleteRequest",
-          "when": "view == apiTesterRequestHistoryTreeView && viewItem == userRequestHistory.item",
+          "command": "rest-forge.deleteRequest",
+          "when": "view == restForgeRequestHistoryTreeView && viewItem == userRequestHistory.item",
           "group": "a@3"
         },
         {
-          "command": "api-tester.newRequestInCollection",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
+          "command": "rest-forge.newRequestInCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.collection",
           "group": "inline"
         },
         {
-          "command": "api-tester.newFolder",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
+          "command": "rest-forge.newFolder",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.collection",
           "group": "a@1"
         },
         {
-          "command": "api-tester.newRequestInCollection",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
+          "command": "rest-forge.newRequestInCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.collection",
           "group": "a@2"
         },
         {
-          "command": "api-tester.renameCollection",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
+          "command": "rest-forge.renameCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.collection",
           "group": "b@1"
         },
         {
-          "command": "api-tester.deleteCollection",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
+          "command": "rest-forge.deleteCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.collection",
           "group": "b@2"
         },
         {
-          "command": "api-tester.clearItemsInCollection",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
+          "command": "rest-forge.clearItemsInCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.collection",
           "group": "b@3"
         },
         {
-          "command": "api-tester.copyCollection",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
+          "command": "rest-forge.copyCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.collection",
           "group": "c@1"
         },
         {
-          "command": "api-tester.pasteRequestInCollection",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
+          "command": "rest-forge.pasteRequestInCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.collection",
           "group": "c@2"
         },
         {
-          "command": "api-tester.duplicateCollection",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
+          "command": "rest-forge.duplicateCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.collection",
           "group": "c@3"
         },
         {
-          "command": "api-tester.exportCollection",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.collection",
+          "command": "rest-forge.exportCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.collection",
           "group": "d@1"
         },
         {
-          "command": "api-tester.newFolder",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.folder",
+          "command": "rest-forge.newFolder",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.folder",
           "group": "a@1"
         },
         {
-          "command": "api-tester.newRequestInCollection",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.folder",
+          "command": "rest-forge.newRequestInCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.folder",
           "group": "a@2"
         },
         {
-          "command": "api-tester.renameFolder",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.folder",
+          "command": "rest-forge.renameFolder",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.folder",
           "group": "b@1"
         },
         {
-          "command": "api-tester.deleteFolder",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.folder",
+          "command": "rest-forge.deleteFolder",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.folder",
           "group": "b@2"
         },
         {
-          "command": "api-tester.clearItemsInCollection",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.folder",
+          "command": "rest-forge.clearItemsInCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.folder",
           "group": "b@3"
         },
         {
-          "command": "api-tester.pasteRequestInCollection",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.folder",
+          "command": "rest-forge.pasteRequestInCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.folder",
           "group": "b@4"
         },
         {
-          "command": "api-tester.duplicateFolder",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.folder",
+          "command": "rest-forge.duplicateFolder",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.folder",
           "group": "b@5"
         },
         {
-          "command": "api-tester.renameRequestInCollection",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.item",
+          "command": "rest-forge.renameRequestInCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.item",
           "group": "a@1"
         },
         {
-          "command": "api-tester.copyRequestInCollection",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.item",
+          "command": "rest-forge.copyRequestInCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.item",
           "group": "a@2"
         },
         {
-          "command": "api-tester.deleteRequestInCollection",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.item",
+          "command": "rest-forge.deleteRequestInCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.item",
           "group": "a@3"
         },
         {
-          "command": "api-tester.duplicateRequestInCollection",
-          "when": "view == apiTesterCollectionsTreeView && viewItem == userCollection.item",
+          "command": "rest-forge.duplicateRequestInCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.item",
           "group": "a@4"
         },
         {
-          "command": "api-tester.renameEnvironment",
-          "when": "view == apiTesterEnvironmentsTreeView && viewItem == userEnvironment.item",
+          "command": "rest-forge.renameEnvironment",
+          "when": "view == restForgeEnvironmentsTreeView && viewItem == userEnvironment.item",
           "group": "a@1"
         },
         {
-          "command": "api-tester.deleteEnvironment",
-          "when": "view == apiTesterEnvironmentsTreeView && viewItem == userEnvironment.item",
+          "command": "rest-forge.deleteEnvironment",
+          "when": "view == restForgeEnvironmentsTreeView && viewItem == userEnvironment.item",
           "group": "a@2"
         }
       ]
     },
     "configuration": {
-      "title": "API Tester",
+      "title": "REST Forge",
       "properties": {
-        "api-tester.customMethods": {
+        "rest-forge.customMethods": {
           "type": "array",
           "items": {
             "type": "string"

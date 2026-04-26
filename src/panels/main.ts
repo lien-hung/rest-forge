@@ -81,7 +81,7 @@ class MainWebviewPanel {
 
     this.mainPanel.iconPath = vscode.Uri.joinPath(
       this.extensionUri,
-      "icons/images/apitester-icon.png",
+      "icons/images/restforge-icon.png",
     );
 
     this.mainPanel.onDidDispose(() => { this.mainPanel = null; }, null);
@@ -336,7 +336,7 @@ class MainWebviewPanel {
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>API Tester</title>
+          <title>REST Forge</title>
           <link href="${resetCssSrc}" rel="stylesheet">
           <link href="${mainStylesCssSrc}" rel="stylesheet">
         </head>

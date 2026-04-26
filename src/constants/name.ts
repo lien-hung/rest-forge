@@ -1,5 +1,5 @@
 const NAME = {
-  MAIN_PANEL_NAME: "API Tester",
+  MAIN_PANEL_NAME: "REST Forge",
   MANAGE_TOKEN_PANEL_NAME: "Manage OAuth 2.0 Tokens",
   MANAGE_ENV_PANEL_NAME: "Environment",
 };

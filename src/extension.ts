@@ -103,7 +103,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	};
 
 	const disp_requestHistoryTreeView = vscode.window.createTreeView(
-		"apiTesterRequestHistoryTreeView",
+		"restForgeRequestHistoryTreeView",
 		{
 			treeDataProvider: requestHistoryProvider,
 			showCollapseAll: true
@@ -111,7 +111,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	);
 
 	const disp_collectionsTreeView = vscode.window.createTreeView(
-		"apiTesterCollectionsTreeView",
+		"restForgeCollectionsTreeView",
 		{
 			treeDataProvider: collectionsProvider,
 			showCollapseAll: true
@@ -119,7 +119,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	);
 
 	const disp_environmentsTreeView = vscode.window.createTreeView(
-		"apiTesterEnvironmentsTreeView",
+		"restForgeEnvironmentsTreeView",
 		{
 			treeDataProvider: environmentsProvider,
 			showCollapseAll: true
