@@ -9,7 +9,7 @@
 ## Features
 REST Forge (formerly API Tester) is a UI-based HTTP client to send requests to your desired endpoint and is most helpful for testing and verifying that your API is working properly. The extension uses local storage at `%userprofile%/.rest-forge` directory and does not collect or share any personal information and request data somewhere else.
 
-<img width="1440" height="860" alt="API Tester demo" src="https://github.com/user-attachments/assets/47d87376-0304-4df6-8f04-673edad26031" />
+<img width="1440" height="860" alt="REST Forge demo" src="https://github.com/user-attachments/assets/61958c4f-b95d-4d99-aec1-ad15fec001d3" />
 
 - Supports seven main HTTP methods (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS`) and other custom methods (e.g. `PROPFIND`, configurable in settings)
 - Request options:
