@@ -1,5 +1,5 @@
 import { Editor, Monaco } from "@monaco-editor/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { COMMON, OPTION, REQUEST, RESPONSE } from "../constants";
@@ -30,34 +30,34 @@ function CodeEditor({
   handleEditorChange,
   handleBeautifyButton,
 }: ICodeEditorProps) {
-  const editorRef = useRef<any>(null);
-  const monacoRef = useRef<Monaco>(null);
+  const [editor, setEditor] = useState<any>(null);
+  const [monaco, setMonaco] = useState<Monaco>(null);
 
   const [currentTheme, setCurrentTheme] = useState<IEditorTheme>({
     base: "vs-dark",
-    colors: {},
     fontFamily: OPTION.EDITOR_DEFAULT_FONT_FAMILY
   });
   const [tokenColors, setTokenColors] = useState<ITokenColor[]>([]);
 
   const setEditorTheme = () => {
-    if (!monacoRef.current) return;
+    if (!monaco) return;
 
-    monacoRef.current.editor.defineTheme("currentTheme", {
+    monaco.editor.defineTheme("currentTheme", {
       base: currentTheme.base,
       inherit: true,
       rules: tokenColors,
-      colors: currentTheme.colors,
+      colors: {},
     });
-    monacoRef.current.editor.setTheme("currentTheme");
+    monaco.editor.setTheme("currentTheme");
   }
 
   const handleEditorWillMount = (monaco: Monaco) => {
-    monacoRef.current = monaco;
+    setMonaco(monaco);
     setCurrentTheme(getCurrentTheme());
   }
 
   const handleEditorDidMount = (editor: any, monaco: Monaco) => {
+    editor.updateOptions({ useShadowDOM: false });
     editor.addAction({
       id: 'custom-paste',
       label: 'Paste',
@@ -86,7 +86,7 @@ function CodeEditor({
       },
     });
     
-    editorRef.current = editor;
+    setEditor(editor);
   };
 
   const handleExtensionMessage = (event: MessageEvent) => {
@@ -104,13 +104,18 @@ function CodeEditor({
   useEffect(() => setEditorTheme(), [currentTheme, tokenColors]);
 
   useEffect(() => {
+    if (!editor || requestForm) return;
+    editor.trigger("editor", "editor.action.formatDocument");
+  }, [editor, codeEditorValue]);
+
+  useEffect(() => {
     if (shouldBeautifyEditor && requestForm) {
       if (handleBeautifyButton) {
         handleBeautifyButton();
       }
 
       setTimeout(async () => {
-        await editorRef.current.getAction("editor.action.formatDocument").run();
+        await editor.getAction("editor.action.formatDocument").run();
       }, 200);
     }
   }, [shouldBeautifyEditor]);
@@ -118,19 +123,19 @@ function CodeEditor({
   useEffect(() => {
     if (requestForm || !previewMode || viewOption === RESPONSE.PREVIEW) return;
 
-    if (editorRef.current?.getValue() !== codeEditorValue) {
-      editorRef.current?.setValue(codeEditorValue);
+    if (editor?.getValue() !== codeEditorValue) {
+      editor?.setValue(codeEditorValue);
     }
 
     setTimeout(async () => {
-      editorRef.current?.updateOptions(OPTION.READ_ONLY_FALSE_OPTION);
+      editor?.updateOptions(OPTION.READ_ONLY_FALSE_OPTION);
 
-      await editorRef.current?.getAction("editor.action.formatDocument").run();
+      await editor?.getAction("editor.action.formatDocument").run();
 
       if (viewOption === REQUEST.RAW) {
-        editorRef.current?.updateOptions(OPTION.LINE_NUMBER_OPTION);
+        editor?.updateOptions(OPTION.LINE_NUMBER_OPTION);
       } else {
-        editorRef.current?.updateOptions(OPTION.READ_ONLY_TRUE_OPTION);
+        editor?.updateOptions(OPTION.READ_ONLY_TRUE_OPTION);
       }
     }, 500);
   }, [viewOption, language]);
@@ -161,16 +166,31 @@ function CodeEditor({
 const EditorWrapper = styled.div`
   --background: var(--vscode-editor-background);
   --foreground: var(--vscode-editor-foreground);
+  --caretColor: var(--vscode-editorCursor-foreground);
+  --input-background: var(--vscode-input-background);
   --lineHighlightBackground: var(--vscode-editor-lineHighlightBackground);
   --lineHighlightBorder: var(--vscode-editor-lineHighlightBorder);
   --lineNumber-foreground: var(--vscode-editorLineNumber-foreground);
   --lineNumber-activeForeground: var(--vscode-editorLineNumber-activeForeground);
+  --hoverWidget-background: var(--vscode-editorHoverWidget-background);
+  --hoverWidget-highlightForeground: var(--vscode-editorHoverWidget-highlightForeground);
   --suggestWidget-border: var(--vscode-editorSuggestWidget-border);
   --suggestWidget-background: var(--vscode-editorSuggestWidget-background);
   --suggestWidget-selectedBackground: var(--vscode-editorSuggestWidget-selectedBackground);
   --suggestWidget-selectedForeground: var(--vscode-editorSuggestWidget-selectedForeground);
+  --suggestWidget-highlightForeground: var(--vscode-editorSuggestWidget-highlightForeground);
+  --suggestWidget-focusHighlightForeground: var(--vscode-editorSuggestWidget-focusHighlightForeground);
   --stickyScroll-border: var(--vscode-editorStickyScroll-border);
   --stickyScroll-shadow: var(--vscode-editorStickyScroll-shadow);
+  --menu-background: var(--vscode-menu-background);
+  --menu-foreground: var(--vscode-menu-foreground);
+  --menu-selectionBackground: var(--vscode-menu-selectionBackground);
+  --menu-selectionBorder: var(--vscode-menu-selectionBorder);
+  --scrollbar-shadow: var(--vscode-scrollbar-shadow);
+  --quickInput-background: var(--vscode-quickInput-background);
+  --quickInput-foreground: var(--vscode-quickInput-foreground);
+  --quickInputList-focusBackground: var(--vscode-quickInputList-focusBackground);
+  --widget-shadow: var(--vscode-widget-shadow);
 
   .monaco-editor,
   .monaco-editor-background,
@@ -198,14 +218,39 @@ const EditorWrapper = styled.div`
       }
     }
 
+    .cursors-layer .cursor {
+      background-color: var(--caretColor);
+      border-color: var(--caretColor);
+    }
+
     .suggest-widget,
     .suggest-details {
       border: 1px solid var(--suggestWidget-border);
       background-color: var(--suggestWidget-background);
 
-      .monaco-list .monaco-list-row.focused {
-        background-color: var(--suggestWidget-selectedBackground);
-        color: var(--suggestWidget-selectedForeground);
+      .monaco-list {
+        .monaco-list-row {
+          > .contents > .main .monaco-highlighted-label .highlight {
+            color: var(--suggestWidget-highlightForeground);
+          }
+        }
+
+        .monaco-list-row.focused {
+          background-color: var(--suggestWidget-selectedBackground);
+          color: var(--suggestWidget-selectedForeground);
+
+          > .contents > .main .monaco-highlighted-label .highlight {
+            color: var(--suggestWidget-focusHighlightForeground);
+          }
+        }
+      }
+    }
+
+    .monaco-hover, .parameter-hints-widget {
+      background-color: var(--hoverWidget-background);
+
+      .signature .parameter.active {
+        color: var(--hoverWidget-highlightForeground);
       }
     }
 
@@ -221,6 +266,51 @@ const EditorWrapper = styled.div`
       .sticky-widget-line-numbers,
       .sticky-widget-lines-scrollable {
         background-color: var(--background);
+      }
+    }
+
+    .quick-input-widget {
+      color: var(--quickInput-foreground) !important;
+      background-color: var(--quickInput-background) !important;
+      box-shadow: 0 0 8px 2px var(--widget-shadow) !important;
+
+      .monaco-scrollable-element > .shadow {
+        box-shadow: var(--scrollbar-shadow) 0 6px 6px -6px inset;
+      }
+
+      .monaco-list-row {
+        background-color: var(--quickInput-background);
+      }
+
+      .monaco-list-row.focused {
+        background-color: var(--quickInputList-focusBackground);
+      }
+
+      .monaco-inputbox {
+        background-color: var(--input-background) !important;
+      }
+    }
+  }
+
+  .monaco-menu {
+    color: var(--menu-foreground);
+    background-color: var(--menu-background);
+    box-shadow: 0 2px 8px var(--widget-shadow);
+
+    .action-item.focused .action-menu-item {
+      background-color: var(--menu-selectionBackground) !important;
+      outline: 1px solid var(--menu-selectionBorder) !important;
+    }
+    
+    .monaco-menu {
+      .action-item .action-menu-item {
+        background-color: var(--menu-background) !important;
+        outline: none !important;
+      }
+
+      .action-item.focused .action-menu-item {
+        background-color: var(--menu-selectionBackground) !important;
+        outline: 1px solid var(--menu-selectionBorder) !important;
       }
     }
   }

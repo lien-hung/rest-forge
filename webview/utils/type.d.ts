@@ -31,9 +31,6 @@ export interface IAuthData {
 
 export interface IEditorTheme {
   base: "vs" | "vs-dark";
-  colors: {
-    [key: string]: string;
-  };
   fontFamily: string;
 }
 
