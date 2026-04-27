@@ -82,19 +82,6 @@ const KeyValueTable = ({
                       </th>
                     )}
                     <td>
-                      {tableReadOnly ? key : (
-                        <HighlightInput
-                          type="text"
-                          name="Key"
-                          placeholder="Key"
-                          value={key}
-                          onChange={(event) => {
-                            index === tableData.length - 1 && addRow(index, type);
-                            type && handleRequestKey && handleRequestKey(type, index, event.target.value);
-                          }}
-                          readOnly={readOnly}
-                        />
-                      )}
                       {type === "formData" && (
                         <TypeOptionWrapper
                           value={valueType}
@@ -107,6 +94,19 @@ const KeyValueTable = ({
                           <option value="Text">Text</option>
                           <option value="File">File</option>
                         </TypeOptionWrapper>
+                      )}
+                      {tableReadOnly ? key : (
+                        <HighlightInput
+                          type="text"
+                          name="Key"
+                          placeholder="Key"
+                          value={key}
+                          onChange={(event) => {
+                            index === tableData.length - 1 && addRow(index, type);
+                            type && handleRequestKey && handleRequestKey(type, index, event.target.value);
+                          }}
+                          readOnly={readOnly}
+                        />
                       )}
                     </td>
                     <td>
@@ -166,11 +166,14 @@ const TypeOptionWrapper = styled.select`
   visibility: hidden;
   width: auto;
   float: right;
-  margin-top: -1.8rem;
+  margin-bottom: -1.5rem;
   font-size: 1rem;
   font-weight: 500;
   background-color: var(--vscode-editor-background);
   color: var(--default-text);
+  position: relative;
+  top: 4px;
+  z-index: 10;
 `;
 
 const FileInputWrapper = styled.div`
