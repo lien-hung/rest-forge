@@ -2,6 +2,9 @@
 
 All notable changes to the "rest-forge" extension will be documented in this file.
 
+## [v4.1.1]
+- Fix alignment of type selector in Form Data table (on top of highlight preview)
+
 ## [v4.1.0]
 - Environments feature:
   - Manage environments via tree view
