@@ -1,5 +1,5 @@
 <div align="center">
-    <img width="128" height="128" alt="restforge-icon" src="https://github.com/user-attachments/assets/896b4c32-52d1-404b-a5e4-074ac9939899" />
+    <img width="100" height="100" alt="restforge-icon" src="https://github.com/user-attachments/assets/896b4c32-52d1-404b-a5e4-074ac9939899" />
     <h3>REST Forge</h3>
     <h5>A lightweight HTTP client for sending requests and testing APIs in VSCode</h5>
 </div>
@@ -9,7 +9,10 @@
 ## Features
 REST Forge (formerly API Tester) is a UI-based HTTP client to send requests to your desired endpoint and is most helpful for testing and verifying that your API is working properly. The extension uses local storage at `%userprofile%/.rest-forge` directory and does not collect or share any personal information and request data somewhere else.
 
-<img width="1440" height="860" alt="REST Forge demo" src="https://github.com/user-attachments/assets/61958c4f-b95d-4d99-aec1-ad15fec001d3" />
+<img
+  src="https://github.com/user-attachments/assets/61958c4f-b95d-4d99-aec1-ad15fec001d3"
+  alt="REST Forge demo"
+/>
 
 - Supports seven main HTTP methods (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS`) and other custom methods (e.g. `PROPFIND`, configurable in settings)
 - Request options:
