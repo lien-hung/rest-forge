@@ -16,13 +16,12 @@ const generateSdkRequestObject = (
   graphqlData: IGraphqlData
 ) => {
   const bodyOptionCamelCase = camelize(bodyOption) as OptionType;
-
   const requestHeaders = tableData.headers.filter((data) => data.isChecked && data.key.length > 0);
+  
   const bodyData = bodyOptionCamelCase in tableData
     ? tableData[bodyOptionCamelCase]
       .filter((data) => data.isChecked && data.key.length > 0)
-      .map((data) => data.value instanceof ArrayBuffer
-        ? { ...data, src: data.filePath, type: data.valueType?.toLowerCase() } : data)
+      .map((data) => ({ ...data, type: data.valueType?.toLowerCase(), src: data.filePath }))
     : new Array<ITableRow>();
 
   const graphqlObject = {

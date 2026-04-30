@@ -1,5 +1,3 @@
-// @ts-ignore
-import codegen from "postman-code-generators";
 import React, { ChangeEvent, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import { useDebounce } from "use-debounce";
@@ -10,6 +8,7 @@ import SelectWrapper from "../../../components/SelectWrapper";
 import { COMMON, OPTION } from "../../../constants/index";
 import CodeEditor from "../../../shared/CodeEditor";
 import useStore from "../../../store/useStore";
+import * as codegen from "../../../utils/code-snippet";
 import { generateSdkRequestObject, resolveTableData, resolveVariable } from "../../../utils/index";
 import { BodyOptionType } from "../../../utils/type";
 

@@ -551,7 +551,6 @@
     "fast-xml-parser": "^5.7.1",
     "file-saver": "^2.0.5",
     "node-polyfill-webpack-plugin": "^4.0.0",
-    "postman-code-generators": "^2.1.0",
     "postman-collection": "^5.2.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",

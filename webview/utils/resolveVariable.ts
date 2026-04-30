@@ -23,7 +23,8 @@ export function resolveTableData(tableData: ITableData, variables: { [key: strin
       [key]: rows.map((row) => ({
         ...row,
         key: resolveVariable(row.key, variables),
-        value: typeof row.value === 'string' ? resolveVariable(row.value, variables) : row.value
+        value: typeof row.value === 'string' ? resolveVariable(row.value, variables) : row.value,
+        valueType: row.value instanceof ArrayBuffer ? "File" : "Text"
       }))
     }), {} as ITableData);
 }
