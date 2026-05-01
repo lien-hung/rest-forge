@@ -84,6 +84,7 @@ export interface ITableRow {
   prefix?: string;
   valueType?: string;
   filePath?: string;
+  contentType?: string;
 }
 
 export interface ITableData {

@@ -4,6 +4,7 @@ export interface ITableRow {
   value: string | ArrayBuffer;
   valueType?: string;
   filePath?: string;
+  contentType?: string;
 }
 
 export type BodyOptionType = "Form Data" | "Form Encoded" | "GraphQL" | "Raw";

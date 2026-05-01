@@ -124,6 +124,16 @@ const keyValueTableDataSlice: StateCreator<
       }
     })),
 
+  handleFormContentType: (dataIndex, detail) =>
+    set((state) => ({
+      tableData: {
+        ...state.tableData,
+        formData: state.tableData.formData.map((row, index) =>
+          dataIndex === index ? { ...row, contentType: detail } : row
+        ),
+      }
+    })),
+
   addRequestBodyHeaders: (headerValue) =>
     set((state) => ({
       tableData: {

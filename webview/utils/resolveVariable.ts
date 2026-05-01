@@ -24,7 +24,8 @@ export function resolveTableData(tableData: ITableData, variables: { [key: strin
         ...row,
         key: resolveVariable(row.key, variables),
         value: typeof row.value === 'string' ? resolveVariable(row.value, variables) : row.value,
-        valueType: row.value instanceof ArrayBuffer ? "File" : "Text"
+        valueType: key === "formData" ? (row.value instanceof ArrayBuffer ? "File" : "Text") : "",
+        contentType: key === "formData" ? (row.contentType ?? "text/plain") : "",
       }))
     }), {} as ITableData);
 }

@@ -18,6 +18,7 @@ interface IKeyValueTableProps {
   handleRequestCheckbox?: (type: OptionType, index: number) => void;
   handleFormValueType?: (index: number, valueType: string) => void;
   handleFormFilePath?: (index: number, filePath: string) => void;
+  handleFormContentType?: (index: number, contentType: string) => void;
 }
 
 const KeyValueTable = ({
@@ -32,6 +33,7 @@ const KeyValueTable = ({
   handleRequestCheckbox,
   handleFormValueType,
   handleFormFilePath,
+  handleFormContentType,
 }: IKeyValueTableProps) => {
   const addRow = (index: number, type?: OptionType) => {
     type && addNewTableRow && addNewTableRow(type);
@@ -40,9 +42,10 @@ const KeyValueTable = ({
 
   const handleExtensionMessage = (event: MessageEvent) => {
     if (event.data.type === COMMON.FILE_SELECTED) {
-      const { fileRowIndex: index, path, data } = event.data;
+      const { fileRowIndex: index, path, data, contentType } = event.data;
       handleRequestValue && handleRequestValue("formData", index, data);
       handleFormFilePath && handleFormFilePath(index, path);
+      handleFormContentType && handleFormContentType(index, contentType);
     }
   };
 
@@ -88,6 +91,11 @@ const KeyValueTable = ({
                           onChange={(event) => {
                             index === tableData.length - 1 && addRow(index, type);
                             handleFormValueType && handleFormValueType(index, event.target.value);
+                            if (event.target.value === "Text") {
+                              handleRequestValue && handleRequestValue(type, index, "");
+                              handleFormFilePath && handleFormFilePath(index, "");
+                              handleFormContentType && handleFormContentType(index, "text/plain");
+                            }
                           }}
                         >
                           <option value="" selected hidden></option>

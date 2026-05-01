@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync } from "fs";
+import mime from "mime";
 import * as vscode from "vscode";
 
 import CollectionsProvider from "../collections";
@@ -19,7 +20,13 @@ import {
   resolveVariable,
 } from "../utils";
 import getTokenColors from "../utils/getTokenColors";
-import { IParameterKeyValueData, IRequestHeaderInformation, IRequestObject, ITableData, ITableRow } from "../utils/type";
+import {
+  IParameterKeyValueData,
+  IRequestHeaderInformation,
+  IRequestObject,
+  ITableData,
+  ITableRow
+} from "../utils/type";
 
 class MainWebviewPanel {
   private url: string = "";
@@ -112,7 +119,7 @@ class MainWebviewPanel {
           const requestItem = this.parentId
             ? this.collectionsProvider.getRequest(requestId)
             : this.requestHistoryProvider.getItemById(requestId);
-          
+
           if (this.mainPanel && requestItem) {
             this.mainPanel.webview.postMessage({
               type: TYPE.TREEVIEW_DATA,
@@ -136,10 +143,7 @@ class MainWebviewPanel {
             themeKind: vscode.window.activeColorTheme.kind,
             config: getExtensionConfig()
           };
-
-          if (this.mainPanel) {
-            this.mainPanel.webview.postMessage(configObject);
-          }
+          this.mainPanel?.webview.postMessage(configObject);
           return;
         }
 
@@ -151,10 +155,7 @@ class MainWebviewPanel {
             type: COMMAND.HAS_TOKEN_COLORS,
             tokenColors
           };
-
-          if (this.mainPanel) {
-            this.mainPanel.webview.postMessage(tokenColorsObject);
-          }
+          this.mainPanel?.webview.postMessage(tokenColorsObject);
           return;
         }
 
@@ -162,9 +163,7 @@ class MainWebviewPanel {
           try {
             const tokenList = getStoredOAuthTokens(this.tokenPath);
             const tokenListObject = { tokenList, type: COMMAND.HAS_OAUTH2_TOKENS };
-            if (this.mainPanel) {
-              this.mainPanel.webview.postMessage(tokenListObject);
-            }
+            this.mainPanel?.webview.postMessage(tokenListObject);
           } catch (error) {
             console.error("Error loading tokens: ", error);
           }
@@ -178,12 +177,10 @@ class MainWebviewPanel {
 
         if (command === COMMAND.SET_OAUTH2_TOKENS) {
           writeFileSync(this.tokenPath, JSON.stringify(newTokenList));
-          if (this.manageTokenPanel) {
-            this.manageTokenPanel.webview.postMessage({
-              tokenList: newTokenList,
-              type: COMMAND.HAS_OAUTH2_TOKENS
-            });
-          }
+          this.manageTokenPanel?.webview.postMessage({
+            tokenList: newTokenList,
+            type: COMMAND.HAS_OAUTH2_TOKENS
+          });
           return;
         }
 
@@ -203,17 +200,15 @@ class MainWebviewPanel {
               const selectedPath = uri[0].fsPath;
               const data = readFileSync(selectedPath);
 
-              if (this.mainPanel) {
-                this.mainPanel.webview.postMessage({
-                  type: COMMAND.FILE_SELECTED,
-                  fileRowIndex,
-                  path: selectedPath,
-                  data: data.buffer,
-                });
-              }
+              this.mainPanel?.webview.postMessage({
+                type: COMMAND.FILE_SELECTED,
+                fileRowIndex,
+                path: selectedPath,
+                data: data.buffer,
+                contentType: mime.getType(selectedPath),
+              });
             }
           });
-
           return;
         }
 
@@ -245,7 +240,7 @@ class MainWebviewPanel {
           if (row.optionType === "formData" && row.isChecked && row.valueType === "File") {
             const filePath = row.filePath ?? "";
             const fileName = filePath.includes("/") ? filePath.split("/").at(-1) : filePath.split("\\").at(-1);
-            row.value = new File([row.value], fileName ?? "unknown");
+            row.value = new File([row.value], fileName ?? "unknown", { type: row.contentType ?? "" });
           }
         }
 
@@ -282,6 +277,7 @@ class MainWebviewPanel {
           if (row.valueType === "File") {
             row.value = "";
             delete row.filePath;
+            delete row.contentType;
           }
         });
 

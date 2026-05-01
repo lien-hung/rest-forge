@@ -25,6 +25,7 @@ export interface ITableRow {
   prefix?: string;
   valueType?: string;
   filePath?: string;
+  contentType?: string;
 }
 
 export interface IResizeBarSlice {
@@ -137,6 +138,7 @@ export interface IKeyValueTableDataSlice {
   handleHeaderPrefix: (index: number, detail: string) => void;
   handleFormValueType: (index: number, detail: string) => void;
   handleFormFilePath: (index: number, detail: string) => void;
+  handleFormContentType: (index: number, detail: string) => void;
   handleParamsTableData: (params: ITableRow[]) => void;
   handleTreeViewTableData: (tableData: ITableData) => void;
 }
