@@ -2,6 +2,10 @@
 
 All notable changes to the "rest-forge" extension will be documented in this file.
 
+## [v4.1.2]
+- The code snippet feature now uses a smaller, self-made version of `postman-code-generators` with testing and package files stripped, to reduce installation size.
+- Added variable highlight and resolution for authorization data
+
 ## [v4.1.1]
 - Fix alignment of type selector in Form Data table (on top of highlight preview)
 
