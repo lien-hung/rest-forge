@@ -16,6 +16,7 @@ import {
   getNonce,
   getStoredOAuthTokens,
   getUrl,
+  resolveAuthData,
   resolveTableData,
   resolveVariable,
 } from "../utils";
@@ -231,6 +232,8 @@ class MainWebviewPanel {
         const variables = this.environmentsProvider.activeVariables;
         const resolvedUrl = resolveVariable(requestUrl, variables);
         const resolvedTableData = resolveTableData(tableData, variables);
+        const resolvedAuthData = resolveAuthData(authData, variables);
+
         const flatTableData = Object.keys(tableData).reduce(
           (data, key) =>
             [...data, ...resolvedTableData[key as keyof ITableData].map((row) => ({ ...row, optionType: key }))],
@@ -246,7 +249,7 @@ class MainWebviewPanel {
 
         this.url = getUrl(resolvedUrl);
         this.method = requestMethod;
-        this.headers = getHeaders(flatTableData, authOption, authData);
+        this.headers = getHeaders(flatTableData, authOption, resolvedAuthData);
         this.body = getBody(
           flatTableData,
           bodyOption,

@@ -1,4 +1,4 @@
-import { ITableData, OptionType } from "./type";
+import { IAuthData, ITableData, OptionType } from "./type";
 
 export function resolveVariable(str: string, variables: { [key: string]: string }) {
   const matches = [...str.matchAll(/\{\{([^}]+)\}\}/gi)];
@@ -13,6 +13,17 @@ export function resolveVariable(str: string, variables: { [key: string]: string 
     }
   }
   return str;
+}
+
+export function resolveAuthData(authData: IAuthData, variables: { [key: string]: string }) {
+  let key: keyof IAuthData, newAuthData = <IAuthData>{};
+  for (key in authData) {
+    if (key === "tokenPrefix") {
+      newAuthData[key] = authData[key];
+    }
+    newAuthData[key] = resolveVariable(authData[key], variables);
+  }
+  return newAuthData;
 }
 
 export function resolveTableData(tableData: ITableData, variables: { [key: string]: string }) {

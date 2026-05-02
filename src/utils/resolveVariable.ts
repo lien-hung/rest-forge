@@ -1,4 +1,4 @@
-import { ITableData } from "./type";
+import { IHeaderAuth, ITableData } from "./type";
 
 export function resolveVariable(str: string, variables: { [key: string]: string }) {
   const matches = [...str.matchAll(/\{\{([^}]+)\}\}/gi)];
@@ -13,6 +13,17 @@ export function resolveVariable(str: string, variables: { [key: string]: string 
     }
   }
   return str;
+}
+
+export function resolveAuthData(authData: IHeaderAuth, variables: { [key: string]: string }) {
+  let key: keyof IHeaderAuth, newAuthData = <IHeaderAuth>{};
+  for (key in authData) {
+    if (key === "tokenPrefix") {
+      newAuthData[key] = authData[key];
+    }
+    newAuthData[key] = resolveVariable(authData[key], variables);
+  }
+  return newAuthData;
 }
 
 export function resolveTableData(tableData: ITableData, variables: { [key: string]: string }) {

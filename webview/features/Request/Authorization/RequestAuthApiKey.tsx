@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import { styled } from "styled-components";
 import { useShallow } from "zustand/shallow";
 
-import Wrapper from "../../../components/Wrapper";
+import HighlightInput from "../../../components/HighlightInput";
 import InputWrapper from "../../../components/InputWrapper";
-import useStore from "../../../store/useStore";
+import Wrapper from "../../../components/Wrapper";
 import { OPTION, REQUEST } from "../../../constants";
+import useStore from "../../../store/useStore";
 
 const RequestAuthApiKey = () => {
   const {
@@ -40,7 +41,7 @@ const RequestAuthApiKey = () => {
       <h2>API Key</h2>
       <InputWrapper>
         <label htmlFor="key">Key:</label>
-        <input
+        <HighlightInput
           type="text"
           name="key"
           placeholder="Key"
@@ -50,7 +51,7 @@ const RequestAuthApiKey = () => {
       </InputWrapper>
       <InputWrapper>
         <label htmlFor="value">Value:</label>
-        <input
+        <HighlightInput
           type="text"
           name="value"
           placeholder="Value"

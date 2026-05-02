@@ -8,6 +8,7 @@ import Wrapper from "../../../components/Wrapper";
 
 import clockIcon from "../../../assets/svg/clock-icon.svg";
 import errorIcon from "../../../assets/svg/validate-error.svg";
+import HighlightInput from "../../../components/HighlightInput";
 import { COMMON, OPTION, REQUEST } from "../../../constants";
 import { IOAuth2Token, ITableRow } from "../../../store/slices/type";
 import useStore from "../../../store/useStore";
@@ -218,20 +219,19 @@ const RequestOAuth2 = () => {
         {/* Label intentionally left blank */}
         <label></label>
         <SelectTokenWrapper>
-          <input
-            type="text"
+          <HighlightInput
             name="token"
             placeholder="Token"
             value={oauth2Data.token}
             onChange={(event) => setOAuth2Data({ ...oauth2Data, token: event.target.value })}
           />
           {selectedToken && (isRefreshPending ? (
-            <div>
+            <div className="message">
               <span className="loader"></span>
               <TokenMessage role="message">Refreshing token...</TokenMessage>
             </div>
           ) : (
-            <div>
+            <div className="message">
               {isTokenExpired(selectedToken) ? (
                 <>
                   <img src={errorIcon} />
@@ -306,7 +306,7 @@ const SelectTokenWrapper = styled.div`
     cursor: pointer;
   }
 
-  div {
+  div.message {
     display: flex;
     align-items: center;
     margin-top: 0.5rem;

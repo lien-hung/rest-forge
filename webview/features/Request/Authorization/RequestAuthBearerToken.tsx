@@ -1,6 +1,7 @@
 import React from "react";
 import { useShallow } from "zustand/shallow";
 
+import HighlightInput from "../../../components/HighlightInput";
 import InputWrapper from "../../../components/InputWrapper";
 import Wrapper from "../../../components/Wrapper";
 import { REQUEST } from "../../../constants/index";
@@ -24,13 +25,11 @@ const RequestAuthBearerToken = () => {
       <h2>Bearer Token</h2>
       <InputWrapper>
         <label htmlFor="token">Token:</label>
-        <input
+        <HighlightInput
           name="token"
           placeholder="Token"
           value={authDataToken}
-          onChange={(event) =>
-            handleRequestAuthData(REQUEST.TOKEN, event.target.value)
-          }
+          onChange={(event) => handleRequestAuthData(REQUEST.TOKEN, event.target.value)}
         />
       </InputWrapper>
       <InputWrapper>
@@ -39,9 +38,7 @@ const RequestAuthBearerToken = () => {
           name="prefix"
           placeholder="e.g. Bearer"
           value={authDataTokenPrefix}
-          onChange={(event) =>
-            handleRequestAuthData(REQUEST.TOKEN_PREFIX, event.target.value)
-          }
+          onChange={(event) => handleRequestAuthData(REQUEST.TOKEN_PREFIX, event.target.value)}
         />
       </InputWrapper>
     </Wrapper>

@@ -95,7 +95,7 @@ const RequestUrl = () => {
     if (!inputElement) return;
 
     const previewElement = previewRef.current;
-    previewElement?.scrollTo(inputElement?.scrollLeft, inputElement?.scrollTop);
+    previewElement?.scrollTo(inputElement.scrollLeft, inputElement.scrollTop);
   };
 
   useEffect(() => {
@@ -167,6 +167,7 @@ const RequestUrlWrapper = styled.div`
     overflow: scroll hidden;
     scrollbar-width: none;
     pointer-events: none;
+    letter-spacing: normal;
   }
 
   input {

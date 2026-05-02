@@ -8,11 +8,19 @@ const HighlightInput = ({
   value,
   readOnly,
   onChange,
-  onScroll,
-  onInput,
 }: InputHTMLAttributes<HTMLInputElement>) => {
+  const inputProps = { name, placeholder, value, readOnly, onChange };
   const variables = useStore((state) => state.activeVariables);
   const previewRef = useRef<HTMLParagraphElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const mirrorScroll = () => {
+    const inputElement = inputRef.current;
+    if (!inputElement) return;
+
+    const previewElement = previewRef.current;
+    previewElement?.scrollTo(inputElement.scrollLeft, inputElement.scrollTop);
+  };
 
   const setVariableHighlight = () => {
     let variableHighlight = CSS.highlights.get("variable-highlight");
@@ -65,14 +73,11 @@ const HighlightInput = ({
     <HighlightInputWrapper>
       <p className="preview" ref={previewRef}>{value}</p>
       <input
+        ref={inputRef}
         type="text"
-        name={name}
-        value={value}
-        placeholder={placeholder}
-        readOnly={readOnly}
-        onChange={onChange}
-        onScroll={onScroll}
-        onInput={onInput}
+        {...inputProps}
+        onScroll={mirrorScroll}
+        onInput={mirrorScroll}
       />
     </HighlightInputWrapper>
   )
@@ -92,6 +97,7 @@ const HighlightInputWrapper = styled.div`
     overflow: scroll hidden;
     scrollbar-width: none;
     pointer-events: none;
+    letter-spacing: 0.01rem;
   }
 
   input {

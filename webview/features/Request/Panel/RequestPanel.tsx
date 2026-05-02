@@ -72,11 +72,11 @@ const RequestPanelWrapper = styled.div`
   box-sizing: border-box;
 
   ::highlight(variable-highlight) {
-    color: var(--vscode-editorGutter-addedBackground);
+    background-color: color-mix(in srgb, var(--vscode-editor-background), var(--vscode-editorGutter-addedBackground) 30%);
   }
 
   ::highlight(non-variable-highlight) {
-    color: var(--vscode-editorGutter-deletedBackground);
+    background-color: color-mix(in srgb, var(--vscode-editor-background), var(--vscode-editorGutter-deletedBackground) 30%);
   }
 `;
 

@@ -11,6 +11,7 @@ export {
 export { default as getUrlParameters } from "./getUrlParameters";
 export { default as removeUrlParameter } from "./removeUrlParameter";
 export {
+  resolveAuthData,
   resolveTableData,
   resolveVariable
 } from "./resolveVariable";
