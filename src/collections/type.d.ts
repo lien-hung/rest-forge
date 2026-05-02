@@ -1,5 +1,12 @@
+import { IRequestObject } from "../utils/type";
+
 export type RequestItemEntry = {
-  request: IRequestTreeItemState;
+  request: {
+    id: string;
+    name: string;
+    timestamp: number;
+    requestObject: Partial<IRequestObject>;
+  };
 };
 
 export type RequestFolderEntry = {

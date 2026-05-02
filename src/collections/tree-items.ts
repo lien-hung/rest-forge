@@ -29,12 +29,9 @@ export class RequestItem extends TreeItem {
   }
 
   public toExport(): RequestItemEntry {
+    const { id, name, timestamp, requestObject } = this.request;
     return {
-      request: {
-        ...this.request,
-        id: undefined,
-        requestObject: undefined,
-      }
+      request: { id, name, timestamp, requestObject }
     };
   }
 }
