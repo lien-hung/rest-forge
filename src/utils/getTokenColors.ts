@@ -1,4 +1,5 @@
 import { readFileSync } from "fs";
+import { parse as parseJSONC } from "jsonc-parser";
 import path from "path";
 import { extensions } from "vscode";
 
@@ -33,13 +34,13 @@ function getTokenColors(themeName: string): TokenColor[] {
   const themePaths = [];
   if (currentThemePath) { themePaths.push(currentThemePath); }
   while (themePaths.length > 0) {
-    // Get theme data
+    // Get theme data (note that some themes use JSON with comments)
     const themePath = themePaths.pop();
     if (!themePath) {
       throw new Error("Theme path empty");
     }
     const themeData = readFileSync(themePath, { encoding: "utf8" });
-    const theme: any = JSON.parse(themeData);
+    const theme = parseJSONC(themeData);
 
     if (theme) {
       if (theme.include) {
