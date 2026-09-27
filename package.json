@@ -34,10 +34,7 @@
         "title": "New Request",
         "command": "rest-forge.newRequest",
         "category": "REST Forge",
-        "icon": {
-          "light": "icons/svg/add-light.svg",
-          "dark": "icons/svg/add-dark.svg"
-        }
+        "icon": "$(add)"
       },
       {
         "title": "Open Request",
@@ -47,10 +44,7 @@
       {
         "title": "Delete",
         "command": "rest-forge.deleteRequest",
-        "icon": {
-          "light": "icons/svg/delete-light.svg",
-          "dark": "icons/svg/delete-dark.svg"
-        }
+        "icon": "$(trash)"
       },
       {
         "title": "Rename",
@@ -64,28 +58,19 @@
         "title": "Refresh",
         "command": "rest-forge.refresh",
         "category": "REST Forge",
-        "icon": {
-          "light": "icons/svg/refresh-light.svg",
-          "dark": "icons/svg/refresh-dark.svg"
-        }
+        "icon": "$(refresh)"
       },
       {
         "title": "Clear History",
         "command": "rest-forge.clearHistory",
         "category": "REST Forge",
-        "icon": {
-          "light": "icons/svg/delete-light.svg",
-          "dark": "icons/svg/delete-dark.svg"
-        }
+        "icon": "$(trash)"
       },
       {
         "title": "New Collection",
         "command": "rest-forge.newCollection",
         "category": "REST Forge",
-        "icon": {
-          "light": "icons/svg/new-collection-light.svg",
-          "dark": "icons/svg/new-collection-dark.svg"
-        }
+        "icon": "$(new-collection)"
       },
       {
         "title": "Copy To",
@@ -110,7 +95,8 @@
       {
         "title": "New Folder",
         "command": "rest-forge.newFolder",
-        "category": "REST Forge"
+        "category": "REST Forge",
+        "icon": "$(new-folder)"
       },
       {
         "title": "Duplicate",
@@ -127,10 +113,7 @@
       {
         "title": "New Request",
         "command": "rest-forge.newRequestInCollection",
-        "icon": {
-          "light": "icons/svg/add-light.svg",
-          "dark": "icons/svg/add-dark.svg"
-        }
+        "icon": "$(add)"
       },
       {
         "title": "Copy",
@@ -160,10 +143,7 @@
         "title": "New Environment",
         "command": "rest-forge.newEnvironment",
         "category": "REST Forge",
-        "icon": {
-          "light": "icons/svg/add-light.svg",
-          "dark": "icons/svg/add-dark.svg"
-        }
+        "icon": "$(add)"
       },
       {
         "title": "Open Environment",
@@ -388,9 +368,14 @@
           "group": "a@3"
         },
         {
+          "command": "rest-forge.newFolder",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.collection",
+          "group": "inline@1"
+        },
+        {
           "command": "rest-forge.newRequestInCollection",
           "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.collection",
-          "group": "inline"
+          "group": "inline@2"
         },
         {
           "command": "rest-forge.newFolder",
@@ -436,6 +421,16 @@
           "command": "rest-forge.exportCollection",
           "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.collection",
           "group": "d@1"
+        },
+        {
+          "command": "rest-forge.newFolder",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.folder",
+          "group": "inline@1"
+        },
+        {
+          "command": "rest-forge.newRequestInCollection",
+          "when": "view == restForgeCollectionsTreeView && viewItem == userCollection.folder",
+          "group": "inline@2"
         },
         {
           "command": "rest-forge.newFolder",

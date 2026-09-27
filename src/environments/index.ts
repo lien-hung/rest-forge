@@ -1,6 +1,5 @@
 import fs from "fs";
-import { EventEmitter, ExtensionContext, TreeDataProvider, TreeItem, Uri } from "vscode";
-import path from "path";
+import { EventEmitter, ThemeIcon, TreeDataProvider, TreeItem } from "vscode";
 
 import { getHomePath } from "../utils";
 import { IEnvironmentTreeItemState, IEnvironmentVariable } from "../utils/type";
@@ -8,7 +7,6 @@ import { EnvironmentTreeItem } from "./treeItems";
 import { EnvironmentStatusEntry } from "./statusEntry";
 
 export default class EnvironmentsProvider implements TreeDataProvider<EnvironmentTreeItem> {
-  private extensionContext: ExtensionContext;
   private _onDidChangeTreeData: EventEmitter<EnvironmentTreeItem | undefined> = new EventEmitter();
   public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
   private static readonly _onDidChangeEnvironment = new EventEmitter<string>();
@@ -17,10 +15,7 @@ export default class EnvironmentsProvider implements TreeDataProvider<Environmen
   private statusItem: EnvironmentStatusEntry;
 
   public getTreeItem(element: EnvironmentTreeItem): TreeItem | Thenable<TreeItem> {
-    element.iconPath = {
-      light: Uri.file(this.extensionContext.asAbsolutePath(path.join("icons/svg", "env-light.svg"))),
-      dark: Uri.file(this.extensionContext.asAbsolutePath(path.join("icons/svg", "env-dark.svg")))
-    };
+    element.iconPath = new ThemeIcon("arrow-swap");
     return element;
   }
 
@@ -141,10 +136,8 @@ export default class EnvironmentsProvider implements TreeDataProvider<Environmen
     fs.writeFileSync(this.filePath, JSON.stringify(data, null, 2));
   }
 
-  constructor(context: ExtensionContext) {
-    this.extensionContext = context;
+  constructor() {
     this.readFile();
-
     this.statusItem = new EnvironmentStatusEntry(this.activeEnv);
   }
 }

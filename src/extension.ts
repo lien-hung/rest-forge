@@ -17,7 +17,7 @@ import { IRequestObject } from './utils/type';
 export async function activate(context: vscode.ExtensionContext) {
 	const requestHistoryProvider = new RequestHistoryProvider(context);
 	const collectionsProvider = new CollectionsProvider(context);
-	const environmentsProvider = new EnvironmentsProvider(context);
+	const environmentsProvider = new EnvironmentsProvider();
 
 	const mainWebviewProvider = new MainWebviewPanel(
 		context.extensionUri,
