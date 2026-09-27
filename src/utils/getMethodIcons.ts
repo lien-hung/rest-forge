@@ -1,30 +1,24 @@
-import path from "path";
-import { ExtensionContext, Uri } from "vscode";
+import { ThemeColor, ThemeIcon } from "vscode";
 
-function getMethodIcons(context: ExtensionContext, method: string) {
-  let lightIcon: string;
-  let darkIcon: string;
+function getMethodIcons(method: string) {
   switch (method) {
     case "GET":
+      return new ThemeIcon("arrow-down", new ThemeColor("charts.green"));
     case "POST":
+      return new ThemeIcon("arrow-up", new ThemeColor("charts.yellow"));
     case "PUT":
+      return new ThemeIcon("arrow-swap", new ThemeColor("charts.blue"));
     case "PATCH":
+      return new ThemeIcon("edit", new ThemeColor("charts.purple"));
     case "DELETE":
+      return new ThemeIcon("trash", new ThemeColor("charts.red"));
     case "HEAD":
+      return new ThemeIcon("eye", new ThemeColor("charts.green"));
     case "OPTIONS":
-      lightIcon = darkIcon = `method-${method.toLowerCase()}.svg`;
-      break;
-
+      return new ThemeIcon("gear", new ThemeColor("charts.orange"));
     default:
-      lightIcon = "method-custom-light.svg";
-      darkIcon = "method-custom-dark.svg";
-      break;
+      return new ThemeIcon("question");
   }
-
-  return {
-    light: Uri.file(context.asAbsolutePath(path.join("icons/svg", lightIcon))),
-    dark: Uri.file(context.asAbsolutePath(path.join("icons/svg", darkIcon)))
-  };
 }
 
 export default getMethodIcons;

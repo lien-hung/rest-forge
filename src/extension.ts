@@ -15,8 +15,8 @@ import getTokenColors from './utils/getTokenColors';
 import { IRequestObject } from './utils/type';
 
 export async function activate(context: vscode.ExtensionContext) {
-	const requestHistoryProvider = new RequestHistoryProvider(context);
-	const collectionsProvider = new CollectionsProvider(context);
+	const requestHistoryProvider = new RequestHistoryProvider();
+	const collectionsProvider = new CollectionsProvider();
 	const environmentsProvider = new EnvironmentsProvider();
 
 	const mainWebviewProvider = new MainWebviewPanel(

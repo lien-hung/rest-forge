@@ -1,18 +1,17 @@
 import fs from "fs";
-import { EventEmitter, ExtensionContext, TreeDataProvider } from "vscode";
+import { EventEmitter, TreeDataProvider } from "vscode";
 
 import { getHomePath, getMethodIcons } from "../../src/utils";
 import { IRequestTreeItemState } from "../utils/type";
 import { RequestHistoryTreeItem } from "./treeItems";
 
 export default class RequestHistoryProvider implements TreeDataProvider<RequestHistoryTreeItem> {
-  private extensionContext: ExtensionContext;
   private _onDidChangeTreeData: EventEmitter<RequestHistoryTreeItem | undefined> = new EventEmitter();
   public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
   private tree: RequestHistoryTreeItem[] = [];
 
   public getTreeItem(element: RequestHistoryTreeItem): RequestHistoryTreeItem {
-    element.iconPath = getMethodIcons(this.extensionContext, element.request.method);
+    element.iconPath = getMethodIcons(element.request.method);
     return element;
   }
 
@@ -69,8 +68,7 @@ export default class RequestHistoryProvider implements TreeDataProvider<RequestH
     fs.writeFileSync(this.filePath, JSON.stringify(data, null, 2));
   }
   
-  constructor(context: ExtensionContext) {
-    this.extensionContext = context;
+  constructor() {
     this.readFile();
   }
 }

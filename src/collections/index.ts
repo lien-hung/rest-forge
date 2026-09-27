@@ -1,7 +1,6 @@
 import fs from "fs";
 import yaml from "js-yaml";
-import path from "path";
-import { EventEmitter, ExtensionContext, TreeDataProvider, TreeItem, Uri } from "vscode";
+import { EventEmitter, ThemeColor, ThemeIcon, TreeDataProvider, TreeItem } from "vscode";
 
 import { getElapsedTime, getHomePath, getMethodIcons } from "../utils";
 import { IRequestTreeItemState } from "../utils/type";
@@ -12,18 +11,17 @@ type CollectionsProviderItem = RequestCollection | RequestFolder | RequestItem;
 type RequestFolderLike = RequestCollection | RequestFolder;
 
 export default class CollectionsProvider implements TreeDataProvider<CollectionsProviderItem> {
-  private extensionContext: ExtensionContext;
   private _onDidChangeTreeData: EventEmitter<CollectionsProviderItem | undefined> = new EventEmitter();
   public readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
   private tree: CollectionsProviderItem[] = [];
 
   public getTreeItem(element: CollectionsProviderItem): TreeItem {
     if (element instanceof RequestCollection) {
-      element.iconPath = Uri.file(this.extensionContext.asAbsolutePath(path.join("icons/svg", "collection.svg")));
+      element.iconPath = new ThemeIcon("folder-library", new ThemeColor("charts.blue"));
     } else if (element instanceof RequestFolder) {
-      element.iconPath = Uri.file(this.extensionContext.asAbsolutePath(path.join("icons/svg", "folder.svg")));
+      element.iconPath = new ThemeIcon("folder");
     } else if (element instanceof RequestItem) {
-      element.iconPath = getMethodIcons(this.extensionContext, element.request.method);
+      element.iconPath = getMethodIcons(element.request.method);
     }
     return element;
   }
@@ -258,8 +256,7 @@ export default class CollectionsProvider implements TreeDataProvider<Collections
     fs.writeFileSync(path, exportData);
   }
 
-  constructor(context: ExtensionContext) {
-    this.extensionContext = context;
+  constructor() {
     this.readFile();
   }
 }
