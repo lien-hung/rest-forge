@@ -9,12 +9,17 @@
 ## Features
 REST Forge (formerly API Tester) is a UI-based HTTP client to send requests to your desired endpoint and is most helpful for testing and verifying that your API is working properly. The extension uses local storage at `%userprofile%/.rest-forge` directory and does not collect or share any personal information and request data somewhere else.
 
+### Send HTTP requests
 <img
-  src="https://github.com/user-attachments/assets/61958c4f-b95d-4d99-aec1-ad15fec001d3"
-  alt="REST Forge demo"
+    src="https://github.com/user-attachments/assets/84a9e7bc-7319-43e9-ab43-94d460f6d934"
+    alt="Typical HTTP request"
+/>
+<img
+    src="https://github.com/user-attachments/assets/5a73c032-ba28-49b2-a732-00656358d6f9"
+    alt="Sending JSON data"
 />
 
-- Supports seven main HTTP methods (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS`) and other custom methods (e.g. `PROPFIND`, configurable in settings)
+- Seven main HTTP methods (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS`) and other custom methods (e.g. `PROPFIND`, configurable in settings)
 - Request options:
   - URL search parameters
   - Authorization: `API Key`, `Bearer Token`, `Basic Auth`, `OAuth 2.0`
@@ -24,11 +29,21 @@ REST Forge (formerly API Tester) is a UI-based HTTP client to send requests to y
     - Raw: Text, JavaScript, JSON, HTML, XML
     - GraphQL
 - Code snippets for your current request
+
+### Preview all response types (text, images, videos, ...)
+<img
+    src="https://github.com/user-attachments/assets/7cf30565-af27-49f6-b424-9250a7d2313c"
+    alt="Video response preview"
+/>
+
+### Collections
 - Preview and save responses to disk
 - Organize requests into collections
 - Export collections to JSON, Postman, or Bruno's OpenCollection
   - While mainly for individual use, you can save the exported file to your local repository for Git collaboration.
 - Search from collections (`Ctrl+Alt+F` on tree view)
+
+### Environments
 - Manage environments and use variables from active environment
 - Export environments to `.env` files
 
