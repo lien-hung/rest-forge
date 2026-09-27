@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { OPTION, RESPONSE } from "../../../constants/index";
+import { OPTION, RESPONSE } from "../../../constants";
 import useStore from "../../../store/useStore";
 
 interface IResponseMetaDataProps {
@@ -20,7 +20,7 @@ const ResponseMetaData = ({
   const themeKind = useStore((state) => state.themeKind);
 
   const time = requestTime >= 1000 ? `${(requestTime / 1000).toFixed(2)} s` : `${requestTime} ms`;
-  const statusCodeAndText = `${statusCode} ${statusText}`;
+  const statusCodeAndText = statusCode ? `${statusCode} ${statusText}` : "N/A";
   const size = responseSize >= 1000 ? `${(responseSize / 1000).toFixed(2)} KB` : `${responseSize} B`;
 
   return (

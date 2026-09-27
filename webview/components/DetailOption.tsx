@@ -14,7 +14,7 @@ const DetailOptionWrapper = styled.div`
   gap: 2rem;
   padding: 0 1.3rem;
   flex: 0 1 auto;
-  border-bottom: 1px solid rgba(128 128 128 / 0.7);
+  border-bottom: 1px solid var(--vscode-editorWidget-border);
 `;
 
 export default DetailOption;

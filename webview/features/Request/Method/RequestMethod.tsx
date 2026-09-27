@@ -43,6 +43,7 @@ const RequestMethod = () => {
 const MethodSelectOptionWrapper = styled.select`
   width: 7rem;
   height: 3rem;
+  position: relative;
   padding: 0.7rem;
   font-size: 1.15rem;
   border: 1px solid color-mix(in srgb, var(--vscode-focusBorder), transparent 30%);
@@ -53,6 +54,12 @@ const MethodSelectOptionWrapper = styled.select`
   &::picker(select) {
     appearance: base-select;
     border: none;
+  }
+
+  &::picker-icon {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
   }
 
   option {

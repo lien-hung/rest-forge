@@ -4,9 +4,10 @@ export class EnvironmentStatusEntry {
   private readonly statusItem: StatusBarItem;
 
   public constructor(environment?: string) {
+    const envLabel = environment || "No Environment";
     this.statusItem = window.createStatusBarItem('env', StatusBarAlignment.Right, 100);
     this.statusItem.command = "rest-forge.setActiveEnvironment";
-    this.statusItem.text = environment ? `$(arrow-swap) ${environment}` : "$(arrow-swap) No Environment";
+    this.statusItem.text = `$(arrow-swap) ${envLabel}`;
     this.statusItem.tooltip = "Set Active Environment for REST Forge";
     this.statusItem.name = "REST Forge Environment";
     this.statusItem.show();
@@ -17,6 +18,7 @@ export class EnvironmentStatusEntry {
   }
 
   public update(environment?: string) {
-    this.statusItem.text = environment ? `$(arrow-swap) ${environment}` : "$(arrow-swap) No Environment";
+    const envLabel = environment || "No Environment";
+    this.statusItem.text = `$(arrow-swap) ${envLabel}`;
   }
 }

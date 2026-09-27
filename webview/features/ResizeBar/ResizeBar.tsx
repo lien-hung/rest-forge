@@ -69,7 +69,7 @@ const ResizeBarHitBox = styled.div`
   flex: 0 0 2px;
   margin: 0 0.5px;
   height: 100vh;
-  background: rgba(128 128 128 / 0.7);
+  background: var(--vscode-editorWidget-border);
   cursor: ew-resize;
 
   &:hover {

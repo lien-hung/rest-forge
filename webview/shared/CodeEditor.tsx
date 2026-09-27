@@ -31,7 +31,7 @@ function CodeEditor({
   handleBeautifyButton,
 }: ICodeEditorProps) {
   const [editor, setEditor] = useState<any>(null);
-  const [monaco, setMonaco] = useState<Monaco>(null);
+  const [monaco, setMonaco] = useState<Monaco | null>(null);
 
   const [currentTheme, setCurrentTheme] = useState<IEditorTheme>({
     base: "vs-dark",
@@ -155,7 +155,8 @@ function CodeEditor({
           options={{
             ...editorOption,
             useShadowDOM: false,
-            fontFamily: currentTheme.fontFamily
+            fontFamily: currentTheme.fontFamily,
+            "semanticHighlighting.enabled": true,
           }}
           onChange={handleEditorChange}
           beforeMount={handleEditorWillMount}
